@@ -1,103 +1,78 @@
+# Bat-Orgil Batjargal & Alec Wang
+# Sunday, September 16, 2018
+# The purpose of this code is to read a CSV file with titles, dates, and
+    # authors of books and return a list of either the titles or authors in
+    # forward or reverse lexicographic order.
 import csv
 import sys
 
 def test_and_load():
+    # a function to test the terminal arguments and, if they're correct, load the file
 	test_failed = False
 	if(len(sys.argv) < 3):
 		test_failed = True
 	elif(len(sys.argv)>=3):
-		action = sys.argv[2]#index
+		action = sys.argv[2]
 		if(not (action.lower() in ("books", "authors"))):
 			test_failed = True
 		if(len(sys.argv)>=4):
-			sort_direction = sys.argv[3]#index
-			if(not (sort_direction and (sort_direction.lower() in ("forwards", "backwards")))):
+			sort_direction = sys.argv[3]
+			if(not (sort_direction and (sort_direction.lower() in ("forward", "reverse")))):
 				test_failed = True
 	if(test_failed):
-		print("Usage: python3 books1.py input-file action [sort-direction]")
-		print("action is either 'books' or 'authors'")
-		print("sort-direction is either 'forwards' or 'backwards'")
-
+		print("Usage: python3 books1.py input-file action [sort-direction]", file=sys.stderr)
 	else:
 		try:
 			input_file = sys.argv[1]
-			Lines = open(input_file, 'r')
-			return Lines
+			books_data = open(input_file, 'r')
+			return books_data
 		except:
-			print("Error: Could not find file.")
-			print("Please put it in the same folder as this file and try again.")
+			print("Could not read file:", input_file)
 			return False
 
-
-
-def get_list(reader, action):
-	titleList = []
+def get_authors_list(reader):
+	# a function to return a list of author last names without redundancies
 	authorList = []
-	for row in reader:
-		titleList.append(row[0])#adding the book name 
-
-		indexNameEnd = str.find(row[2], "(") #finding the end of the last name
+	for row in reader: 
+		indexNameEnd = str.find(row[2], "(")
 		author_full_name = row[2][0:indexNameEnd-1]
 		author_last_name = author_full_name.split(" ")[-1]
 		if not author_last_name in authorList:
 			authorList.append(author_last_name)
-	if(action=="books"):
-		return sorted(titleList)
-	else:
-		return sorted(authorList)
+	return sorted(authorList)
+
+def get_titles_list(reader):
+	# a function to return a list of book titles
+	titleList = []
+	for row in reader:
+		titleList.append(row[0])
+	return sorted(titleList)
 
 def print_results(results, sort_direction):
-	if(sort_direction=='forwards'):
+    # prints the authors or titles in either forward or reverse lexicographic order
+	if(sort_direction.lower()=='forward'):
 		for i in results:
 			print(i)
 	else:
 		for i in range(1, len(results)):
-			print (results[-i])
-		print (results[0])
-
+			print(results[-i])
+		print(results[0])
 
 print("=============================== books1.py V. 1.0 ===============================")
 print("---------------------- by Bat-Orgil Batjargal & Alec Wang ----------------------")
-Lines = test_and_load()
-if(Lines):
+books_data = test_and_load()
+if(books_data):
 	input_file = sys.argv[1]
 	action = sys.argv[2]
 	if (len(sys.argv)>=4):
 		sort_direction = sys.argv[3]
 	else:
-		sort_direction = "fowards"
-	reader = csv.reader(Lines)
-	results = get_list(reader, action)
+		sort_direction = "forward"
+	reader = csv.reader(books_data)
+	if(action.lower()=="books"):
+		results = get_titles_list(reader)
+	else:
+		results = get_authors_list(reader)
 	print_results(results, sort_direction)
 print("================================================================================")
 
-
-
-
-
-
-
-#		row = row.join()
-#		print(type(row))
-#		if("\"" in row):
-#			index = str.find(row[1,], "\"")
-#			indexAuthor = str.find(row[index+2,],",")
-#			title = row[1, index-1]
-#		else:
-#			index = str.find(row, ",")
-#			indexAuthor = str.find(row[index+1,],",")
-#			title = row[0,index-1]
-#		full_author_name = row[indexAuthor + 1, str.find(row, "(") - 1]
-#	println(title)
-#	println(full_author_name)
-
-#	titleList.append()
-#	return title_list
-
-#get_list(reader, action)
-
-
-
-#    everyLine.append(row)
-#for line in everyLine:
- # 	print (line)
