@@ -1,4 +1,5 @@
-# Bat-Orgil Batjargal & Alec Wang
+# Alec Wang
+# Bat-Orgil Batjargal
 # Sunday, September 16, 2018
 # The purpose of this code is to read a CSV file with titles, dates, and
     # authors of books and return a list of either the titles or authors in
@@ -9,13 +10,14 @@ import sys
 def test_and_load():
     # a function to test the terminal arguments and, if they're correct, load the file
 	test_failed = False
-	if(len(sys.argv) < 3):
+	number_of_args = len(sys.argv)
+	if(number_of_args < 3):
 		test_failed = True
-	elif(len(sys.argv)>=3):
+	elif(number_of_args >= 3):
 		action = sys.argv[2]
 		if(not (action.lower() in ("books", "authors"))):
 			test_failed = True
-		if(len(sys.argv)>=4):
+		if(number_of_args >= 4):
 			sort_direction = sys.argv[3]
 			if(not (sort_direction and (sort_direction.lower() in ("forward", "reverse")))):
 				test_failed = True
@@ -33,12 +35,15 @@ def test_and_load():
 def get_authors_list(reader):
 	# a function to return a list of author last names without redundancies
 	authorList = []
-	for row in reader: 
-		indexNameEnd = str.find(row[2], "(")
-		author_full_name = row[2][0:indexNameEnd-1]
-		author_last_name = author_full_name.split(" ")[-1]
-		if not author_last_name in authorList:
-			authorList.append(author_last_name)
+	for row in reader:
+		authors = row[2].split(")")
+		authors.remove("");
+		for author in authors:
+			indexNameEnd = str.find(author, "(")
+			author_full_name = author[0:indexNameEnd-1]
+			author_last_name = author_full_name.split(" ")[-1]
+			if not author_last_name in authorList:
+				authorList.append(author_last_name)
 	return sorted(authorList)
 
 def get_titles_list(reader):
@@ -75,4 +80,3 @@ if(books_data):
 		results = get_authors_list(reader)
 	print_results(results, sort_direction)
 print("================================================================================")
-
