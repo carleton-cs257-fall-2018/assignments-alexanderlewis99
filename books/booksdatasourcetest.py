@@ -1,6 +1,7 @@
 '''
    booksdatasourcetest.py
    Alec Wang, 21 September 2018
+   Bat-Orgil Batjargal
 '''
 
 import booksdatasource
