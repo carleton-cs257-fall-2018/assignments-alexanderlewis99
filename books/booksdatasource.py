@@ -89,26 +89,25 @@ class BooksDataSource:
         books_authors_reader = csv.reader(books_authors_file)
 
         for book_line in books_reader:
-			book_id = book_line[0]
-			book_title = book_line[1]
-			book_publication_year = book_line[2]
-			book = {'id': book_id, 'title': book_title, 'publication_year': book_publication_year}
-			books.append(book)
-		for author_line in authors_reader:
-			author_id = author_line[0]
-			author_last_name = author_line[1]
-			author_first_name = author_line[2]
-			author_birth_year = author_line[3]
-			author_death_year = author_line[4]
-			author = {'id': author_id, 'last_name': author_last_name, 'first_name': author_first_name,
+            book_id = book_line[0]
+            book_title = book_line[1]
+            book_publication_year = book_line[2]
+            book = {'id': book_id, 'title': book_title, 'publication_year': book_publication_year}
+            self.books.append(book)
+        for author_line in authors_reader:
+            author_id = author_line[0]
+            author_last_name = author_line[1]
+            author_first_name = author_line[2]
+            author_birth_year = author_line[3]
+            author_death_year = author_line[4]
+            author = {'id': author_id, 'last_name': author_last_name, 'first_name': author_first_name,
                       'birth_year': author_birth_year, 'death_year': author_death_year}
-			authors.append(author)
+            self.authors.append(author)
         for line in books_authors_reader:
             book_id = line[0]
             author_id = line[1]
             dic_book_author = {'book_id':book_id, 'author_id':author_id}
-            maps.append(dic_book_author)
-
+            self.maps.append(dic_book_author)
 
     def book(self, book_id):
         ''' Returns the book with the specified ID. (See the BooksDataSource comment
@@ -121,7 +120,7 @@ class BooksDataSource:
 
         book_to_return = None
         for book in self.books:
-            if book['id'] = book_id:
+            if book['id'] == book_id:
                 book_to_return = book
         if book_to_return == None:
             raise ValueError('Not a valid book ID.')
@@ -155,10 +154,10 @@ class BooksDataSource:
             Raises ValueError if author_id is non-None but is not a valid author ID.
         '''
         books_matching_search_query = self.books
-        if not(author_id in None or (type(author_id)==int and author_id >= 0))
+        if(not(author_id in None or (type(author_id)==int and author_id >= 0))
         or not(search_text in None or type(search_text)==str)
         or not(start_year in None or type(author_id)==int)
-        or not(end_year in None or type(author_id)==int):
+        or not(end_year in None or type(author_id)==int)):
             raise TypeError('Invalid parameter types')
 
         author_ids = []
@@ -178,11 +177,11 @@ class BooksDataSource:
             book_removed = False
             if not author_id == None:
                 for book_author_pair in self.map:
-                    if not (book_author_pair['author_id'] == author_id)
+                    if not (book_author_pair['author_id'] == author_id):
                         books_matching_search_query.remove(book)
                         book_removed = True
             if not book_removed and not search_text == None:
-                if search_text not in book['book_title']
+                if search_text not in book['book_title']:
                     books_matching_search_query.remove(book)
                     book_removed = True
             if not book_removed and not start_year == None:
@@ -213,7 +212,7 @@ class BooksDataSource:
 
         author_to_return = None
         for author in self.authors:
-            if author['id'] = author_id:
+            if author['id'] == author_id:
                 author_to_return = author
         if author_to_return == None:
             raise ValueError('Not a valid author ID.')
