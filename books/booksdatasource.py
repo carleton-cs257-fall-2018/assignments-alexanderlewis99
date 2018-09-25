@@ -154,10 +154,10 @@ class BooksDataSource:
             Raises ValueError if author_id is non-None but is not a valid author ID.
         '''
         books_matching_search_query = self.books
-        if(not(author_id in None or (type(author_id)==int and author_id >= 0))
-        or not(search_text in None or type(search_text)==str)
-        or not(start_year in None or type(author_id)==int)
-        or not(end_year in None or type(author_id)==int)):
+        if(not(author_id is None or (type(author_id)==int and author_id >= 0))
+        or not(search_text is None or type(search_text)==str)
+        or not(start_year is None or type(author_id)==int)
+        or not(end_year is None or type(author_id)==int)):
             raise TypeError('Invalid parameter types')
 
         author_ids = []
@@ -243,6 +243,58 @@ class BooksDataSource:
 
             See the BooksDataSource comment for a description of how an author is represented.
         '''
+
+        authors_matching_search_query = self.authors
+
+        if(not(author_id is None or (type(author_id)==int and author_id >= 0))
+        or not(search_text is None or type(search_text)==str)
+        or not(start_year is None or type(author_id)==int)
+        or not(end_year is None or type(author_id)==int)):
+            raise TypeError('Invalid parameter types')
+
+        author_ids = []
+        for book in self.books:
+            author_ids.append(book['author_id'])
+        if not author_id in author_ids:
+            raise ValueError("Invalid author_id")
+
+        if not (start_year is None and end_year is None):
+            if (start_year > end_year):
+                raise ValueError("Invalid start_year and end_year")
+
+        if not sort_by.lower() in ('title', 'year'):
+            raise ValueError("Invalid sorting method")
+
+
+        for author in self.authors:
+            author_removed = False
+            if not book_id == None:
+                for book_author_pair in self.map:
+                    if not (book_author_pair['book_id'] == book_id):
+                        authors_matching_search_query.remove(author)
+                        author_removed = True
+            if not author_removed and not search_text == None:
+                if search_text not in (author['first_name'], author['last_name']):
+                    authors_matching_search_query.remove(author)
+                    author_removed = True
+            if not author_removed and not start_year == None:
+                if author['birth_year'] > start_year:
+                    authors_matching_search_query.remove(author)
+                    author_removed = True
+            if not author_removed and not end_year == None:
+                if author['death_year'] < end_year:
+                    authors_matching_search_query.remove(author)
+        if len(authors_matching_search_query) == 0:
+            raise ValueError('Invalid parameters: no books found.')
+
+        if sort_by == 'birth_year':
+            authors_matching_search_query = sorted(authors_matching_search_query, key=lambda k: k['title'])
+        else:
+            authors_matching_search_query = sorted(authors_matching_search_query, key=lambda k: k['publication_year'])
+        return authors_matching_search_query
+
+
+
         return []
 
 
