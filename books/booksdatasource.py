@@ -80,9 +80,9 @@ class BooksDataSource:
         self.authors = []
         self.maps = []
 
-        books_file = open("books.csv", 'r')
-        authors_file = open("authors.csv", 'r')
-        books_authors_file = open("books_authors.csv", 'r')
+        books_file = open(books_filename, 'r')
+        authors_file = open(authors_filename, 'r')
+        books_authors_file = open(books_authors_link_filename, 'r')
 
         books_reader = csv.reader(books_file)
         authors_reader = csv.reader(authors_file)
@@ -120,7 +120,7 @@ class BooksDataSource:
 
         book_to_return = None
         for book in self.books:
-            if book['id'] == book_id:
+            if int(book['id']) == book_id:
                 book_to_return = book
         if book_to_return == None:
             raise ValueError('Not a valid book ID.')
@@ -177,7 +177,7 @@ class BooksDataSource:
             book_removed = False
             if not author_id == None:
                 for book_author_pair in self.map:
-                    if not (book_author_pair['author_id'] == author_id):
+                    if not (int(book_author_pair['author_id']) == author_id):
                         books_matching_search_query.remove(book)
                         book_removed = True
             if not book_removed and not search_text == None:
@@ -185,15 +185,15 @@ class BooksDataSource:
                     books_matching_search_query.remove(book)
                     book_removed = True
             if not book_removed and not start_year == None:
-                if book['publication_year'] < start_year:
+                if int(book['publication_year']) < start_year:
                     books_matching_search_query.remove(book)
                     book_removed = True
             if not book_removed and not end_year == None:
-                if book['publication_year'] > end_year:
+                if int(book['publication_year']) > end_year:
                     books_matching_search_query.remove(book)
 
         if len(books_matching_search_query) == 0:
-            raise ValueError('Invalid parameters: no books found.')
+            raise ValueError('No books found.')
 
         if sort_by == 'title':
             books_matching_search_query = sorted(books_matching_search_query, key=lambda k: k['title'])
@@ -212,7 +212,7 @@ class BooksDataSource:
 
         author_to_return = None
         for author in self.authors:
-            if author['id'] == author_id:
+            if int(author['id']) == author_id:
                 author_to_return = author
         if author_to_return == None:
             raise ValueError('Not a valid author ID.')
@@ -270,7 +270,7 @@ class BooksDataSource:
             author_removed = False
             if not book_id == None:
                 for book_author_pair in self.map:
-                    if not (book_author_pair['book_id'] == book_id):
+                    if not (int(book_author_pair['book_id']) == book_id):
                         authors_matching_search_query.remove(author)
                         author_removed = True
             if not author_removed and not search_text == None:
@@ -278,19 +278,20 @@ class BooksDataSource:
                     authors_matching_search_query.remove(author)
                     author_removed = True
             if not author_removed and not start_year == None:
-                if author['birth_year'] > start_year:
+                if int(author['birth_year']) > start_year:
                     authors_matching_search_query.remove(author)
                     author_removed = True
             if not author_removed and not end_year == None:
-                if author['death_year'] < end_year:
+                if int(author['death_year']) < end_year:
                     authors_matching_search_query.remove(author)
         if len(authors_matching_search_query) == 0:
-            raise ValueError('Invalid parameters: no books found.')
+            raise ValueError('No authors found.')
 
         if sort_by == 'birth_year':
             authors_matching_search_query = sorted(authors_matching_search_query, key=lambda k: k['title'])
         else:
             authors_matching_search_query = sorted(authors_matching_search_query, key=lambda k: k['publication_year'])
+        print(authors_matching_search_query)
         return authors_matching_search_query
 
 

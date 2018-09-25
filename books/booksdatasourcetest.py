@@ -102,7 +102,7 @@ class BooksDataSourceTest(unittest.TestCase):
         self.assertRaises(ValueError, self.booksdatasource.books, sort_by='pancakes')
 
     # author() function tests
-    def test_author():
+    def test_author(self):
         author_jane_austen = {'id': 4, 'last_name': 'Austen', 'first_name': 'Jane', 'birth_year': 1775, 'death_year': 1817}
         self.assertEquals(self.booksdatasource.author(4), author_jane_austen)
 
