@@ -116,6 +116,9 @@ class BooksDataSource:
 
             Raises ValueError if book_id is not a valid book ID.
         '''
+        if not (type(book_id) == int and book_id >= 0):
+            raise TypeError('Invalid type for book ID.')
+
         book_to_return = None
         for book in self.books:
             if book['id'] = book_id:
@@ -151,29 +154,53 @@ class BooksDataSource:
             QUESTION: How about ValueError? And if so, for which parameters?
             Raises ValueError if author_id is non-None but is not a valid author ID.
         '''
-        books_considered = self.books
-        if not author_id == None:
-            for book in books_considered:
+        books_matching_search_query = self.books
+        if not(author_id in None or (type(author_id)==int and author_id >= 0))
+        or not(search_text in None or type(search_text)==str)
+        or not(start_year in None or type(author_id)==int)
+        or not(end_year in None or type(author_id)==int):
+            raise TypeError('Invalid parameter types')
+
+        author_ids = []
+        for book in self.books:
+            author_ids.append(book['author_id'])
+        if not author_id in author_ids:
+            raise ValueError("Invalid author_id")
+
+        if not (start_year is None and end_year is None):
+            if (start_year > end_year):
+                raise ValueError("Invalid start_year and end_year")
+
+        if not sort_by.lower() in ('title', 'year'):
+            raise ValueError("Invalid sorting method")
+
+        for book in self.books:
+            book_removed = False
+            if not author_id == None:
                 for book_author_pair in self.map:
                     if not (book_author_pair['author_id'] == author_id)
-                        books_considered.remove(book)
-
-        if not search_text == None:
-            for book in books_considered:
+                        books_matching_search_query.remove(book)
+                        book_removed = True
+            if not book_removed and not search_text == None:
                 if search_text not in book['book_title']
-                    books_considered.remove(book)
+                    books_matching_search_query.remove(book)
+                    book_removed = True
+            if not book_removed and not start_year == None:
+                if book['publication_year'] < start_year:
+                    books_matching_search_query.remove(book)
+                    book_removed = True
+            if not book_removed and not end_year == None:
+                if book['publication_year'] > end_year:
+                    books_matching_search_query.remove(book)
 
-         if not start_year == None: 
-            for book in books_considered:
-                if book["publication_year"] < start_year:
-                    books_considered.remove(book)
+        if len(books_matching_search_query) == 0:
+            raise ValueError('Invalid parameters: no books found.')
 
-        if not end_year == None:
-            for book in books_considered:
-                if book["publication_year"] > end_year:
-                    books_considered.remove(book)
-
-        return books_considered
+        if sort_by == 'title':
+            books_matching_search_query = sorted(books_matching_search_query, key=lambda k: k['title'])
+        else:
+            books_matching_search_query = sorted(books_matching_search_query, key=lambda k: k['publication_year'])
+        return books_matching_search_query
 
     def author(self, author_id):
         ''' Returns the author with the specified ID. (See the BooksDataSource comment for a
@@ -181,6 +208,9 @@ class BooksDataSource:
 
             Raises ValueError if author_id is not a valid author ID.
         '''
+        if not (type(author_id) == int and author_id >= 0):
+            raise TypeError('Invalid type for author ID.')
+
         author_to_return = None
         for author in self.authors:
             if author['id'] = author_id:
