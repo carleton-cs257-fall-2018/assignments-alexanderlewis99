@@ -151,18 +151,29 @@ class BooksDataSource:
             QUESTION: How about ValueError? And if so, for which parameters?
             Raises ValueError if author_id is non-None but is not a valid author ID.
         '''
-        book_considered = self.books
+        books_considered = self.books
         if not author_id == None:
-            for book in book_considered:
+            for book in books_considered:
                 for book_author_pair in self.map:
                     if not (book_author_pair['author_id'] == author_id)
-                        book_considered.remove(book)
-        and (search_text = None and author[] search_text)
-            author_to_return = author
+                        books_considered.remove(book)
 
-        author_id, search_text, start_year, end_year
+        if not search_text == None:
+            for book in books_considered:
+                if search_text not in book['book_title']
+                    books_considered.remove(book)
 
-        return []
+         if not start_year == None: 
+            for book in books_considered:
+                if book["publication_year"] < start_year:
+                    books_considered.remove(book)
+
+        if not end_year == None:
+            for book in books_considered:
+                if book["publication_year"] > end_year:
+                    books_considered.remove(book)
+
+        return books_considered
 
     def author(self, author_id):
         ''' Returns the author with the specified ID. (See the BooksDataSource comment for a
