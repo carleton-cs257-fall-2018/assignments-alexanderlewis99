@@ -7,6 +7,9 @@
     CS 257 Software Design class, Fall 2018.
 '''
 
+import csv
+import sys
+
 class BooksDataSource:
     '''
     A BooksDataSource object provides access to data about books and authors.
@@ -73,7 +76,41 @@ class BooksDataSource:
             NOTE TO STUDENTS: I have not specified how you will store the books/authors
             data in a BooksDataSource object. That will be up to you, in Phase 3.
         '''
-        pass
+        books_file = open("books.csv", 'r')
+        authors_file = open("authors.csv", 'r')
+        books_authors_file = open("books_authors.csv", 'r')
+        
+        {6,Good Omens,1990}
+        
+        books_reader = csv.reader(books_file) 
+        authors_reader = csv.reader(authors_file)
+        books_authors
+        
+        books = []
+        authors = []
+        
+        for book_line in books_reader:
+			book_id = book_line[0]
+			book_title = book_line[1]
+			book_publication_year = book_line[2]
+			book = {'id': book_id, 'title': book_title, 'publication_year': book_publication_year}
+			books.append(book)
+		for author_line in authors_reader:
+			author_id = author_line[0]
+			author_last_name = author_line[1]
+			author_first_name = author_line[2]
+			author_birth_year = author_line[3]
+			author_death_year = author_line[4]
+			{'id': author_id, 'last_name': author_last_name, 'first_name': author_first_name,
+         'birth_year': author_birth_year, 'death_year': author_death_year}
+					
+
+        
+        books = []
+        authors = []
+        books_authors []
+        
+        
 
     def book(self, book_id):
         ''' Returns the book with the specified ID. (See the BooksDataSource comment
