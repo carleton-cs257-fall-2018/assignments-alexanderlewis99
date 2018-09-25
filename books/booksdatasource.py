@@ -294,7 +294,7 @@ class BooksDataSource:
             for book_author_pair in self.maps:
                 author_of_selected_pair = int(book_author_pair['author_id'])
                 book_of_selected_pair = int(book_author_pair['book_id'])
-                if not (book_author_pair) == book_id):
+                if not book_of_selected_pair == book_id:
                     authors_matching_search_query.remove(self.author(book_of_selected_pair))
                     author_ids_removed.append(author_of_selected_pair)
 
