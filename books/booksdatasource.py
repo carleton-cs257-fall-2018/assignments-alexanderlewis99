@@ -100,6 +100,8 @@ class BooksDataSource:
             author_first_name = author_line[2]
             author_birth_year = author_line[3]
             author_death_year = author_line[4]
+            if (author_death_year == 'NULL'):
+                author_death_year = None
             author = {'id': author_id, 'last_name': author_last_name, 'first_name': author_first_name,
                       'birth_year': author_birth_year, 'death_year': author_death_year}
             self.authors_data.append(author)
@@ -158,8 +160,8 @@ class BooksDataSource:
             books_matching_search_query.append(book)
         if(not(author_id is None or (type(author_id)==int and author_id >= 0))
         or not(search_text is None or type(search_text)==str)
-        or not(start_year is None or type(author_id)==int)
-        or not(end_year is None or type(author_id)==int)):
+        or not(start_year is None or type(start_year)==int)
+        or not(end_year is None or type(end_year)==int)):
             raise TypeError('Invalid parameter types')
 
         if not author_id is None:
@@ -169,23 +171,21 @@ class BooksDataSource:
             if not author_id in author_ids:
                 raise ValueError("Invalid author_id")
 
-        if not (start_year is None and end_year is None):
-            if (start_year > end_year):
+        if not start_year is None and not end_year is None:
+            if (int(start_year) > int(end_year)):
                 raise ValueError("Invalid start_year and end_year")
 
-        if not sort_by.lower() in ('title', 'year'):
+        if not sort_by is None and not sort_by.lower() in ('title', 'year'):
             raise ValueError("Invalid sorting method")
 
-        author_ids_removed = []
+        book_ids_removed = []
         if not author_id == None:
             for book_author_pair in self.maps:
-                if not book_author_pair['author_id'] in author_ids_removed and not (int(book_author_pair['author_id']) == author_id):                        
-                        print("--------------------")
-                        print (book_author_pair['book_id'], book_author_pair['author_id']) 
-                        print (books_matching_search_query)
-                        print("--------------------")
-                        books_matching_search_query.remove(self.book(int(book_author_pair['book_id'])))
-                        author_ids_removed.append(book_author_pair['author_id'])
+                author_of_selected_pair = int(book_author_pair['author_id'])
+                book_of_selected_pair = int(book_author_pair['book_id'])
+                if not book_of_selected_pair in book_ids_removed and not (author_of_selected_pair == author_id):
+                        books_matching_search_query.remove(self.book(book_of_selected_pair))
+                        book_ids_removed.append(book_of_selected_pair)
 
         for book in books_matching_search_query:
             book_removed = False
@@ -256,10 +256,10 @@ class BooksDataSource:
         for author in self.authors_data:
             authors_matching_search_query.append(author)
 
-        if(not(author_id is None or (type(author_id)==int and author_id >= 0))
+        if(not(book_id is None or (type(book_id)==int and book_id >= 0))
         or not(search_text is None or type(search_text)==str)
-        or not(start_year is None or type(author_id)==int)
-        or not(end_year is None or type(author_id)==int)):
+        or not(start_year is None or type(start_year)==int)
+        or not(end_year is None or type(end_year)==int)):
             raise TypeError('Invalid parameter types')
 
 
@@ -270,11 +270,11 @@ class BooksDataSource:
             if not book_id in book_ids:
                 raise ValueError("Invalid book_id")
 
-        if not (start_year is None and end_year is None):
-            if (start_year > end_year):
+        if not start_year is None and not end_year is None:
+            if (int(start_year) > int(end_year)):
                 raise ValueError("Invalid start_year and end_year")
 
-        if not sort_by.lower() in ('title', 'year'):
+        if not sort_by is None and not sort_by.lower() in ('birth_year', 'last_name'):
             raise ValueError("Invalid sorting method")
 
         if not book_id == None:
@@ -288,19 +288,19 @@ class BooksDataSource:
                     authors_matching_search_query.remove(author)
                     author_removed = True
             if not author_removed and not start_year == None:
-                if int(author['birth_year']) > start_year:
+                if not author['death_year'] is None and int(author['death_year']) < start_year:
                     authors_matching_search_query.remove(author)
                     author_removed = True
             if not author_removed and not end_year == None:
-                if int(author['death_year']) < end_year:
+                if int(author['birth_year']) > end_year:
                     authors_matching_search_query.remove(author)
         if len(authors_matching_search_query) == 0:
             raise ValueError('No authors found.')
 
         if sort_by == 'birth_year':
-            authors_matching_search_query = sorted(authors_matching_search_query, key=lambda k: k['title'])
+            authors_matching_search_query = sorted(authors_matching_search_query, key=lambda k: k['birth_year'])
         else:
-            authors_matching_search_query = sorted(authors_matching_search_query, key=lambda k: k['publication_year'])
+            authors_matching_search_query = sorted(authors_matching_search_query, key=lambda k: k['last_name'])
         return authors_matching_search_query
 
 
