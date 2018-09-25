@@ -176,10 +176,17 @@ class BooksDataSource:
         if not sort_by.lower() in ('title', 'year'):
             raise ValueError("Invalid sorting method")
 
+        author_ids_removed = []
         if not author_id == None:
             for book_author_pair in self.maps:
-                if not (int(book_author_pair['author_id']) == author_id):
-                    books_matching_search_query.remove(self.book(int(book_author_pair['book_id'])))
+                if not book_author_pair['author_id'] in author_ids_removed and not (int(book_author_pair['author_id']) == author_id):                        
+                        print("--------------------")
+                        print (book_author_pair['book_id'], book_author_pair['author_id']) 
+                        print (books_matching_search_query)
+                        print("--------------------")
+                        books_matching_search_query.remove(self.book(int(book_author_pair['book_id'])))
+                        author_ids_removed.append(book_author_pair['author_id'])
+
         for book in books_matching_search_query:
             book_removed = False
             if not book_removed and not search_text == None:
@@ -293,7 +300,7 @@ class BooksDataSource:
         if sort_by == 'birth_year':
             authors_matching_search_query = sorted(authors_matching_search_query, key=lambda k: k['title'])
         else:
-            authors_matching_search_query = sorted(authors_matching_search_query, key=lambda k: k['publication_year']
+            authors_matching_search_query = sorted(authors_matching_search_query, key=lambda k: k['publication_year'])
         return authors_matching_search_query
 
 
