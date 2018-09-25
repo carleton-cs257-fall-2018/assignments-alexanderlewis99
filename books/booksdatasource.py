@@ -158,6 +158,9 @@ class BooksDataSource:
         books_matching_search_query = []
         for book in self.books_data:
             books_matching_search_query.append(book)
+
+        #argument errors    
+
         if(not(author_id is None or (type(author_id)==int and author_id >= 0))
         or not(search_text is None or type(search_text)==str)
         or not(start_year is None or type(start_year)==int)
@@ -178,6 +181,8 @@ class BooksDataSource:
         if not sort_by is None and not sort_by.lower() in ('title', 'year'):
             raise ValueError("Invalid sorting method")
 
+        #method begins    
+
         book_ids_removed = []
         if not author_id == None:
             for book_author_pair in self.maps:
@@ -187,7 +192,12 @@ class BooksDataSource:
                         books_matching_search_query.remove(self.book(book_of_selected_pair))
                         book_ids_removed.append(book_of_selected_pair)
 
-        for book in books_matching_search_query:
+        copy_books_matching_search_query = []
+        for i in books_matching_search_query:
+            copy_books_matching_search_query.append(i)
+
+
+        for book in copy_books_matching_search_query:
             book_removed = False
             if not book_removed and not search_text == None:
                 if search_text not in book['book_title']:
@@ -256,12 +266,12 @@ class BooksDataSource:
         for author in self.authors_data:
             authors_matching_search_query.append(author)
 
+        #checking arguments
         if(not(book_id is None or (type(book_id)==int and book_id >= 0))
         or not(search_text is None or type(search_text)==str)
         or not(start_year is None or type(start_year)==int)
         or not(end_year is None or type(end_year)==int)):
             raise TypeError('Invalid parameter types')
-
 
         if not book_id is None:
             book_ids = []
@@ -277,12 +287,21 @@ class BooksDataSource:
         if not sort_by is None and not sort_by.lower() in ('birth_year', 'last_name'):
             raise ValueError("Invalid sorting method")
 
+
+        #method begins
+
         if not book_id == None:
             for book_author_pair in self.maps:
                 if not (int(book_author_pair['book_id']) == book_id):
                     authors_matching_search_query.remove(self.author(int(book_author_pair['author_id'])))
-        for author in authors_matching_search_query:
+
+        copy_authors_matching_search_query = []
+        for i in authors_matching_search_query:
+            copy_authors_matching_search_query.append(i)
+
+        for author in copy_authors_matching_search_query:
             author_removed = False
+            print(author)
             if not author_removed and not search_text == None:
                 if search_text not in (author['first_name'], author['last_name']):
                     authors_matching_search_query.remove(author)
