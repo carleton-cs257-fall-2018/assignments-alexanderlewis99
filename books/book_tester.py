@@ -3,4 +3,4 @@ booksdatasource = booksdatasource.BooksDataSource("test_books.csv", "test_author
 print(booksdatasource.book(4))
 print(booksdatasource.author(4))
 print(booksdatasource.books(author_id=3))
-print(booksdatasource.authors(end_year=1900))
+print(booksdatasource.authors(end_year=1900, sort_by="birth_year"))

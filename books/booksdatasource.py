@@ -159,7 +159,7 @@ class BooksDataSource:
         for book in self.books_data:
             books_matching_search_query.append(book)
 
-        #argument errors    
+        #argument errors
 
         if(not(author_id is None or (type(author_id)==int and author_id >= 0))
         or not(search_text is None or type(search_text)==str)
@@ -181,7 +181,7 @@ class BooksDataSource:
         if not sort_by is None and not sort_by.lower() in ('title', 'year'):
             raise ValueError("Invalid sorting method")
 
-        #method begins    
+        #method begins
 
         book_ids_removed = []
         if not author_id == None:
@@ -289,11 +289,14 @@ class BooksDataSource:
 
 
         #method begins
-
+        author_ids_removed = []
         if not book_id == None:
             for book_author_pair in self.maps:
-                if not (int(book_author_pair['book_id']) == book_id):
-                    authors_matching_search_query.remove(self.author(int(book_author_pair['author_id'])))
+                author_of_selected_pair = int(book_author_pair['author_id'])
+                book_of_selected_pair = int(book_author_pair['book_id'])
+                if not (book_author_pair) == book_id):
+                    authors_matching_search_query.remove(self.author(book_of_selected_pair))
+                    author_ids_removed.append(author_of_selected_pair)
 
         copy_authors_matching_search_query = []
         for i in authors_matching_search_query:
@@ -301,18 +304,20 @@ class BooksDataSource:
 
         for author in copy_authors_matching_search_query:
             author_removed = False
-            print(author)
             if not author_removed and not search_text == None:
-                if search_text not in (author['first_name'], author['last_name']):
+                if not (search_text in author['first_name'], author['last_name']):
                     authors_matching_search_query.remove(author)
+                    print(author['last_name'], "search_text")
                     author_removed = True
             if not author_removed and not start_year == None:
                 if not author['death_year'] is None and int(author['death_year']) < start_year:
                     authors_matching_search_query.remove(author)
+                    print(author['last_name'], "start_year")
                     author_removed = True
             if not author_removed and not end_year == None:
                 if int(author['birth_year']) > end_year:
                     authors_matching_search_query.remove(author)
+                    print(author['last_name'], "end_year")
         if len(authors_matching_search_query) == 0:
             raise ValueError('No authors found.')
 
