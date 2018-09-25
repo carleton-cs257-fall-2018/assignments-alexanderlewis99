@@ -55,7 +55,7 @@ class BooksDataSource:
                 books: ID,title,publication-year
                   e.g. 6,Good Omens,1990
                        41,Middlemarch,1871
-                    
+
 
                 authors: ID,last-name,first-name,birth-year,death-year
                   e.g. 5,Gaiman,Neil,1960,NULL
@@ -66,7 +66,7 @@ class BooksDataSource:
                   e.g. 41,22
                        6,5
                        6,6
-                  
+
                   [that is, book 41 was written by author 22, while book 6
                     was written by both author 5 and author 6]
 
@@ -76,21 +76,18 @@ class BooksDataSource:
             NOTE TO STUDENTS: I have not specified how you will store the books/authors
             data in a BooksDataSource object. That will be up to you, in Phase 3.
         '''
+        self.books = []
+        self.authors = []
+        self.maps = []
+
         books_file = open("books.csv", 'r')
         authors_file = open("authors.csv", 'r')
         books_authors_file = open("books_authors.csv", 'r')
-        
-        {6,Good Omens,1990}
-        
-        books_reader = csv.reader(books_file) 
+
+        books_reader = csv.reader(books_file)
         authors_reader = csv.reader(authors_file)
         books_authors_reader = csv.reader(books_authors_file)
-        
 
-        books = []
-        authors = []
-        maps = []
-        
         for book_line in books_reader:
 			book_id = book_line[0]
 			book_title = book_line[1]
@@ -111,20 +108,21 @@ class BooksDataSource:
             author_id = line[1]
             dic_book_author = {'book_id':book_id, 'author_id':author_id}
             maps.append(dic_book_author)
-        
-        books = []
-        authors = []
-        books_authors []
-        
-        
+
 
     def book(self, book_id):
         ''' Returns the book with the specified ID. (See the BooksDataSource comment
             for a description of how a book is represented.)
-        
+
             Raises ValueError if book_id is not a valid book ID.
         '''
-        return {}
+        book_to_return = None
+        for book in self.books:
+            if book['id'] = book_id:
+                book_to_return = book
+        if book_to_return == None:
+            raise ValueError('Not a valid book ID.')
+        return book_to_return
 
     def books(self, *, author_id=None, search_text=None, start_year=None, end_year=None, sort_by='title'):
         ''' Returns a list of all the books in this data source matching all of
@@ -143,7 +141,7 @@ class BooksDataSource:
 
                 'year' -- sorts by publication_year, breaking ties with (case-insenstive) title
                 default -- sorts by (case-insensitive) title, breaking ties with publication_year
-                
+
             See the BooksDataSource comment for a description of how a book is represented.
 
             QUESTION: Should Python interfaces specify TypeError?
@@ -153,15 +151,32 @@ class BooksDataSource:
             QUESTION: How about ValueError? And if so, for which parameters?
             Raises ValueError if author_id is non-None but is not a valid author ID.
         '''
+        book_considered = self.books
+        if not author_id == None:
+            for book in book_considered:
+                for book_author_pair in self.map:
+                    if not (book_author_pair['author_id'] == author_id)
+                        book_considered.remove(book)
+        and (search_text = None and author[] search_text)
+            author_to_return = author
+
+        author_id, search_text, start_year, end_year
+
         return []
 
     def author(self, author_id):
         ''' Returns the author with the specified ID. (See the BooksDataSource comment for a
             description of how an author is represented.)
-        
+
             Raises ValueError if author_id is not a valid author ID.
         '''
-        return {}
+        author_to_return = None
+        for author in self.authors:
+            if author['id'] = author_id:
+                author_to_return = author
+        if author_to_return == None:
+            raise ValueError('Not a valid author ID.')
+        return author_to_return
 
     def authors(self, *, book_id=None, search_text=None, start_year=None, end_year=None, sort_by='birth_year'):
         ''' Returns a list of all the authors in this data source matching all of the
@@ -185,7 +200,7 @@ class BooksDataSource:
                     then (case-insensitive) first_name
                 any other value - sorts by (case-insensitive) last_name, breaking ties with
                     (case-insensitive) first_name, then birth_year
-        
+
             See the BooksDataSource comment for a description of how an author is represented.
         '''
         return []
@@ -208,4 +223,3 @@ class BooksDataSource:
         ''' Returns a list of all the authors of the book with the specified book ID.
             See the BooksDataSource comment for a description of how an author is represented. '''
         return self.authors(book_id=book_id)
-
