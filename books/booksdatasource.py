@@ -123,7 +123,7 @@ class BooksDataSource:
             if int(book['id']) == book_id:
                 book_to_return = book
         if book_to_return == None:
-            raise ValueError('Not a valid book ID.')
+            raise ValueError('Not a valid book ID:', book_id)
         return book_to_return
 
     def books(self, *, author_id=None, search_text=None, start_year=None, end_year=None, sort_by='title'):
@@ -153,18 +153,19 @@ class BooksDataSource:
             QUESTION: How about ValueError? And if so, for which parameters?
             Raises ValueError if author_id is non-None but is not a valid author ID.
         '''
-        books_matching_search_query = self.books_data
+        books_matching_search_query = []
+        for book in self.books_data:
+            books_matching_search_query.append(book)
         if(not(author_id is None or (type(author_id)==int and author_id >= 0))
         or not(search_text is None or type(search_text)==str)
         or not(start_year is None or type(author_id)==int)
         or not(end_year is None or type(author_id)==int)):
             raise TypeError('Invalid parameter types')
 
-
         if not author_id is None:
             author_ids = []
             for author in self.authors_data:
-                author_ids.append(author['id'])
+                author_ids.append(int(author['id']))
             if not author_id in author_ids:
                 raise ValueError("Invalid author_id")
 
@@ -175,13 +176,12 @@ class BooksDataSource:
         if not sort_by.lower() in ('title', 'year'):
             raise ValueError("Invalid sorting method")
 
-        for book in self.books_data:
+        if not author_id == None:
+            for book_author_pair in self.maps:
+                if not (int(book_author_pair['author_id']) == author_id):
+                    books_matching_search_query.remove(self.book(int(book_author_pair['book_id'])))
+        for book in books_matching_search_query:
             book_removed = False
-            if not author_id == None:
-                for book_author_pair in self.map:
-                    if not (int(book_author_pair['author_id']) == author_id):
-                        books_matching_search_query.remove(book)
-                        book_removed = True
             if not book_removed and not search_text == None:
                 if search_text not in book['book_title']:
                     books_matching_search_query.remove(book)
@@ -217,7 +217,7 @@ class BooksDataSource:
             if int(author['id']) == author_id:
                 author_to_return = author
         if author_to_return == None:
-            raise ValueError('Not a valid author ID.')
+            raise ValueError('Not a valid author ID:', author_id)
         return author_to_return
 
     def authors(self, *, book_id=None, search_text=None, start_year=None, end_year=None, sort_by='birth_year'):
@@ -245,8 +245,9 @@ class BooksDataSource:
 
             See the BooksDataSource comment for a description of how an author is represented.
         '''
-
-        authors_matching_search_query = self.authors_data
+        authors_matching_search_query = []
+        for author in self.authors_data:
+            authors_matching_search_query.append(author)
 
         if(not(author_id is None or (type(author_id)==int and author_id >= 0))
         or not(search_text is None or type(search_text)==str)
@@ -258,7 +259,7 @@ class BooksDataSource:
         if not book_id is None:
             book_ids = []
             for book in self.books_data:
-                book_ids.append(book['id'])
+                book_ids.append(int(book['id']))
             if not book_id in book_ids:
                 raise ValueError("Invalid book_id")
 
@@ -269,14 +270,12 @@ class BooksDataSource:
         if not sort_by.lower() in ('title', 'year'):
             raise ValueError("Invalid sorting method")
 
-
-        for author in self.authors_data:
+        if not book_id == None:
+            for book_author_pair in self.maps:
+                if not (int(book_author_pair['book_id']) == book_id):
+                    authors_matching_search_query.remove(self.author(int(book_author_pair['author_id'])))
+        for author in authors_matching_search_query:
             author_removed = False
-            if not book_id == None:
-                for book_author_pair in self.map:
-                    if not (int(book_author_pair['book_id']) == book_id):
-                        authors_matching_search_query.remove(author)
-                        author_removed = True
             if not author_removed and not search_text == None:
                 if search_text not in (author['first_name'], author['last_name']):
                     authors_matching_search_query.remove(author)
@@ -294,13 +293,8 @@ class BooksDataSource:
         if sort_by == 'birth_year':
             authors_matching_search_query = sorted(authors_matching_search_query, key=lambda k: k['title'])
         else:
-            authors_matching_search_query = sorted(authors_matching_search_query, key=lambda k: k['publication_year'])
-        print(authors_matching_search_query)
+            authors_matching_search_query = sorted(authors_matching_search_query, key=lambda k: k['publication_year']
         return authors_matching_search_query
-
-
-
-        return []
 
 
     # Note for my students: The following two methods provide no new functionality beyond
