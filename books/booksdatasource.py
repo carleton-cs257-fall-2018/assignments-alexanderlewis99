@@ -84,10 +84,12 @@ class BooksDataSource:
         
         books_reader = csv.reader(books_file) 
         authors_reader = csv.reader(authors_file)
-        books_authors
+        books_authors_reader = csv.reader(books_authors_file)
         
+
         books = []
         authors = []
+        maps = []
         
         for book_line in books_reader:
 			book_id = book_line[0]
@@ -101,10 +103,14 @@ class BooksDataSource:
 			author_first_name = author_line[2]
 			author_birth_year = author_line[3]
 			author_death_year = author_line[4]
-			{'id': author_id, 'last_name': author_last_name, 'first_name': author_first_name,
-         'birth_year': author_birth_year, 'death_year': author_death_year}
-					
-
+			author = {'id': author_id, 'last_name': author_last_name, 'first_name': author_first_name,
+                      'birth_year': author_birth_year, 'death_year': author_death_year}
+			authors.append(author)
+        for line in books_authors_reader:
+            book_id = line[0]
+            author_id = line[1]
+            dic_book_author = {'book_id':book_id, 'author_id':author_id}
+            maps.append(dic_book_author)
         
         books = []
         authors = []
