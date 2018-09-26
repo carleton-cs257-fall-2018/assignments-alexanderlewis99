@@ -209,10 +209,10 @@ class BooksDataSource:
         if len(books_matching_search_query) == 0:
             raise ValueError('No books found.')
         else:
-            if sort_by == 'title':
-                books_matching_search_query = sorted(books_matching_search_query, key=lambda k: k['title'])
-            else:
+            if sort_by == 'year':
                 books_matching_search_query = sorted(books_matching_search_query, key=lambda k: k['publication_year'])
+            else:
+                books_matching_search_query = sorted(books_matching_search_query, key=lambda k: k['title'])
         return books_matching_search_query
 
     def author(self, author_id):
@@ -315,6 +315,7 @@ class BooksDataSource:
             else:
                 authors_matching_search_query = sorted(authors_matching_search_query, key=lambda k: k['last_name'])
         return authors_matching_search_query
+
 
 
     # Note for my students: The following two methods provide no new functionality beyond

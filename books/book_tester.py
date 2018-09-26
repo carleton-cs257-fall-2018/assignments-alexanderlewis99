@@ -1,14 +1,10 @@
 import booksdatasource
 import unittest
 
-booksdatasource = booksdatasource.BooksDataSource("test_books.csv", "test_authors.csv", "test_books_authors.csv")
+booksdatasource = booksdatasource.BooksDataSource("test_books.csv", "test_authors_copy.csv", "test_books_authors.csv")
 #print(booksdatasource.authors())
 
-authors_names_containing_ga = [{'id': 1, 'last_name': 'Christie', 'first_name': 'Agatha',
-                               'birth_year': 1890, 'death_year': 1976},
-                               {'id': 5, 'last_name': 'Gaiman', 'first_name': 'Neil',
-                               'birth_year': 1960, 'death_year': None}]
-print(booksdatasource.authors(search_text="ga"))
+print(booksdatasource.authors(sort_by="last_name"))
 #print(booksdatasource.authors(book_id=0, search_text='Willis',start_year=1900, end_year=3000))
 
 # print(booksdatasource.book(4))
