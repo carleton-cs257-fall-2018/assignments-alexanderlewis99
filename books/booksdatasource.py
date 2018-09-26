@@ -89,25 +89,27 @@ class BooksDataSource:
         books_authors_reader = csv.reader(books_authors_file)
 
         for book_line in books_reader:
-            book_id = book_line[0]
+            book_id = int(book_line[0])
             book_title = book_line[1]
-            book_publication_year = book_line[2]
+            book_publication_year = int(book_line[2])
             book = {'id': book_id, 'title': book_title, 'publication_year': book_publication_year}
             self.books_data.append(book)
         for author_line in authors_reader:
-            author_id = author_line[0]
+            author_id = int(author_line[0])
             author_last_name = author_line[1]
             author_first_name = author_line[2]
-            author_birth_year = author_line[3]
+            author_birth_year = int(author_line[3])
             author_death_year = author_line[4]
             if (author_death_year == 'NULL'):
                 author_death_year = None
+            else:
+                author_death_year = int(author_death_year)
             author = {'id': author_id, 'last_name': author_last_name, 'first_name': author_first_name,
                       'birth_year': author_birth_year, 'death_year': author_death_year}
             self.authors_data.append(author)
         for line in books_authors_reader:
-            book_id = line[0]
-            author_id = line[1]
+            book_id = int(line[0])
+            author_id = int(line[1])
             dic_book_author = {'book_id':book_id, 'author_id':author_id}
             self.maps.append(dic_book_author)
 
@@ -122,7 +124,7 @@ class BooksDataSource:
 
         book_to_return = None
         for book in self.books_data:
-            if int(book['id']) == book_id:
+            if book['id'] == book_id:
                 book_to_return = book
         if book_to_return == None:
             raise ValueError('Not a valid book ID:', book_id)
@@ -170,12 +172,12 @@ class BooksDataSource:
         if not author_id is None:
             author_ids = []
             for author in self.authors_data:
-                author_ids.append(int(author['id']))
+                author_ids.append(author['id'])
             if not author_id in author_ids:
                 raise ValueError("Invalid author_id")
 
         if not start_year is None and not end_year is None:
-            if (int(start_year) > int(end_year)):
+            if (start_year > end_year):
                 raise ValueError("Invalid start_year and end_year")
 
         if not sort_by is None and not sort_by.lower() in ('title', 'year'):
@@ -186,8 +188,8 @@ class BooksDataSource:
         book_ids_removed = []
         if not author_id == None:
             for book_author_pair in self.maps:
-                author_of_selected_pair = int(book_author_pair['author_id'])
-                book_of_selected_pair = int(book_author_pair['book_id'])
+                author_of_selected_pair = book_author_pair['author_id']
+                book_of_selected_pair = book_author_pair['book_id']
                 if not book_of_selected_pair in book_ids_removed and not (author_of_selected_pair == author_id):
                         books_matching_search_query.remove(self.book(book_of_selected_pair))
                         book_ids_removed.append(book_of_selected_pair)
@@ -200,24 +202,26 @@ class BooksDataSource:
         for book in copy_books_matching_search_query:
             book_removed = False
             if not book_removed and not search_text == None:
-                if search_text not in book['book_title']:
+                if search_text.lower() not in book['title'].lower():
                     books_matching_search_query.remove(book)
                     book_removed = True
             if not book_removed and not start_year == None:
-                if int(book['publication_year']) < start_year:
+                if book['publication_year'] < start_year:
                     books_matching_search_query.remove(book)
                     book_removed = True
             if not book_removed and not end_year == None:
-                if int(book['publication_year']) > end_year:
+                if book['publication_year'] > end_year:
                     books_matching_search_query.remove(book)
 
         if len(books_matching_search_query) == 0:
             raise ValueError('No books found.')
-
-        if sort_by == 'title':
-            books_matching_search_query = sorted(books_matching_search_query, key=lambda k: k['title'])
+        elif len(books_matching_search_query) == 1:
+            books_matching_search_query = books_matching_search_query[0]
         else:
-            books_matching_search_query = sorted(books_matching_search_query, key=lambda k: k['publication_year'])
+            if sort_by == 'title':
+                books_matching_search_query = sorted(books_matching_search_query, key=lambda k: k['title'])
+            else:
+                books_matching_search_query = sorted(books_matching_search_query, key=lambda k: k['publication_year'])
         return books_matching_search_query
 
     def author(self, author_id):
@@ -231,7 +235,7 @@ class BooksDataSource:
 
         author_to_return = None
         for author in self.authors_data:
-            if int(author['id']) == author_id:
+            if author['id'] == author_id:
                 author_to_return = author
         if author_to_return == None:
             raise ValueError('Not a valid author ID:', author_id)
@@ -276,12 +280,12 @@ class BooksDataSource:
         if not book_id is None:
             book_ids = []
             for book in self.books_data:
-                book_ids.append(int(book['id']))
+                book_ids.append(book['id'])
             if not book_id in book_ids:
                 raise ValueError("Invalid book_id")
 
         if not start_year is None and not end_year is None:
-            if (int(start_year) > int(end_year)):
+            if (start_year > end_year):
                 raise ValueError("Invalid start_year and end_year")
 
         if not sort_by is None and not sort_by.lower() in ('birth_year', 'last_name'):
@@ -290,13 +294,18 @@ class BooksDataSource:
 
         #method begins
         author_ids_removed = []
+        author_ids_kept = []
         if not book_id == None:
             for book_author_pair in self.maps:
-                author_of_selected_pair = int(book_author_pair['author_id'])
-                book_of_selected_pair = int(book_author_pair['book_id'])
-                if not book_of_selected_pair == book_id:
-                    authors_matching_search_query.remove(self.author(book_of_selected_pair))
-                    author_ids_removed.append(author_of_selected_pair)
+                author_id_of_selected_pair = book_author_pair['author_id']
+                book_id_of_selected_pair = book_author_pair['book_id']
+                if (not author_id_of_selected_pair in author_ids_kept
+                and not author_id_of_selected_pair in author_ids_removed
+                and not book_id_of_selected_pair == book_id):
+                    authors_matching_search_query.remove(self.author(author_id_of_selected_pair))
+                    author_ids_removed.append(author_id_of_selected_pair)
+                else:
+                    author_ids_kept.append(author_id_of_selected_pair)
 
         copy_authors_matching_search_query = []
         for i in authors_matching_search_query:
@@ -305,26 +314,28 @@ class BooksDataSource:
         for author in copy_authors_matching_search_query:
             author_removed = False
             if not author_removed and not search_text == None:
-                if not (search_text in author['first_name'], author['last_name']):
+                if not (search_text.lower() in author['first_name'].lower(), author['last_name'].lower()):
                     authors_matching_search_query.remove(author)
                     print(author['last_name'], "search_text")
                     author_removed = True
             if not author_removed and not start_year == None:
-                if not author['death_year'] is None and int(author['death_year']) < start_year:
+                if not author['death_year'] is None and author['death_year'] < start_year:
                     authors_matching_search_query.remove(author)
                     print(author['last_name'], "start_year")
                     author_removed = True
             if not author_removed and not end_year == None:
-                if int(author['birth_year']) > end_year:
+                if author['birth_year'] > end_year:
                     authors_matching_search_query.remove(author)
                     print(author['last_name'], "end_year")
         if len(authors_matching_search_query) == 0:
             raise ValueError('No authors found.')
-
-        if sort_by == 'birth_year':
-            authors_matching_search_query = sorted(authors_matching_search_query, key=lambda k: k['birth_year'])
+        elif len(authors_matching_search_query) == 1:
+            authors_matching_search_query = authors_matching_search_query[0]
         else:
-            authors_matching_search_query = sorted(authors_matching_search_query, key=lambda k: k['last_name'])
+            if sort_by == 'birth_year':
+                authors_matching_search_query = sorted(authors_matching_search_query, key=lambda k: k['birth_year'])
+            else:
+                authors_matching_search_query = sorted(authors_matching_search_query, key=lambda k: k['last_name'])
         return authors_matching_search_query
 
 
