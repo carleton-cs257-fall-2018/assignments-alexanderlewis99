@@ -185,14 +185,10 @@ class BooksDataSource:
 
         #method begins
 
-        book_ids_removed = []
-        if not author_id == None:
-            for book_author_pair in self.maps:
-                author_of_selected_pair = book_author_pair['author_id']
-                book_of_selected_pair = book_author_pair['book_id']
-                if not book_of_selected_pair in book_ids_removed and not (author_of_selected_pair == author_id):
-                        books_matching_search_query.remove(self.book(book_of_selected_pair))
-                        book_ids_removed.append(book_of_selected_pair)
+        books_matching_search_query = []
+        for book_author_pair in self.maps:
+            if (book_author_pair['book_id'] = book_id):
+                books_matching_search_query.append(author(author_id))
 
         copy_books_matching_search_query = []
         for i in books_matching_search_query:
