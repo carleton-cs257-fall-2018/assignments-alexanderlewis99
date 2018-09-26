@@ -46,11 +46,11 @@ class BooksDataSourceTest(unittest.TestCase):
         self.assertEqual(self.booksdatasource.books(), all_test_books)
 
     def test_books_author_id(self):
-        elmer_gantry_book = {'id': 4, 'title': 'Elmer Gantry', 'publication_year': 1927}
+        elmer_gantry_book = [{'id': 4, 'title': 'Elmer Gantry', 'publication_year': 1927}]
         self.assertEqual(self.booksdatasource.books(author_id=3), elmer_gantry_book)
 
     def test_books_search_text(self):
-        good_omens_book = {'id': 6, 'title': 'Good Omens', 'publication_year': 1990}
+        good_omens_book = [{'id': 6, 'title': 'Good Omens', 'publication_year': 1990}]
         self.assertEqual(self.booksdatasource.books(search_text="oMenS"), good_omens_book)
 
     def test_books_start_year(self):
@@ -67,7 +67,7 @@ class BooksDataSourceTest(unittest.TestCase):
         self.assertEqual(self.booksdatasource.books(end_year=1987), books_end_year_1987)
 
     def test_books_all_args(self):
-        beloved_book = {'id': 2, 'title': 'Beloved', 'publication_year': 1987}
+        beloved_book = [{'id': 2, 'title': 'Beloved', 'publication_year': 1987}]
         self.assertEqual(self.booksdatasource.books(author_id=2, search_text='lOVe', start_year=1980, end_year=2000), beloved_book)
 
     def test_books_sort_by_year(self):
@@ -140,8 +140,8 @@ class BooksDataSourceTest(unittest.TestCase):
         self.assertEqual(self.booksdatasource.authors(), authors)
 
     def test_authors_book_id(self):
-        author_toni_morrison = {'id': 2, 'last_name': 'Morrison', 'first_name': 'Toni',
-                                'birth_year': 1931, 'death_year': None}
+        author_toni_morrison = [{'id': 2, 'last_name': 'Morrison', 'first_name': 'Toni',
+                                'birth_year': 1931, 'death_year': None}]
         self.assertEqual(self.booksdatasource.authors(book_id=2), author_toni_morrison)
 
     def test_authors_book_id_multiple_authors(self):
@@ -159,29 +159,29 @@ class BooksDataSourceTest(unittest.TestCase):
         self.assertEqual(self.booksdatasource.authors(search_text="ga"), authors_names_containing_ga)
 
     def test_authors_start_year(self):
-        authors_since_1950 = [{'id': 0, 'last_name': 'Willis', 'first_name': 'Connie',
+        authors_since_1950 = [{'id': 3, 'last_name': 'Lewis', 'first_name': 'Sinclair',
+                                'birth_year': 1885, 'death_year': None},
+                                {'id': 1, 'last_name': 'Christie', 'first_name': 'Agatha',
+                                'birth_year': 1890, 'death_year': 1976},
+                                {'id': 2, 'last_name': 'Morrison', 'first_name': 'Toni',
+                                'birth_year': 1931, 'death_year': None},
+                                {'id': 0, 'last_name': 'Willis', 'first_name': 'Connie',
                               'birth_year': 1945, 'death_year': None},
-                              {'id': 1, 'last_name': 'Christie', 'first_name': 'Agatha',
-                              'birth_year': 1890, 'death_year': 1976},
-                              {'id': 2, 'last_name': 'Morrison', 'first_name': 'Toni',
-                              'birth_year': 1931, 'death_year': None},
-                              {'id': 3, 'last_name': 'Lewis', 'first_name': 'Sinclair',
-                              'birth_year': 1885, 'death_year': None},
+                                {'id': 6, 'last_name': 'Pratchett', 'first_name': 'Terry',
+                               'birth_year': 1948, 'death_year': 2015},
                               {'id': 5, 'last_name': 'Gaiman', 'first_name': 'Neil',
-                              'birth_year': 1960, 'death_year': None},
-                              {'id': 6, 'last_name': 'Pratchett', 'first_name': 'Terry',
-                              'birth_year': 1948, 'death_year': 2015}]
+                              'birth_year': 1960, 'death_year': None}]
         self.assertEqual(self.booksdatasource.authors(start_year=1950), authors_since_1950)
 
     def test_authors_start_year_only_living_authors(self):
-        authors_living = [{'id': 0, 'last_name': 'Willis', 'first_name': 'Connie',
-                          'birth_year': 1945, 'death_year': None},
-                          {'id': 2, 'last_name': 'Morrison', 'first_name': 'Toni',
-                          'birth_year': 1931, 'death_year': None},
-                          {'id': 3, 'last_name': 'Lewis', 'first_name': 'Sinclair',
-                          'birth_year': 1885, 'death_year': None},
-                          {'id': 5, 'last_name': 'Gaiman', 'first_name': 'Neil',
-                          'birth_year': 1960, 'death_year': None}]
+        authors_living = [{'id': 3, 'last_name': 'Lewis', 'first_name': 'Sinclair',
+                            'birth_year': 1885, 'death_year': None},
+                            {'id': 2, 'last_name': 'Morrison', 'first_name': 'Toni',
+                            'birth_year': 1931, 'death_year': None},
+                            {'id': 0, 'last_name': 'Willis', 'first_name': 'Connie',
+                            'birth_year': 1945, 'death_year': None},
+                            {'id': 5, 'last_name': 'Gaiman', 'first_name': 'Neil',
+                            'birth_year': 1960, 'death_year': None}]
         self.assertEqual(self.booksdatasource.authors(start_year=2016), authors_living)
 
     def test_authors_end_year(self):
@@ -194,8 +194,8 @@ class BooksDataSourceTest(unittest.TestCase):
         self.assertEqual(self.booksdatasource.authors(end_year=1900), authors_before_1900)
 
     def test_authors_all_args(self):
-        author_connie_willis = {'id': 0, 'last_name': 'Willis', 'first_name': 'Connie',
-                               'birth_year': 1945, 'death_year': None}
+        author_connie_willis = [{'id': 0, 'last_name': 'Willis', 'first_name': 'Connie',
+                               'birth_year': 1945, 'death_year': None}]
         self.assertEqual(self.booksdatasource.authors(book_id=0, search_text='Willis',
                                                        start_year=1900, end_year=3000),
                                                        author_connie_willis)

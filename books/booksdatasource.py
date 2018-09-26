@@ -157,12 +157,7 @@ class BooksDataSource:
             QUESTION: How about ValueError? And if so, for which parameters?
             Raises ValueError if author_id is non-None but is not a valid author ID.
         '''
-        books_matching_search_query = []
-        for book in self.books_data:
-            books_matching_search_query.append(book)
-
         #argument errors
-
         if(not(author_id is None or (type(author_id)==int and author_id >= 0))
         or not(search_text is None or type(search_text)==str)
         or not(start_year is None or type(start_year)==int)
@@ -184,16 +179,18 @@ class BooksDataSource:
             raise ValueError("Invalid sorting method")
 
         #method begins
-
         books_matching_search_query = []
-        for book_author_pair in self.maps:
-            if (book_author_pair['book_id'] = book_id):
-                books_matching_search_query.append(author(author_id))
+        if not author_id is None:
+            for book_author_pair in self.maps:
+                if (book_author_pair['author_id'] == author_id):
+                    books_matching_search_query.append(self.book(book_author_pair['book_id']))
+        else:
+            for book in self.books_data:
+                books_matching_search_query.append(book)
 
         copy_books_matching_search_query = []
         for i in books_matching_search_query:
             copy_books_matching_search_query.append(i)
-
 
         for book in copy_books_matching_search_query:
             book_removed = False
@@ -211,8 +208,6 @@ class BooksDataSource:
 
         if len(books_matching_search_query) == 0:
             raise ValueError('No books found.')
-        elif len(books_matching_search_query) == 1:
-            books_matching_search_query = books_matching_search_query[0]
         else:
             if sort_by == 'title':
                 books_matching_search_query = sorted(books_matching_search_query, key=lambda k: k['title'])
@@ -262,10 +257,6 @@ class BooksDataSource:
 
             See the BooksDataSource comment for a description of how an author is represented.
         '''
-        authors_matching_search_query = []
-        for author in self.authors_data:
-            authors_matching_search_query.append(author)
-
         #checking arguments
         if(not(book_id is None or (type(book_id)==int and book_id >= 0))
         or not(search_text is None or type(search_text)==str)
@@ -287,21 +278,15 @@ class BooksDataSource:
         if not sort_by is None and not sort_by.lower() in ('birth_year', 'last_name'):
             raise ValueError("Invalid sorting method")
 
-
-        #method begins
-        author_ids_removed = []
-        author_ids_kept = []
-        if not book_id == None:
+        # method start
+        authors_matching_search_query = []
+        if not book_id is None:
             for book_author_pair in self.maps:
-                author_id_of_selected_pair = book_author_pair['author_id']
-                book_id_of_selected_pair = book_author_pair['book_id']
-                if (not author_id_of_selected_pair in author_ids_kept
-                and not author_id_of_selected_pair in author_ids_removed
-                and not book_id_of_selected_pair == book_id):
-                    authors_matching_search_query.remove(self.author(author_id_of_selected_pair))
-                    author_ids_removed.append(author_id_of_selected_pair)
-                else:
-                    author_ids_kept.append(author_id_of_selected_pair)
+                if (book_author_pair['book_id'] == book_id):
+                    authors_matching_search_query.append(self.author(book_author_pair['author_id']))
+        else:
+            for author in self.authors_data:
+                authors_matching_search_query.append(author)
 
         copy_authors_matching_search_query = []
         for i in authors_matching_search_query:
@@ -309,24 +294,21 @@ class BooksDataSource:
 
         for author in copy_authors_matching_search_query:
             author_removed = False
-            if not author_removed and not search_text == None:
-                if not (search_text.lower() in author['first_name'].lower(), author['last_name'].lower()):
+            if not search_text == None:
+                if not (search_text.lower() in author['first_name'].lower()
+                or search_text.lower() in author['last_name'].lower()):
                     authors_matching_search_query.remove(author)
-                    print(author['last_name'], "search_text")
                     author_removed = True
             if not author_removed and not start_year == None:
+                # if author has died AND died before the start year
                 if not author['death_year'] is None and author['death_year'] < start_year:
                     authors_matching_search_query.remove(author)
-                    print(author['last_name'], "start_year")
                     author_removed = True
             if not author_removed and not end_year == None:
                 if author['birth_year'] > end_year:
                     authors_matching_search_query.remove(author)
-                    print(author['last_name'], "end_year")
         if len(authors_matching_search_query) == 0:
             raise ValueError('No authors found.')
-        elif len(authors_matching_search_query) == 1:
-            authors_matching_search_query = authors_matching_search_query[0]
         else:
             if sort_by == 'birth_year':
                 authors_matching_search_query = sorted(authors_matching_search_query, key=lambda k: k['birth_year'])
