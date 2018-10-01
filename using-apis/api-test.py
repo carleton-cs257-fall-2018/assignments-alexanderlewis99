@@ -21,13 +21,13 @@ def get_names(category, location_name = None):
     location_names = []
     for location in location_data:
         location_names.append(location[name_key])
-    if location_name != None:
-        if location_name in location_names:
-            return location_names
-        else:
-            print("invalid location name")
-            return ''
-    else: return location_names
+    if location_name is None:
+        return location_names
+    elif location_name in location_names:
+        return [location_name]
+    else:
+        print("Invalid location name")
+        return ''
 
 def get_name_key(category):
     if category == 'countries':
@@ -41,14 +41,18 @@ def get_measurements(category, location_name = None):
     location_data = get_decoded_data(category)
     name_key = get_name_key(category)
     measurements = []
-    for location in location_data:
-        if(location_name is None or location[name_key] == location_name):
-            measurements.append([location[name_key], location['count']])
+    if location_name is not None and location_name not in get_names(category):
+        print("Invalid location name")
+        return ''
+    else:
+        for location in location_data:
+            if(location_name is None or location[name_key] == location_name):
+                measurements.append([location[name_key], location['count']])
     return measurements
 
 def get_decoded_data(category):
     data_from_server = get_data(category)
-    string_from_server = data_from_server.decode('utf-8')
+    string_from_server = data_from_server.decode('utf-8', errors="replace")
     decoded_data = json.loads(string_from_server)
     return decoded_data['results']
 
