@@ -1,7 +1,7 @@
 import booksdatasource
 import unittest
 
-booksdatasource = booksdatasource.BooksDataSource("test_books.csv", "test_authors_copy.csv", "test_books_authors.csv")
+booksdatasource = booksdatasource.BooksDataSource("books.csv", "authors.csv", "books_authors.csv")
 #print(booksdatasource.authors())
 
 print(booksdatasource.authors(sort_by="last_name"))

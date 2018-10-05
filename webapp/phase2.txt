@@ -1,0 +1,49 @@
+Alec Wang ‘21
+Bat-Orgil Batjargal ‘21
+
+Our dataset examines the effect of different majors at universities and graduate programs on the salary earnings and employment rates after the students graduate.
+We located our dataset on the data-driven newspaper fivethirtyeight.com.
+
+The link to the article about the data set is:
+https://fivethirtyeight.com/features/the-economic-guide-to-picking-a-college-major/
+
+The link to the data set itself is:
+https://github.com/fivethirtyeight/data/tree/master/college-majors.
+
+The data was collected by the American Community Survey.
+Each row in the data set represents a major, whether in college or graduate school.
+For each major, some of the information provided by the columns includes:
+	•	Rank by median earnings 
+	•	Male graduates of that major 
+	•	Women graduates of that major 
+	•	Percentage of graduates within that major that are women 
+	•	The category of that major (i.e. engineering, business, computer science & mathematics) 
+	•	The median earnings made by individuals of a major after they graduate. 
+	•	The 25th and 75th percentile earnings made by graduates of that major 
+	•	The number of graduates who are employed full time and part time 
+	•	The number of graduates who are unemployed 
+	•	The unemployment rate of graduates of that major 
+	•	The number of graduates in jobs requiring a college degree 
+	•	The number of graduates in jobs not requiring a college degree 
+	•	The number of graduates in jobs not requiring a college degree that pay low wages 
+
+Our user stories in order of importance (most important story first).
+As a college-sophomore, Indecisive-Isaac wants to retrieve a list of college majors ranked by median salaries so that he can more easily choose a career.
+As a college freshman, Sensible-Samantha wants to retrieve a list of college majors ranked by median salaries so that she can easily pay off student debt.
+As a college sophomore, Selective-Sindy wants to retrieve a list of college majors ranked by employment rate so that she pick a major that will let her easily be employed.
+As a college senior, Studious-Star wants to retrieve a list of graduate school majors ranked by median salaries so that she can decide which graduate program she should do.
+As a college senior, Computing-Caroline wants to retrieve a list of graduate school majors in computer science ranked by median salary so that afterwards she’ll have a career with a high salary.
+As a college sophomore, Busy-Beth wants to retrieve a list of college majors ranked based on the percents of graduates with jobs requiring college degrees so that she can pick a major that will let her get a job requiring a college degree.
+As a college sophomore, Anxious-Aaron wants to retrieve a list of majors looking for a major that has a low chance of letting him end up in a low-wage-job.
+As a college sophomore, Advocating-Alice wants to retrieve a list of STEM majors with low numbers of women so that she can promote gender-diversity in STEM.
+As a college sophomore, Greedy-Garry wants to retrieve a list of the top ten majors ranked based on 75th percentile earnings, so that he can make lots of money after college.
+As a college sophomore, Engineer-Eric wants to retrieve a list of engineering majors ranked based on median salary earnings, so he can easily find the engineering major with the highest median pay-rate.
+As a college senior, Analytically-Alice wants to retrieve the salaries (median, 25th percentile, 75th percentile) of college majors and graduate majors in Arts to see whether it is worth going to graduate school.
+As a college senior, Foresighted-Francis wants to see the salaries of all-ages in Advertising Majors so that he can see the pay-off in the long term.
+As a college freshman, Curious-Alexis wants to retrieve a list of all majors so that he can find different departments to explore and can be practical at choosing his next term courses.
+As a government official, Righteous-Reagan wants to see which college STEM major is the most popular among female students so that he can choose a right department of university to support financially.
+As a college sophomore, Following-Frank wants to retrieve a list of majors ranked by popularity so that he can choose the most popular of all majors.
+As a college sophomore, Hipster-Harold wants to retrieve a list of majors ranked in reverse by popularity so that he can choose the least popular of all majors.
+As a college sophomore, Cautious-Cathy wants to retrieve a list of majors whose graduates make at least 60 thousand dollars a year on average.
+As a college sophomore, Smart-Sam knows he is interested in computer science and mathematics so that he can compare long run return of his work at school.
+As a college sophomore, Anti-capitalist Envy wants to retrieve a list of majors ranked based on 25th percentile salary so that she can choose a major that will decrease her chances of making money after graduating.

@@ -91,6 +91,7 @@ class BooksDataSource:
         for book_line in books_reader:
             book_id = int(book_line[0])
             book_title = book_line[1]
+            print(book_line[2])
             book_publication_year = int(book_line[2])
             book = {'id': book_id, 'title': book_title, 'publication_year': book_publication_year}
             self.books_data.append(book)
