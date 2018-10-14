@@ -1,5 +1,4 @@
-import
-
+#Alec Wang and Bat-Orgil Batjargal
 
 #methods that we will use on the api - CareerSalaryDataSource
 @app.route(/majors)
@@ -23,6 +22,7 @@ def get_majors_in_program(<program>):
 @app.route(/majors/<category>/<program>)
 def get_majors_in_category_and_program(<category>, <program>):
 	limit = flask.request.args.get('limit')
+	sort_by_setting = flask.request.args.get('sort_by')
 	#Get a list of all the undergraduate majors in a particular program in a particular category
 
 @app.route(/majors/null/null/<minimum_salary>)
