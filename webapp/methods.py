@@ -15,6 +15,11 @@ def get_majors_in_catergory(<category>):
 
 	limit = flask.request.args.get('limit')
 
+@app.route(/majors/null/<program>)
+def get_majors_in_program(<program>):
+	limit = flask.request.args.get('limit')
+	#Get a list of all the undergraduate majors in a particular program in any category
+
 @app.route(/majors/<category>/<program>)
 def get_majors_in_category_and_program(<category>, <program>):
 	limit = flask.request.args.get('limit')

@@ -1,16 +1,16 @@
-import CareerSalaryDataSource
+import career_salary_data_source
 import unittest
 
-class CareerSalaryDataSourceTest(unittest.TestCase):
+class career_salary_data_sourceTest(unittest.TestCase):
     def setUp(self):
-        self.careersalarydatasource = careersalarydatasource.CareerSalaryDataSourceTest("test-recent-grads.csv")
+        self.career_salary_data_source = career_salary_data_source.career_salary_data_sourceTest("test-recent-grads.csv")
 
     def tearDown(self):
         pass
 
     def test_specific_category(self):
         #EXAMPLE: majorinfo.com/majors/law_and_public_policy
-        major_in_law_and_public_policy = [{id: 3210, "major": "court reporting", "total": 1148, "men": 877, "women": 271,
+        majors_in_law_and_public_policy = [{id: 3210, "major": "court reporting", "total": 1148, "men": 877, "women": 271,
         "category": "Law & Public Policy", "employed": 930, "full_time": 808, "part_time": 223,
         "unemployed": 11, "unemployment_rate": 0.011689692, "median": 54000, "p25th": 50000, "p75th": 54000,
         "college_jobs": 402, "non_college_jobs": 528, "low_wage_jobs": 144},
@@ -30,10 +30,11 @@ class CareerSalaryDataSourceTest(unittest.TestCase):
         "category": "Law & Public Policy", "employed": 125393, "full_time": 109970, "part_time": 32242,
         "unemployed": 11268, "unemployment_rate": 0.082452199, "median": 35000, "p25th": 26000, "p75th": 45000,
         "college_jobs": 24348, "non_college_jobs": 88858, "low_wage_jobs": 18404}]
+        self.assertEquals(self.career_salary_data_source.get_majors_in_catergory('Law & Public Policy'), majors_in_law_and_public_policy)
 
     def test_invalid_specific_category(self):
         #EXAMPLE: majorinfo.com/majors/extreme_sports
-        majors_in_extreme_sports = []
+        self.assertRaises(ValueError, self.career_salary_data_source.get_majors_in_catergory('Extreme Sports'))
 
     def test_specific_majors_from_any_category(self):
         #EXAMPLE: majorinfo.com/majors/null/chem
@@ -49,13 +50,14 @@ class CareerSalaryDataSourceTest(unittest.TestCase):
         "category": "Biology & Life Science", "employed": 25678, "full_time": 20643, "part_time": 9948,
         "unemployed": 2249, "unemployment_rate": 0.080531385, "median": 37400, "p25th": 29000, "p75th": 50000,
         "college_jobs": 15654, "non_college_jobs": 8394, "low_wage_jobs": 3012}]
+        self.assertEquals(self.career_salary_data_source.get_majors_in_program('chem'), chem_majors)
 
     def test_invalid_specific_major(self):
         #EXAMPLE: majorinfo.com/majors/null/skydiving
-        skydiving_majors = []
+        self.assertRaises(ValueError, self.career_salary_data_source.get_majors_in_program('Skydiving'))
 
     def test_specific_category_specific_major(self):
-        #EXAMPLE: majorinfo.com/majors/computer_science_mathematics/math
+        #EXAMPLE: majorinfo.com/majors/computers_and_mathematics/math
         math_majors_in_cs_and_math =  [{id: 3700, "major": "Mathematics", "total": 72397, "men": 39956, "women": 32441,
         "category": "Computers & Mathematics", "employed": 58118, "full_time": 46399, "part_time": 18079,
         "unemployed": 2884, "unemployment_rate": 0.047277138, "median": 45000, "p25th": 33000, "p75th": 60000,
@@ -68,10 +70,11 @@ class CareerSalaryDataSourceTest(unittest.TestCase):
         "category": "Computers & Mathematics", "employed": 559, "full_time": 584, "part_time": 0,
         "unemployed": 0, "unemployment_rate": 0, "median": 42000, "p25th": 30000, "p75th": 78000,
         "college_jobs": 452, "non_college_jobs": 67, "low_wage_jobs": 25}]
+        self.assertEquals(self.career_salary_data_source.get_majors_in_category_and_program('Computers & Mathematics', 'math'), math_majors_in_cs_and_math)
 
     def test_invalid_specific_category_specific_major(self):
         #EXAMPLE: majorinfo.com/majors/arts/physics/
-        physics_majors_in_arts = []
+        self.assertRaises(ValueError, self.career_salary_data_source.get_majors_in_category_and_program('Arts', 'Physics'))
 
     def test_all_majors_above_min_salary(self):
         #EXAMPLE: majorinfo.com/majors/70000
@@ -91,20 +94,21 @@ class CareerSalaryDataSourceTest(unittest.TestCase):
         "category": "Engineering", "employed": 758, "full_time": 1069, "part_time": 150,
         "unemployed": 40, "unemployment_rate": 0.050125313, "median": 70000, "p25th": 43000, "p75th": 80000,
         "college_jobs": 529, "non_college_jobs": 102, "low_wage_jobs": 0}]
+        self.assertEquals(self.career_salary_data_source.get_majors_by_minimum_salary(70000), majors_with_salary_above_70k)
 
-    def test_negative_all_majors_above_min_salary(self):
-        #Example: majorinfo.com/majors/70000/arts
-        majors_in_art_above_70k = []
+    def test_invalid_all_majors_above_min_salary(self):
+        self.assertRaises(ValueError, self.career_salary_data_source.get_majors_by_minimum_salary(1000000))
 
     def test_all_majors_from_specific_category_with_min_salary(self):
         #EXAMPLE: majorinfo.com/majors/arts/null/45000
-        majors_in__with_salary_above_45k = [id: 6099, "major": "Miscellaneous fine arts", "total": 3340, "men": 1970, "women": 1370,
+        majors_in_with_salary_above_45k = [id: 6099, "major": "Miscellaneous fine arts", "total": 3340, "men": 1970, "women": 1370,
         "category": "Arts", "employed": 2914, "full_time": 2049, "part_time": 1067,
         "unemployed": 286, "unemployment_rate": 0.089375, "median": 50000, "p25th": 25000, "p75th": 66000,
         "college_jobs": 693, "non_college_jobs": 1714, "low_wage_jobs": 755}]
+        self.assertEquals(self.career_salary_data_source.get_majors_by_minimum_salary(70000), majors_with_salary_above_70k)
 
-    def test_negative__all_majors_from_specific_category_with_invalid_min_salary(self):
-        #EXAMPLE: majorinfo.com/majors/
+    def test_negative_all_majors_from_specific_category_with_invalid_min_salary(self):
+        #Example: majorinfo.com/majors/70000/arts
 
     def test_specific_majors_from_any_category_with_min_salary(self):
         #EXAMPLE: majorinfo.com/majors/null/physics/55000
