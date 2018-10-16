@@ -53,7 +53,7 @@ class career_salary_data_sourceTest(unittest.TestCase):
         "unemployed": 2249, "unemployment_rate": 0.080531385, "median": 37400, "p25th": 29000, "p75th": 50000,
         "college_jobs": 15654, "non_college_jobs": 8394, "low_wage_jobs": 3012}]
         self.assertEquals(self.career_salary_data_source.get_majors(major_search_text = 'chem'), chem_majors)
-
+  
     def test_invalid_specific_major(self):
         #EXAMPLE: majorinfo.com/majors/null/skydiving/
         self.assertRaises(ValueError,
