@@ -65,21 +65,21 @@ class career_salary_data_sourceTest(unittest.TestCase):
         "category_id": 10, "employed": 25678, "full_time": 20643, "part_time": 9948,
         "unemployed": 2249, "unemployment_rate": 0.080531385, "median": 37400, "p25th": 29000, "p75th": 50000,
         "college_jobs": 15654, "non_college_jobs": 8394, "low_wage_jobs": 3012}]
-        self.assertEquals(self.career_salary_data_source.get_majors(major_search_text = 'chem'), chem_majors)
+        self.assertEquals(self.career_salary_data_source.get_majors(major_contains = 'chem'), chem_majors)
 
     def test_invalid_specific_major(self):
         #EXAMPLE: majorinfo.com/majors/?maj=skydiving/
 
         self.assertRaises(ValueError,
-                self.career_salary_data_source.get_majors(major_search_text = 'Skydiving'))
+                self.career_salary_data_source.get_majors(major_contains = 'Skydiving'))
 
     def test_invalid_specific_major_int(self):
         self.assertRaises(ValueError,
-                self.career_salary_data_source.get_majors(major_search_text = 6))
+                self.career_salary_data_source.get_majors(major_contains = 6))
 
     def test_invalid_specific_major_boolean(self):
         self.assertRaises(ValueError,
-                self.career_salary_data_source.get_majors(major_search_text = False))
+                self.career_salary_data_source.get_majors(major_contains = False))
 
     def test_specific_category_specific_major(self):
         #EXAMPLE: majorinfo.com/majors/?cat=4&maj=math/
@@ -96,12 +96,12 @@ class career_salary_data_sourceTest(unittest.TestCase):
         "unemployed": 0, "unemployment_rate": 0, "median": 42000, "p25th": 30000, "p75th": 78000,
         "college_jobs": 452, "non_college_jobs": 67, "low_wage_jobs": 25}]
         self.assertEquals(self.career_salary_data_source.get_majors(category_id = 4,
-                major_search_text = 'math'), math_majors_in_cs_and_math)
+                major_contains = 'math'), math_majors_in_cs_and_math)
 
     def test_invalid_specific_category_specific_major(self):
 
         #EXAMPLE: majorinfo.com/majors/?cat=7&maj=physics/
-        self.assertRaises(ValueError, self.career_salary_data_source.get_majors(category_id = 7, major_search_text = 'Physics'))
+        self.assertRaises(ValueError, self.career_salary_data_source.get_majors(category_id = 7, major_contains = 'Physics'))
 
 
     def test_all_majors_above_min_salary(self):
@@ -166,11 +166,11 @@ class career_salary_data_sourceTest(unittest.TestCase):
         "category_id": 0, "employed": 3608, "full_time": 2999, "part_time": 811,
         "unemployed": 23, "unemployment_rate": 0.006334343, "median": 58000, "p25th": 25000, "p75th": 74000,
         "college_jobs": 2439, "non_college_jobs": 947, "low_wage_jobs": 263}]
-        self.assertEquals(self.career_salary_data_source.get_majors(major_search_text = 'physics',minimum_salary = 55000), physics_majors_with_salary_above_55k)
+        self.assertEquals(self.career_salary_data_source.get_majors(major_contains = 'physics',minimum_salary = 55000), physics_majors_with_salary_above_55k)
 
     def test_invalid_specific_majors_from_any_category_with_min_salary(self):
     	#EXAMPLE: majorinfo.com/majors/?maj=physics&min_sal=65000/
-    	self.assertRaises(ValueError, self.career_salary_data_source.get_majors(major_search_text = 'physics', minimum_salary = 65000))
+    	self.assertRaises(ValueError, self.career_salary_data_source.get_majors(major_contains = 'physics', minimum_salary = 65000))
 
     def test_specific_majors_from_specific_category_above_min_salary(self):
         #EXAMPLE: majorinfo.com/majors/?cat=8&maj=medical&min_sal=40000/
@@ -182,18 +182,18 @@ class career_salary_data_sourceTest(unittest.TestCase):
         "category_id": 8, "employed": 9168, "full_time": 5643, "part_time": 4107,
         "unemployed": 407, "unemployment_rate": 0.042506527, "median": 42000, "p25th": 30000, "p75th": 65000,
         "college_jobs": 2091, "non_college_jobs": 6948, "low_wage_jobs": 1270}]
-        self.assertEquals(self.career_salary_data_source.get_majors(category_id = 8, major_search_text = 'medical', minimum_salary = 40000), medical_majors_in_health_with_salary_above_40k)
+        self.assertEquals(self.career_salary_data_source.get_majors(category_id = 8, major_contains = 'medical', minimum_salary = 40000), medical_majors_in_health_with_salary_above_40k)
 
     def test_invalid_specific_majors_from_specific_category_above_min_salary(self):
     	#EXAMPLE: majorinfo.com/majors/?cat=8&maj=medical&min_sal=50000/
-    	self.assertRaises(ValueError, self.career_salary_data_source.get_majors(category_id = 8,major_search_text = 'medical', minimum_salary = 50000))
+    	self.assertRaises(ValueError, self.career_salary_data_source.get_majors(category_id = 8,major_contains = 'medical', minimum_salary = 50000))
 
     def test_invalid_specific_majors_from_specific_category_above_min_salary(self):
     	#EXAMPLE: majorinfo.com/majors/?cat=8&maj=medico&min_sal=40000/
-    	self.assertRaises(ValueError, self.career_salary_data_source.get_majors(category_id = 8, major_search_text = 'medico', minimum_salary = 40000))
+    	self.assertRaises(ValueError, self.career_salary_data_source.get_majors(category_id = 8, major_contains = 'medico', minimum_salary = 40000))
 	def test_invalid_specific_majors_from_specific_category_above_min_salary(self):
     	#EXAMPLE: majorinfo.com/majors/?cat=20&maj=medical&min_sal=40000/
-    	self.assertRaises(ValueError, self.career_salary_data_source.get_majors(category_id = 8.5,major_search_text = 'medical', minimum_salary = 40000))
+    	self.assertRaises(ValueError, self.career_salary_data_source.get_majors(category_id = 8.5,major_contains = 'medical', minimum_salary = 40000))
 
     def test_sort_by_major(self):
         #EXAMPLE: majorinfo.com/majors/?maj=law_and_public_policy/
