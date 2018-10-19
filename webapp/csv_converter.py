@@ -93,9 +93,27 @@ def remove_columns_and_headers(recent_grads_csv):
     majors_csv_file.close()
     output_file.close()
 
+def remove_category_ids_headers(category_ids_csv):
+    #opens category_ids_csv
+    category_ids_csv_file = open(category_ids_csv)
+    category_ids_csv_reader = csv.reader(category_ids_csv_file)
+    #opens output_file.csv
+    output_file = open("category-ids-db-ready.csv", 'w')
+    writer = csv.writer(output_file)
+    first_row = True
+    for row in category_ids_csv_reader:
+        if(first_row):
+            first_row = False
+            continue
+        new_row = row
+        writer.writerow(new_row)
+    category_ids_csv_file.close()
+    output_file.close()
+
 if __name__ == '__main__':
     ids_categories = get_ids_for_categories('recent-grads.csv')
-    save_category_id_table(ids_categories, 'category_ids.csv')
-    category_ids = get_category_ids("category_ids.csv")
+    save_category_id_table(ids_categories, 'category-ids.csv')
+    category_ids = get_category_ids("category-ids.csv")
     write_recent_grads_csv_with_category_ids("recent-grads.csv", category_ids)
-    remove_columns("recent-grads-category-ids.csv")
+    remove_columns_and_headers("recent-grads-category-ids.csv")
+    remove_category_ids_headers("category-ids.csv")
