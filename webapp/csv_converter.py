@@ -88,7 +88,7 @@ def remove_columns_and_headers(recent_grads_csv):
         new_row.pop(8) #sample_size
         new_row.pop(7) #sharewomen
         new_row.pop(1) #major_code
-        new_row.pop(0) #rank
+        #new_row.pop(0) #rank
         writer.writerow(new_row)
     majors_csv_file.close()
     output_file.close()
