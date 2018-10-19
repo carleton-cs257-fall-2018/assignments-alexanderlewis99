@@ -12,7 +12,7 @@ import csv
 
 def get_ids_for_categories(csv_file_name):
     """
-    Produces a csv mapping category with an ID 
+    Produces a csv mapping category with an ID
     """
     csv_file = open(csv_file_name, encoding='utf-8')
     reader = csv.reader(csv_file)
@@ -21,10 +21,10 @@ def get_ids_for_categories(csv_file_name):
     added_categories = []
     for row in reader:
         assert len(row) == 21
-        if row[6] == 'Major_category':
-            continue
         if row[6] not in added_categories:
             new_id = len(ids_categories)
+            if row[6] == 'Major_category':
+                new_id = 'category_id'
             category = {'id': new_id, 'name': row[6]}
             ids_categories.append(category)
             added_categories.append(row[6])
@@ -36,8 +36,6 @@ def save_category_id_table(ids_categories, csv_file_name):
         (category id, category name). '''
     output_file = open(csv_file_name, 'w', encoding='utf-8')
     writer = csv.writer(output_file)
-    first_row = {'Major_category', 'category_id'}
-    writer.writerow(first_row)
     for id_category in ids_categories:
         id_category_row = [id_category['id'], id_category['name']]
         writer.writerow(id_category_row)
@@ -51,8 +49,10 @@ def get_category_ids(category_ids_csv):
     for row in category_ids_csv_reader:
         category = row[1]
         id = row[0]
+        key = category
+        value = id
         if category not in category_ids.keys():
-            category_ids[category] = id
+            category_ids[key] = value
     category_ids_csv_file.close()
     return(category_ids)
 
@@ -62,8 +62,6 @@ def write_recent_grads_csv_with_category_ids(recent_grads_csv, category_ids):
     majors_csv_reader = csv.reader(majors_csv_file)
     #opens output_file.csv
     output_file = open("recent-grads-category-ids.csv", 'w')
-
-    
     writer = csv.writer(output_file)
     for row in majors_csv_reader:
         new_row = row
@@ -71,19 +69,29 @@ def write_recent_grads_csv_with_category_ids(recent_grads_csv, category_ids):
         writer.writerow(new_row)
     majors_csv_file.close()
     output_file.close()
-#get rid of following atimes. 
-#major_code
-#unemployment_rate
-#sharewomen
-#sample_size
-#full_time_year_round
 
+def remove_columns(recent_grads_csv):
+    #opens recent_grads_csv
+    majors_csv_file = open(recent_grads_csv)
+    majors_csv_reader = csv.reader(majors_csv_file)
+    #opens output_file.csv
+    output_file = open("recent-grads-category-ids-dropped-columns.csv", 'w')
+    writer = csv.writer(output_file)
+    for row in majors_csv_reader:
+        new_row = row
+        new_row.pop(14) #unemployment_rate
+        new_row.pop(12) #full_time_year_round
+        new_row.pop(8) #sample_size
+        new_row.pop(7) #sharewomen
+        new_row.pop(1) #major_code
+        new_row.pop(0) #rank
+        writer.writerow(new_row)
+    majors_csv_file.close()
+    output_file.close()
 
 if __name__ == '__main__':
     ids_categories = get_ids_for_categories('recent-grads.csv')
     save_category_id_table(ids_categories, 'category_ids.csv')
-
-    #category_ids = get_category_ids("category_ids.csv")
-    write_recent_grads_csv_with_category_ids("recent-grads.csv", ids_categories)
-
-
+    category_ids = get_category_ids("category_ids.csv")
+    write_recent_grads_csv_with_category_ids("recent-grads.csv", category_ids)
+    remove_columns("recent-grads-category-ids.csv")
