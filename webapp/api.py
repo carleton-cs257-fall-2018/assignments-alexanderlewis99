@@ -19,9 +19,8 @@ except Exception as e:
     print(e)
     exit()
 
-
 app = flask.Flask(__name__)
-@app.route(/majors)
+@app.route('/majors')
 def get_majors(self, *, category_id = None, minimum_salary = None, major_contains = None, sort_by = None, limit = None):
 	arguments = get_url_query_string_args(category_id, minimum_salary, major_contains, sort_by, limit)
 	sql_query_requirements = get_query_requirements(arguments)
@@ -51,7 +50,7 @@ def get_url_query_string_args(category_id, minimum_salary, major_contains, sort_
 		minimum_salary  = flask.request.args.get('min_sal')
 	if (flask.request.args.get('maj')):
 		major_contains = flask.request.args.get('maj')
-	if (flask.request.args.get('sort'))
+	if (flask.request.args.get('sort')):
 		sort_by = flask.request.args.get('sort')
 	if (flask.request.args.get('lim')):
 		limit = flask.request.args.get('lim')
@@ -76,6 +75,16 @@ def get_query_requirements(arguments):
 	if (len(query_requirements) > 0):
 		query_requirements[:-5] # remove extra ' AND '
 	return(query_requirements)
+
+if __name__ == '__main__':
+    if len(sys.argv) != 3:
+        print('Usage: {0} host port'.format(sys.argv[0]))
+        print('  Example: {0} perlman.mathcs.carleton.edu 5101'.format(sys.argv[0]))
+        exit()
+
+    host = sys.argv[1]
+    port = int(sys.argv[2])
+    app.run(host=host, port=port, debug=True)
 
 
 	# csv_file = open(recent-grads-category-ids.csv, encoding='utf-8')
@@ -102,7 +111,7 @@ def get_query_requirements(arguments):
 	#
     # return (to_return)
 	#
-    # if __name__ == '__main__':
+
 
 
 
