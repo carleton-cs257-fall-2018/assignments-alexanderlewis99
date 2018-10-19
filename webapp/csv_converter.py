@@ -70,14 +70,18 @@ def write_recent_grads_csv_with_category_ids(recent_grads_csv, category_ids):
     majors_csv_file.close()
     output_file.close()
 
-def remove_columns(recent_grads_csv):
+def remove_columns_and_headers(recent_grads_csv):
     #opens recent_grads_csv
     majors_csv_file = open(recent_grads_csv)
     majors_csv_reader = csv.reader(majors_csv_file)
     #opens output_file.csv
-    output_file = open("recent-grads-category-ids-dropped-columns.csv", 'w')
+    output_file = open("recent-grads-db-ready.csv", 'w')
     writer = csv.writer(output_file)
+    first_row = True
     for row in majors_csv_reader:
+        if(first_row):
+            first_row = False
+            continue
         new_row = row
         new_row.pop(14) #unemployment_rate
         new_row.pop(12) #full_time_year_round
