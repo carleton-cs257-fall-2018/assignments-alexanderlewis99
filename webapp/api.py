@@ -7,9 +7,44 @@ import csv
 import sys
 import flask
 import json
+import psycopg2
+from config import password
+from config import database
+from config import user
+
+# Connect to the database
+try:
+    connection = psycopg2.connect(database=database, user=user, password=password)
+except Exception as e:
+    print(e)
+    exit()
+
+
 app = flask.Flask(__name__)
 @app.route(/majors)
 def get_majors(self, *, category_id = None, minimum_salary = None, major_contains = None, sort_by = None, limit = None):
+	arguments = get_url_query_string_args(category_id, minimum_salary, major_contains, sort_by, limit)
+	sql_query_requirements = get_query_requirements(arguments)
+	if (len(sql_query_requirements) > 0):
+		sql_query = 'SELECT * FROM majors WHERE ' + query_requirements
+	else:
+		sql_query = 'SELECT * FROM majors'
+
+	try:
+	    cursor.execute(sql_query)
+	except Exception as e:
+	    print(e)
+	    exit()
+
+	print('===== Majors =====')
+	for row in cursor:
+	    print(row)
+	print()
+
+	# Don't forget to close the database connection.
+	connection.close()
+
+def get_url_query_string_args(category_id, minimum_salary, major_contains, sort_by, limit):
 	if (flask.request.args.get('cat')):
 		category_id = flask.request.args.get('cat')
 	if (flask.request.args.get('min_sal')):
@@ -21,32 +56,53 @@ def get_majors(self, *, category_id = None, minimum_salary = None, major_contain
 	if (flask.request.args.get('lim')):
 		limit = flask.request.args.get('lim')
 
+	arg_value_pair_category_id = {'arg': 'category_id', 'value': category_id}
+	arg_value_pair_minimum_salary = {'arg': 'minimum_salary', 'value': minimum_salary}
+	arg_value_pair_major_contains = {'arg': 'major_contains', 'value': major_contains}
+	arg_value_pair_sort_by = {'arg': 'sort_by', 'value': sort_by}
+	arg_value_pair_limit = {'arg': 'limit', 'value': limit}
+	arguments = [arg_value_pair_category_id,
+				  arg_value_pair_minimum_salary,
+				  arg_value_pair_major_contains,
+				  arg_value_pair_sort_by,
+				  arg_value_pair_limit]
+	return arguments
 
-	csv_file = open(recent-grads-category-ids.csv, encoding='utf-8')
-    reader = csv.reader(csv_file)
-    to_return = []
-
-    if category_id:
-        for row in reader:
-            if row[6] == category_id:
-            	to_return.add(row)
-    if major_contains:
-    	for item in to_return:
-    		if item[2] not in major_contains.lower():
-    			to_return.remove(item)
-    if minimum_salary:
-    	for item in to_return:
-    		if item[15] < minimum_salary
-    			to_return(x)
-    if to_return.len() > limit:
-    	to_return = to_return[0:limit-1]
-
-    if sort_by:
+def get_query_requirements(arguments):
+	query_requirements = ''
+	for argument in arguments:
+		if argument['value'] != None:
+			query_requirements = query_requirements + argument['arg'] + ' = ' + argument['value'] + ' AND '
+	if (len(query_requirements) > 0):
+		query_requirements[:-5] # remove extra ' AND '
+	return(query_requirements)
 
 
-    return (to_return)
-
-    if __name__ == '__main__':
+	# csv_file = open(recent-grads-category-ids.csv, encoding='utf-8')
+    # reader = csv.reader(csv_file)
+    # to_return = []
+	#
+    # if category_id:
+    #     for row in reader:
+    #         if row[6] == category_id:
+    #         	to_return.add(row)
+    # if major_contains:
+    # 	for item in to_return:
+    # 		if item[2] not in major_contains.lower():
+    # 			to_return.remove(item)
+    # if minimum_salary:
+    # 	for item in to_return:
+    # 		if item[15] < minimum_salary
+    # 			to_return(x)
+    # if to_return.len() > limit:
+    # 	to_return = to_return[0:limit-1]
+	#
+    # if sort_by:
+	#
+	#
+    # return (to_return)
+	#
+    # if __name__ == '__main__':
 
 
 
