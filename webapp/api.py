@@ -17,23 +17,25 @@ app = flask.Flask(__name__)
 @app.route('/')
 def hello():
     # Connect to the database
-    try:
-        connection = psycopg2.connect(database=database, user=user, password=password)
-    except Exception as e:
-        print(e)
-        exit()
     text_to_return = ""
     text_to_return = text_to_return + 'Hello!'
+    try:
+        connection = psycopg2.connect(database=database, user=user, password=password)
+        text_to_return = text_to_return + "SUCCESSFUL CONNECTION!!"
+    except Exception as e:
+        text_to_return + e
+        exit()
     try:
         cursor = connection.cursor()
         sql_query = 'SELECT * FROM majors'
         cursor.execute(sql_query)
-        text_to_return = text_to_return + ('===== Majors =====')
         for row in cursor:
-            text_to_return = text_to_return + row
+            text_to_return = text_to_return + ('===== Majors =====')
+            text_to_return = text_to_return + row[1]
         return(text_to_return)
     except Exception as e:
         text_to_return = text_to_return + ":( It didn't work"
+        text_to_return = text_to_return + e
         return(text_to_return)
         exit()
 
