@@ -75,7 +75,7 @@ def get_majors(category_id = None, minimum_salary = None, major_contains = None,
 
         for i in row:
             text_to_return = text_to_return + str(i) + ", "
-
+            text_to_return = text_to_return[:-1]
         text_to_return = text_to_return + "}, "
 
     return(text_to_return)
@@ -95,20 +95,24 @@ def get_url_query_string_args(category_id, minimum_salary, major_contains, sort_
 	if (flask.request.args.get('lim')):
 		limit = flask.request.args.get('lim')
 	arguments = {'category_id': category_id,
-                 'minimum_salary': minimum_salary,
+                 'median': minimum_salary,
                  'major_contains': major_contains,
                  'sort_by': sort_by,
-                 'value': limit}
+                 'limit': limit}
 	return arguments
 
 def get_query_requirements(arguments):
 	query_requirements = ''
-	for arg in arguments.keys():
-		value = arguments[arg]
-		if value != None:
-			query_requirements = query_requirements + arg + ' = ' + value + ' AND '
-	if (len(query_requirements) > 0):
+	if arguments['category_id'] != None:
+		query_requirements = query_requirements + arg + ' = ' + arguments['category_id'] + ' AND '
+    if arguments['median'] != None:
+        query_requirements = query_requirements + arg + ' = ' + arguments['median'] + ' AND '
+    if arguments['major_contains'] != None:
+        query_requirements = query_requirements + arg + ' LIKE  ANY ' + arguments['major_contains'] + ' AND '
+    if (len(query_requirements) > 0):
 		query_requirements = query_requirements[:-5] # remove extra ' AND '
+    if arguments['sort_by'] != None:
+        query_requirements = query_requirements + arg + ' ORDER BY ' + arguments['sort_by']
 	print(query_requirements)
 	return(query_requirements)
 
