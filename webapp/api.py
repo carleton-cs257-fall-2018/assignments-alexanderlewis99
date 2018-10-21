@@ -26,16 +26,16 @@ app = flask.Flask(__name__)
 def hello():
     return 'Hello!'
     try:
-		cursor = connection.cursor()
+        cursor = connection.cursor()
         sql_query = 'SELECT * FROM majors'
-		cursor.execute(sql_query)
+        cursor.execute(sql_query)
         print('===== Majors =====')
-    	for row in cursor:
-    	    print(row)
-    	print()
+        for row in cursor:
+            print(row)
+        print()
     except Exception as e:
-	    print(":( It didn't work")
-	    exit()
+        print(":( It didn't work")
+        exit()
 
 @app.route('/majors')
 def get_majors(category_id = None, minimum_salary = None, major_contains = None, sort_by = None, limit = None):
