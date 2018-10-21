@@ -84,37 +84,40 @@ def get_majors(category_id = None, minimum_salary = None, major_contains = None,
     connection.close()
 
 def get_url_query_string_args(category_id, minimum_salary, major_contains, sort_by, limit):
-	if (flask.request.args.get('cat')):
-		category_id = flask.request.args.get('cat')
-	if (flask.request.args.get('min_sal')):
-		minimum_salary  = flask.request.args.get('min_sal')
-	if (flask.request.args.get('maj')):
-		major_contains = flask.request.args.get('maj')
-	if (flask.request.args.get('sort')):
-		sort_by = flask.request.args.get('sort')
-	if (flask.request.args.get('lim')):
-		limit = flask.request.args.get('lim')
-	arguments = {'category_id': category_id,
+    if (flask.request.args.get('cat')):
+        category_id = flask.request.args.get('cat')
+    if (flask.request.args.get('min_sal')):
+        minimum_salary  = flask.request.args.get('min_sal')
+    if (flask.request.args.get('maj')):
+        major_contains = flask.request.args.get('maj')
+    if (flask.request.args.get('sort')):
+        sort_by = flask.request.args.get('sort')
+    if (flask.request.args.get('lim')):
+        limit = flask.request.args.get('lim')
+    arguments = {'category_id': category_id,
                  'median': minimum_salary,
                  'major_contains': major_contains,
                  'sort_by': sort_by,
                  'limit': limit}
-	return arguments
+    return arguments
 
 def get_query_requirements(arguments):
-	query_requirements = ''
-	if arguments['category_id'] != None:
-		query_requirements = query_requirements + arg + ' = ' + arguments['category_id'] + ' AND '
+    query_requirements = ''
+    if arguments['category_id'] != None:
+        query_requirements = query_requirements + 'category_id = ' + arguments['category_id'] + ' AND '
     if arguments['median'] != None:
-        query_requirements = query_requirements + arg + ' = ' + arguments['median'] + ' AND '
+        query_requirements = query_requirements + 'median = ' + arguments['median'] + ' AND '
     if arguments['major_contains'] != None:
-        query_requirements = query_requirements + arg + ' LIKE  ANY ' + arguments['major_contains'] + ' AND '
+        query_requirements = query_requirements + 'major LIKE ANY ' + arguments['major_contains'] + ' AND '
     if (len(query_requirements) > 0):
-		query_requirements = query_requirements[:-5] # remove extra ' AND '
+        query_requirements = query_requirements[:-5] # remove extra ' AND '
     if arguments['sort_by'] != None:
-        query_requirements = query_requirements + arg + ' ORDER BY ' + arguments['sort_by']
-	print(query_requirements)
-	return(query_requirements)
+        query_requirements = query_requirements + ' ORDER BY ' + arguments['sort_by']
+    if arguments['limit'] != None:
+        query_requirements = query_requirements + ' LIMIT ' + arguments['sort_by']
+
+    print(query_requirements)
+    return(query_requirements)
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:
