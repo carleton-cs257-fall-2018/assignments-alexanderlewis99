@@ -58,6 +58,7 @@ def get_majors(category_id = None, minimum_salary = None, major_contains = None,
         sql_query = 'SELECT * FROM majors WHERE ' + sql_query_requirements
     else:
         sql_query = 'SELECT * FROM majors'
+    print(sql_query)
 
     try:
         cursor = connection.cursor()
@@ -107,9 +108,8 @@ def get_query_requirements(arguments):
 		if value != None:
 			query_requirements = query_requirements + arg + ' = ' + value + ' AND '
 	if (len(query_requirements) > 0):
-		query_requirements[:-5] # remove extra ' AND '
-        query_requirements = query_requirements + ";"
-        print(query_requirements)
+		query_requirements = query_requirements[:-5] # remove extra ' AND '
+	print(query_requirements)
 	return(query_requirements)
 
 if __name__ == '__main__':
