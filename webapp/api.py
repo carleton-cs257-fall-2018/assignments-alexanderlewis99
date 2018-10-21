@@ -8,9 +8,9 @@ import sys
 import flask
 import json
 import psycopg2
-from config import password
-from config import database
-from config import user
+from config_alec import password
+from config_alec import database
+from config_alec import user
 
 # Connect to the database
 try:
@@ -25,13 +25,13 @@ def get_majors(category_id = None, minimum_salary = None, major_contains = None,
 	arguments = get_url_query_string_args(category_id, minimum_salary, major_contains, sort_by, limit)
 	sql_query_requirements = get_query_requirements(arguments)
 
-    if (len(sql_query_requirements) > 0):
+	if (len(sql_query_requirements) > 0):
 		sql_query = 'SELECT * FROM majors WHERE ' + query_requirements
 	else:
 		sql_query = 'SELECT * FROM majors'
 	try:
-        cursor = connection.cursor()
-	    cursor.execute(sql_query)
+		cursor = connection.cursor()
+		cursor.execute(sql_query)
 	except Exception as e:
 	    print(e)
 	    exit()
