@@ -8,9 +8,9 @@ import sys
 import flask
 import json
 import psycopg2
-from config import password
-from config import database
-from config import user
+from config_alec import password
+from config_alec import database
+from config_alec import user
 
 # Connect to the database
 try:
@@ -61,24 +61,19 @@ def get_url_query_string_args(category_id, minimum_salary, major_contains, sort_
 		sort_by = flask.request.args.get('sort')
 	if (flask.request.args.get('lim')):
 		limit = flask.request.args.get('lim')
-
-	arg_value_pair_category_id = {'arg': 'category_id', 'value': category_id}
-	arg_value_pair_minimum_salary = {'arg': 'minimum_salary', 'value': minimum_salary}
-	arg_value_pair_major_contains = {'arg': 'major_contains', 'value': major_contains}
-	arg_value_pair_sort_by = {'arg': 'sort_by', 'value': sort_by}
-	arg_value_pair_limit = {'arg': 'limit', 'value': limit}
-	arguments = [arg_value_pair_category_id,
-				  arg_value_pair_minimum_salary,
-				  arg_value_pair_major_contains,
-				  arg_value_pair_sort_by,
-				  arg_value_pair_limit]
+	arguments = {'category_id': category_id,
+                 'minimum_salary': minimum_salary,
+                 'major_contains': major_contains,
+                 'sort_by': sort_by,
+                 'value': limit}
 	return arguments
 
 def get_query_requirements(arguments):
 	query_requirements = ''
-	for argument in arguments:
-		if argument['value'] != None:
-			query_requirements = query_requirements + argument['arg'] + ' = ' + argument['value'] + ' AND '
+	for arg in arguments.keys():
+		value = arguments[arg]
+		if value != None:
+			query_requirements = query_requirements + arg + ' = ' + value + ' AND '
 	if (len(query_requirements) > 0):
 		query_requirements[:-5] # remove extra ' AND '
 	return(query_requirements)
