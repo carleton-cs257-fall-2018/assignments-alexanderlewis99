@@ -8,9 +8,9 @@ import sys
 import flask
 import json
 import psycopg2
-from config_alec import password
-from config_alec import database
-from config_alec import user
+from config import password
+from config import database
+from config import user
 
 # Connect to the database
 try:
@@ -19,7 +19,13 @@ except Exception as e:
     print(e)
     exit()
 
+
 app = flask.Flask(__name__)
+
+@app.route('/')
+def hello():
+    return 'Hello!'
+
 @app.route('/majors')
 def get_majors(category_id = None, minimum_salary = None, major_contains = None, sort_by = None, limit = None):
 	arguments = get_url_query_string_args(category_id, minimum_salary, major_contains, sort_by, limit)
