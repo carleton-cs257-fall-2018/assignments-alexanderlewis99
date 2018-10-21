@@ -107,8 +107,9 @@ def get_query_requirements(arguments):
 		if value != None:
 			query_requirements = query_requirements + arg + ' = ' + value + ' AND '
 	if (len(query_requirements) > 0):
-		print(query_requirements)
 		query_requirements[:-5] # remove extra ' AND '
+        query_requirements = query_requirements + ";"
+        print(query_requirements)
 	return(query_requirements)
 
 if __name__ == '__main__':
