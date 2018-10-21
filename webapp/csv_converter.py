@@ -57,6 +57,13 @@ def remove_unwanted_columns_from_majors_csv(majors_data):
         row.pop(0) #rank
     return majors_data
 
+def make_serials_in_place_of_rank(majors_data):
+    serial_id = 0
+    for row in majors_data:
+        row[0] = serial_id
+        serial_id = serial_id + 1
+    return majors_data
+
 def replace_empty_data_with_null(majors_data):
     row_index = 0
     cell_index = 0
@@ -94,5 +101,6 @@ if __name__ == '__main__':
     majors_data = remove_headers_from_majors_csv(majors_data)
     majors_data = remove_unwanted_columns_from_majors_csv(majors_data)
     majors_data = replace_empty_data_with_null(majors_data)
+    majors_data = make_serials_in_place_of_rank(majors_data)
     save_category_id_table(category_ids)
     save_majors_table(majors_data)
