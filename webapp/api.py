@@ -8,9 +8,9 @@ import sys
 import flask
 import json
 import psycopg2
-from config import password
-from config import database
-from config import user
+from config_alec import password
+from config_alec import database
+from config_alec import user
 
 app = flask.Flask(__name__)
 
@@ -55,26 +55,26 @@ def get_majors(category_id = None, minimum_salary = None, major_contains = None,
         exit()
 
     if (len(sql_query_requirements) > 0):
-        sql_query = 'SELECT * FROM majors WHERE ' + query_requirements
+        sql_query = 'SELECT * FROM majors WHERE ' + sql_query_requirements
     else:
         sql_query = 'SELECT * FROM majors'
 
     try:
         cursor = connection.cursor()
-        cursor.execute(sql_query)    
+        cursor.execute(sql_query)
 
     except Exception as e:
         print(e)
         exit()
 
-    text_to_return = text_to_return + '===== Majors ====='	
+    text_to_return = text_to_return + '===== Majors ====='
 
     for row in cursor:
         text_to_return = text_to_return + "{"
-    
-        for i in row: 
+
+        for i in row:
             text_to_return = text_to_return + str(i) + ", "
- 
+
         text_to_return = text_to_return + "}, "
 
     return(text_to_return)
@@ -107,6 +107,7 @@ def get_query_requirements(arguments):
 		if value != None:
 			query_requirements = query_requirements + arg + ' = ' + value + ' AND '
 	if (len(query_requirements) > 0):
+        print(query_requirements)
 		query_requirements[:-5] # remove extra ' AND '
 	return(query_requirements)
 
