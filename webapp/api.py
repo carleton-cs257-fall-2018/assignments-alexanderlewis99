@@ -21,7 +21,7 @@ except Exception as e:
 
 app = flask.Flask(__name__)
 @app.route('/majors')
-def get_majors(self, *, category_id = None, minimum_salary = None, major_contains = None, sort_by = None, limit = None):
+def get_majors(category_id = None, minimum_salary = None, major_contains = None, sort_by = None, limit = None):
 	arguments = get_url_query_string_args(category_id, minimum_salary, major_contains, sort_by, limit)
 	sql_query_requirements = get_query_requirements(arguments)
 	if (len(sql_query_requirements) > 0):
