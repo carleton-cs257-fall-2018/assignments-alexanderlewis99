@@ -73,7 +73,7 @@ def get_majors(category_id = None, minimum_salary = None, major_contains = None,
         text_to_return = text_to_return + "{"
     
         for i in row: 
-            text_to_return = text_to_return +" " + i + " "
+            text_to_return = text_to_return +" " + str(i) + " "
 
         text_to_return = text_to_return + "}"
 
