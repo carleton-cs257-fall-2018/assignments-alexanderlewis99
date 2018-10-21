@@ -24,7 +24,7 @@ app = flask.Flask(__name__)
 
 @app.route('/')
 def hello():
-    return 'Hello!'
+    print('Hello!')
     try:
         cursor = connection.cursor()
         sql_query = 'SELECT * FROM majors'
