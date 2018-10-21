@@ -21,7 +21,6 @@ def hello():
     text_to_return = text_to_return + 'Hello!'
     try:
         connection = psycopg2.connect(database=database, user=user, password=password)
-        text_to_return = text_to_return + "SUCCESSFUL CONNECTION!!"
     except Exception as e:
         text_to_return + e
         exit()
