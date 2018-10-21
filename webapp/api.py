@@ -24,17 +24,19 @@ app = flask.Flask(__name__)
 
 @app.route('/')
 def hello():
-    print('Hello!')
+    text_to_return = ""
+    text_to_return = text_to_return + 'Hello!'
     try:
         cursor = connection.cursor()
         sql_query = 'SELECT * FROM majors'
         cursor.execute(sql_query)
-        print('===== Majors =====')
+        text_to_return = text_to_return + ('===== Majors =====')
         for row in cursor:
-            print(row)
-        print()
+            text_to_return = text_to_return + row
+        return(text_to_return)
     except Exception as e:
-        print(":( It didn't work")
+        text_to_return = text_to_return + ":( It didn't work"
+        return(text_to_return)
         exit()
 
 @app.route('/majors')
