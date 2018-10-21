@@ -61,6 +61,7 @@ def make_serials_in_place_of_rank(majors_data):
     serial_id = 0
     for row in majors_data:
         row[0] = serial_id
+        serial_id = serial_id + 1
     return majors_data
 
 def replace_empty_data_with_null(majors_data):
