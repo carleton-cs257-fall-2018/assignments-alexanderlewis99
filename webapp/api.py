@@ -70,14 +70,16 @@ def get_majors(category_id = None, minimum_salary = None, major_contains = None,
 
     text_to_return = text_to_return + '===== Majors ====='
 
+    keys = ["id", "major", "total", "men", "women", "category", "employed", "full_time", "part_time", "unemployed",
+    "median", "p25th", "p75th", "college_jobs",  "non_college_jobs", "low_wage_jobs"]
     for row in cursor:
         text_to_return = text_to_return + "{"
-
-        for i in row:
-            text_to_return = text_to_return + str(i) + ", "
-            text_to_return = text_to_return[:-1]
+        for index in row:
+            text_to_return = text_to_return + keys[index] + ":" + str(row[index]) + ", "
+            if (keys[index] = "unemployed"):
+                text_to_return = text_to_return + "unemployment_rate" + ":" + str(row[9]/(row[1])) + ", "
+        text_to_return = text_to_return[:-1]
         text_to_return = text_to_return + "}, "
-
     return(text_to_return)
 
     # Don't forget to close the database connection.
@@ -106,15 +108,15 @@ def get_query_requirements(arguments):
     if arguments['category_id'] != None:
         query_requirements = query_requirements + 'category_id = ' + arguments['category_id'] + ' AND '
     if arguments['median'] != None:
-        query_requirements = query_requirements + 'median = ' + arguments['median'] + ' AND '
+        query_requirements = query_requirements + 'median > ' + arguments['median'] + ' AND '
     if arguments['major_contains'] != None:
-        query_requirements = query_requirements + 'major LIKE ANY ' + arguments['major_contains'] + ' AND '
+        query_requirements = query_requirements + 'major IN ' + arguments['major_contains'] + ' AND '
     if (len(query_requirements) > 0):
         query_requirements = query_requirements[:-5] # remove extra ' AND '
     if arguments['sort_by'] != None:
         query_requirements = query_requirements + ' ORDER BY ' + arguments['sort_by']
     if arguments['limit'] != None:
-        query_requirements = query_requirements + ' LIMIT ' + arguments['sort_by']
+        query_requirements = query_requirements + ' LIMIT ' + arguments['limit']
 
     print(query_requirements)
     return(query_requirements)
