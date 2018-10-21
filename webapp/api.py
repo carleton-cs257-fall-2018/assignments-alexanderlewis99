@@ -12,18 +12,16 @@ from config_alec import password
 from config_alec import database
 from config_alec import user
 
-# Connect to the database
-try:
-    connection = psycopg2.connect(database=database, user=user, password=password)
-except Exception as e:
-    print(e)
-    exit()
-
-
 app = flask.Flask(__name__)
 
 @app.route('/')
 def hello():
+    # Connect to the database
+    try:
+        connection = psycopg2.connect(database=database, user=user, password=password)
+    except Exception as e:
+        print(e)
+        exit()
     text_to_return = ""
     text_to_return = text_to_return + 'Hello!'
     try:
