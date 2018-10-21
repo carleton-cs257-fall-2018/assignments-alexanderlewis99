@@ -8,9 +8,9 @@ import sys
 import flask
 import json
 import psycopg2
-from config_alec import password
-from config_alec import database
-from config_alec import user
+from config import password
+from config import database
+from config import user
 
 app = flask.Flask(__name__)
 
@@ -38,26 +38,46 @@ def hello():
         return(text_to_return)
         exit()
 
+
+
 @app.route('/majors')
 def get_majors(category_id = None, minimum_salary = None, major_contains = None, sort_by = None, limit = None):
 	arguments = get_url_query_string_args(category_id, minimum_salary, major_contains, sort_by, limit)
 	sql_query_requirements = get_query_requirements(arguments)
 
+    text_to_return = ""
+    text_to_return = text_to_return + 'Hello!'
+
+    try:
+        connection = psycopg2.connect(database=database, user=user, password=password)
+    except Exception as e:
+        text_to_return + e
+        exit()
+
 	if (len(sql_query_requirements) > 0):
 		sql_query = 'SELECT * FROM majors WHERE ' + query_requirements
 	else:
 		sql_query = 'SELECT * FROM majors'
+
 	try:
 		cursor = connection.cursor()
-		cursor.execute(sql_query)
+		cursor.execute(sql_query)    
+
 	except Exception as e:
 	    print(e)
 	    exit()
 
-	print('===== Majors =====')
+    text_to_return = text_to_return + '===== Majors ====='	
+
 	for row in cursor:
-	    print(row)
-	print()
+        text_to_return = text_to_return + "{"
+    
+        for i in row: 
+            text_to_return = text_to_return +" " + i + " "
+
+        text_to_return = text_to_return + "}"
+	
+    return(text_to_return)
 
 	# Don't forget to close the database connection.
 	connection.close()
