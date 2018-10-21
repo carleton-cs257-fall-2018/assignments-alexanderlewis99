@@ -54,14 +54,13 @@ def remove_unwanted_columns_from_majors_csv(majors_data):
         row.pop(8) #sample_size
         row.pop(7) #sharewomen
         row.pop(1) #major_code
-        row.pop(0) #rank
+        #row.pop(0) #rank
     return majors_data
 
 def make_serials_in_place_of_rank(majors_data):
     serial_id = 0
     for row in majors_data:
         row[0] = serial_id
-        serial_id = serial_id + 1
     return majors_data
 
 def replace_empty_data_with_null(majors_data):
