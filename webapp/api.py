@@ -74,10 +74,12 @@ def get_majors(category_id = None, minimum_salary = None, major_contains = None,
     "median", "p25th", "p75th", "college_jobs",  "non_college_jobs", "low_wage_jobs"]
     for row in cursor:
         text_to_return = text_to_return + "{"
-        for index in row:
-            text_to_return = text_to_return + keys[index] + ":" + str(row[index]) + ", "
+        index = 0
+        for cell in row:
+            text_to_return = text_to_return + keys[index] + ":" + str(cell) + ", "
             if (keys[index] == "unemployed"):
                 text_to_return = text_to_return + "unemployment_rate" + ":" + str(row[9]/(row[1])) + ", "
+            index = index + 1
         text_to_return = text_to_return[:-1]
         text_to_return = text_to_return + "}, "
     return(text_to_return)
