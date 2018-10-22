@@ -78,7 +78,10 @@ def get_majors(category_id = None, minimum_salary = None, major_contains = None,
         for cell in row:
             text_to_return = text_to_return + keys[index] + ":" + str(cell) + ", "
             if (keys[index] == "unemployed"):
-                text_to_return = text_to_return + "unemployment_rate" + ":" + str(row[9]/(row[1])) + ", "
+               if(row[9] is not None and row[2] is not None):
+                  text_to_return = text_to_return + "unemployment_rate" + ":" + str(int(row[9])/int(row[2])) + ", "
+            else:
+                  text_to_return = text_to_return + "unemployment_rate" + ":" + "NULL" + ", "
             index = index + 1
         text_to_return = text_to_return[:-1]
         text_to_return = text_to_return + "}, "
