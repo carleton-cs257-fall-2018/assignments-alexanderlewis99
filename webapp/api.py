@@ -51,10 +51,7 @@ def get_majors(category_id = None, minimum_salary = None, major_contains = None,
         text_to_return + e
         exit()
 
-    if (len(sql_query_requirements) > 0):
-        sql_query = 'SELECT * FROM majors WHERE ' + sql_query_requirements
-    else:
-        sql_query = 'SELECT * FROM majors'
+    sql_query = 'SELECT * FROM majors' + sql_query_requirements
     print(sql_query)
 
     try:
@@ -141,7 +138,9 @@ def get_url_query_string_args(category_id, minimum_salary, major_contains, sort_
     return arguments
 
 def get_query_requirements(arguments):
-    query_requirements = ''
+    query_requirements = ' '
+    if arguments['category_id'] != None or arguments['median'] != None or arguments['major_contains'] != None:
+        query_requirements = query_requirements + 'WHERE '
     if arguments['category_id'] != None:
         query_requirements = query_requirements + 'category_id = ' + arguments['category_id'] + ' AND '
     if arguments['median'] != None:
