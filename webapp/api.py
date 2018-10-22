@@ -43,15 +43,14 @@ def hello():
 
 @app.route('/majors')
 def get_majors(category_id = None, minimum_salary = None, major_contains = None, sort_by = None, limit = None):
-    arguments = get_url_query_string_args(category_id, minimum_salary, major_contains, sort_by, limit)
-    sql_query_requirements = get_query_requirements(arguments)
     try:
         connection = psycopg2.connect(database=database, user=user, password=password)
     except Exception as e:
         text_to_return + e
         exit()
 
-    sql_query = 'SELECT * FROM majors' + sql_query_requirements
+    arguments = get_url_query_string_args(category_id, minimum_salary, major_contains, sort_by, limit)
+    sql_query = 'SELECT * FROM majors ' + get_query_requirements(arguments)
     print(sql_query)
 
     try:
@@ -154,7 +153,6 @@ def get_query_requirements(arguments):
     if arguments['limit'] != None:
         query_requirements = query_requirements + 'LIMIT ' + arguments['limit']
     print(query_requirements)
-
     return(query_requirements)
 
 if __name__ == '__main__':
