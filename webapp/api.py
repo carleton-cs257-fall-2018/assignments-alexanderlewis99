@@ -84,7 +84,6 @@ def get_list_of_unsorted_majors(cursor):
     for row in cursor:
         major = get_major_dictionary(row)
         majors.append(major)
-    print(majors)
     return majors
 
 def get_list_of_sorted_majors(cursor, arguments):
@@ -97,11 +96,7 @@ def get_list_of_sorted_majors(cursor, arguments):
         else:
             sort_key = arguments['sort_by']
         majors_sort_key_pairs[sort_key] = major
-    majors_sort_key_pairs = collections.OrderedDict(sorted(majors_sort_key_pairs.items()))
-    majors = []
-    for major in majors_sort_key_pairs:
-        majors.append(major[1]) #gets dictionary without sort key
-    print(majors)
+    majors = sorted(majors_sort_key_pairs)
     return majors
 
 def get_major_dictionary(row):

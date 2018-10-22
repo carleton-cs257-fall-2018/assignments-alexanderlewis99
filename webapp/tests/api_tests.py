@@ -431,7 +431,7 @@ class career_salary_data_sourceTest(unittest.TestCase):
         "category": 'Law & Public Policy', "employed": 4158, "full_time": 4148, "part_time": 847,
         "unemployed": 789, "unemployment_rate": 0.1594906, "median": 36000, "p25th": 23000, "p75th": 60000,
         "college_jobs": 912, "non_college_jobs": 2313, "low_wage_jobs": 496}]
-        self.assertEquals(self.career_salary_data_source.get_majors(category_id = 3, sort_by = 'employment_rate'), majors_in_law_and_public_policy_sort_by_unemployment_rate)
+        self.assertEquals(self.career_salary_data_source.get_majors(category_id = 3, sort_by = 'employed'), majors_in_law_and_public_policy_sort_by_unemployment_rate)
 
     def test_sort_by_p25th(self):
         majors_in_law_and_public_policy_sort_by_p25th = [
