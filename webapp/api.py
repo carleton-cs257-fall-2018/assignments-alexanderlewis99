@@ -11,6 +11,7 @@ import psycopg2
 from config_alec import password
 from config_alec import database
 from config_alec import user
+import collections
 
 app = flask.Flask(__name__)
 
@@ -44,10 +45,6 @@ def hello():
 def get_majors(category_id = None, minimum_salary = None, major_contains = None, sort_by = None, limit = None):
     arguments = get_url_query_string_args(category_id, minimum_salary, major_contains, sort_by, limit)
     sql_query_requirements = get_query_requirements(arguments)
-
-
-
-    text_to_return = ""
     try:
         connection = psycopg2.connect(database=database, user=user, password=password)
     except Exception as e:
@@ -67,46 +64,49 @@ def get_majors(category_id = None, minimum_salary = None, major_contains = None,
     except Exception as e:
         print(e)
         exit()
-    text_to_return = text_to_return + '['
-    keys = ["id", "major", "total", "men", "women", "category", "employed", "full_time", "part_time", "unemployed",
-    "median", "p25th", "p75th", "college_jobs",  "non_college_jobs", "low_wage_jobs"]
-
-    #percent woman and percent man calculation for each major 
-
-    for row in cursor:
+    #percent woman and percent man calculation for each major
+    #for row in cursor:
         #tell me by what to sort and call it X
         #find the percent of X
         #add it into the end of cursor
         #write a sql Query - order by the new added column in the each row in the end
         #cursor.execute(new SQL query )
-
-
-    for row in cursor:
-        for cell in row:
-            text_to_return = text_to_return + keys[index] + ": " + str(cell) + ", "
-            
-
-            if (keys[index] == "unemployed"):
-                if(row[9] is not None and row[2] is not None):
-                    text_to_return = text_to_return + "unemployment_rate" + ":" + str(int(row[9])/int(row[2])) + ", "
-                else:
-                    text_to_return = text_to_return + "unemployment_rate" + ":" + "NULL" + ", "
-
-
-            index = index + 1
-        text_to_return = text_to_return[:-2]
-        text_to_return = text_to_return + "}, "
-    text_to_return = text_to_return[:-2]
-    if (text_to_return):
-        text_to_return = text_to_return + ']'
-
-
-
-
-    return(text_to_return)
-
+    majors = get_list_of_sorted_majors(cursor, arguments)
+    return json.dumps(majors)
     # Don't forget to close the database connection.
     connection.close()
+
+def get_list_of_sorted_majors(cursor, arguments):
+    majors = {}
+    for row in cursor:
+        major = get_major_dictionary(row)
+        if arguments['sort_by'] in ('men', 'women', 'employed, full_time', 'part_time', 'unemployment_rate', 'employed',
+                'college_jobs', "non_college_jobs", "low_wage_jobs"):
+            sort_key = get_sort_key_percent(major, arguments['sort_by'])
+        else:
+            sort_key = arguments['sort_by']
+        majors[sort_key] = major
+    majors = collections.OrderedDict(sorted(majors.items()))
+    return majors
+
+def get_major_dictionary(row):
+    data_types = ["id", "major", "total", "men", "women", "category", "employed", "full_time", "part_time", "unemployed",
+            "median", "p25th", "p75th", "college_jobs",  "non_college_jobs", "low_wage_jobs"]
+    major = {}
+    for cell in row:
+        index = index + 1
+        major[data_types[index]] = str(cell)
+    if(row[9] is not None and row[2] is not None):
+        major["unemployment_rate"] = str(int(row[9])/int(row[2]))
+    else:
+        major["unemployment_rate"] = "NULL"
+    return major
+
+def get_sort_key_percent(major, divisor):
+    if(major['total'] is not None and row[divisor] is not None):
+        return int(major['total'])/int(major[divisor])
+    else:
+        return 0
 
 def get_url_query_string_args(category_id, minimum_salary, major_contains, sort_by, limit):
     if (flask.request.args.get('cat')):
