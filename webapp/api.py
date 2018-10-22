@@ -71,7 +71,10 @@ def get_majors(category_id = None, minimum_salary = None, major_contains = None,
         #add it into the end of cursor
         #write a sql Query - order by the new added column in the each row in the end
         #cursor.execute(new SQL query )
-    majors = get_list_of_sorted_majors(cursor, arguments)
+    if(arguments['sort_by']):
+        majors = get_list_of_sorted_majors(cursor, arguments)
+    else:
+	majors = get_list_of_unsorted_majors(cursor, arguments)
     return json.dumps(majors)
     # Don't forget to close the database connection.
     connection.close()
@@ -87,19 +90,22 @@ def get_list_of_sorted_majors(cursor, arguments):
             sort_key = arguments['sort_by']
         majors[sort_key] = major
     majors = collections.OrderedDict(sorted(majors.items()))
+    print(majors)
     return majors
 
 def get_major_dictionary(row):
     data_types = ["id", "major", "total", "men", "women", "category", "employed", "full_time", "part_time", "unemployed",
             "median", "p25th", "p75th", "college_jobs",  "non_college_jobs", "low_wage_jobs"]
-    major = {}
+    major = collections.OrderedDict()
+    index = 0
     for cell in row:
-        index = index + 1
         major[data_types[index]] = str(cell)
-    if(row[9] is not None and row[2] is not None):
-        major["unemployment_rate"] = str(int(row[9])/int(row[2]))
-    else:
-        major["unemployment_rate"] = "NULL"
+        if(index==9):
+            if(row[9] is not None and row[2] is not None):
+                major["unemployment_rate"] = str(int(row[9])/int(row[2]))
+            else:
+                major["unemployment_rate"] = "NULL"
+        index = index + 1
     return major
 
 def get_sort_key_percent(major, divisor):
