@@ -71,7 +71,8 @@ def get_majors(category_id = None, minimum_salary = None, major_contains = None,
         #add it into the end of cursor
         #write a sql Query - order by the new added column in the each row in the end
         #cursor.execute(new SQL query )
-    if(arguments['sort_by']):
+    print(arguments['sort_by'])
+    if(arguments['sort_by'] != None):
         majors = get_list_of_sorted_majors(cursor, arguments)
     else:
 	       majors = get_list_of_unsorted_majors(cursor)
@@ -95,6 +96,7 @@ def get_list_of_sorted_majors(cursor, arguments):
             sort_key = get_sort_key_percent(major, arguments['sort_by'])
         else:
             sort_key = arguments['sort_by']
+        print(sort_key)
         majors_sort_key_pairs[sort_key] = major
     majors = sorted(majors_sort_key_pairs)
     return majors
@@ -149,9 +151,9 @@ def get_query_requirements(arguments):
     if (len(query_requirements) > 0):
         query_requirements = query_requirements[:-5] # remove extra ' AND '
     if arguments['sort_by'] != None:
-        query_requirements = query_requirements + ' ORDER BY ' + arguments['sort_by']
+        query_requirements = query_requirements + 'ORDER BY ' + arguments['sort_by']
     if arguments['limit'] != None:
-        query_requirements = query_requirements + ' LIMIT ' + arguments['limit']
+        query_requirements = query_requirements + 'LIMIT ' + arguments['limit']
     print(query_requirements)
 
     return(query_requirements)
