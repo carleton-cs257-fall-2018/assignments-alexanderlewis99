@@ -120,7 +120,7 @@ def get_query_requirements(arguments):
     if arguments['median'] != None:
         query_requirements = query_requirements + 'median > ' + arguments['median'] + ' AND '
     if arguments['major_contains'] != None:
-        query_requirements = query_requirements + 'major IN ' + arguments['major_contains'] + ' AND '
+        query_requirements = query_requirements + 'major LIKE %' + arguments['major_contains'] + '% AND '
     if (len(query_requirements) > 0):
         query_requirements = query_requirements[:-5] # remove extra ' AND '
     if arguments['sort_by'] != None:
