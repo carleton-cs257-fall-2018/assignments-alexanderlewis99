@@ -85,8 +85,11 @@ def get_majors(category_id = None, minimum_salary = None, major_contains = None,
             index = index + 1
         text_to_return = text_to_return[:-2]
         text_to_return = text_to_return + "}, "
-    text_to_return = text_to_return[:-1]
-    text_to_return = text_to_return + ']'
+    text_to_return = text_to_return[:-2]
+    if (!text_to_return)
+        text_to_return = text_to_return + ']'
+  
+
     return(text_to_return)
 
     # Don't forget to close the database connection.
