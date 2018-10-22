@@ -88,7 +88,7 @@ def get_majors(category_id = None, minimum_salary = None, major_contains = None,
     text_to_return = text_to_return[:-2]
     if (text_to_return):
         text_to_return = text_to_return + ']'
-  
+
 
     return(text_to_return)
 
