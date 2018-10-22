@@ -74,13 +74,21 @@ def get_majors(category_id = None, minimum_salary = None, major_contains = None,
     if(arguments['sort_by']):
         majors = get_list_of_sorted_majors(cursor, arguments)
     else:
-	majors = get_list_of_unsorted_majors(cursor, arguments)
+	       majors = get_list_of_unsorted_majors(cursor)
     return json.dumps(majors)
     # Don't forget to close the database connection.
     connection.close()
 
+def get_list_of_unsorted_majors(cursor):
+    majors = []
+    for row in cursor:
+        major = get_major_dictionary(row)
+        majors.append(major)
+    print(majors)
+    return majors
+
 def get_list_of_sorted_majors(cursor, arguments):
-    majors = {}
+    majors_sort_key_pairs = {}
     for row in cursor:
         major = get_major_dictionary(row)
         if arguments['sort_by'] in ('men', 'women', 'employed, full_time', 'part_time', 'unemployment_rate', 'employed',
@@ -88,8 +96,11 @@ def get_list_of_sorted_majors(cursor, arguments):
             sort_key = get_sort_key_percent(major, arguments['sort_by'])
         else:
             sort_key = arguments['sort_by']
-        majors[sort_key] = major
-    majors = collections.OrderedDict(sorted(majors.items()))
+        majors_sort_key_pairs[sort_key] = major
+    majors_sort_key_pairs = collections.OrderedDict(sorted(majors_sort_key_pairs.items()))
+    majors = []
+    for major in majors_sort_key_pairs:
+        majors.append(major[1]) #gets dictionary without sort key
     print(majors)
     return majors
 
