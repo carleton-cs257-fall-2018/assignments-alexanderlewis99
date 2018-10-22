@@ -78,7 +78,6 @@ def get_majors(category_id = None, minimum_salary = None, major_contains = None,
             text_to_return = text_to_return + keys[index] + ": " + str(cell) + ", "
             if (keys[index] == "unemployed"):
                 if(row[9] is not None and row[2] is not None):
-                    print(str(row[2]), str(row[9]))
                     text_to_return = text_to_return + "unemployment_rate" + ":" + str(int(row[9])/int(row[2])) + ", "
                 else:
                     text_to_return = text_to_return + "unemployment_rate" + ":" + "NULL" + ", "
@@ -120,7 +119,7 @@ def get_query_requirements(arguments):
     if arguments['median'] != None:
         query_requirements = query_requirements + 'median > ' + arguments['median'] + ' AND '
     if arguments['major_contains'] != None:
-        query_requirements = query_requirements + "major LIKE '%" + arguments['major_contains'] + "%' AND "
+        query_requirements = query_requirements + "major LIKE '%" + arguments['major_contains'].lower() + "%' AND "
     if (len(query_requirements) > 0):
         query_requirements = query_requirements[:-5] # remove extra ' AND '
     if arguments['sort_by'] != None:
