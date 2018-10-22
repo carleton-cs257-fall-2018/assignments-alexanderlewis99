@@ -84,10 +84,13 @@ def get_list_of_sorted_majors(cursor, arguments):
                 'college_jobs', "non_college_jobs", "low_wage_jobs"):
             sort_key = get_sort_key_percent(major, arguments['sort_by'])
         else:
-            sort_key = arguments['sort_by']
+            sort_key = major[arguments['sort_by']]
         print(sort_key)
         majors_sort_key_pairs[sort_key] = major
-    majors = sorted(majors_sort_key_pairs)
+    majors_keys_sorted_descending = sorted(majors_sort_key_pairs, reverse=True)
+    majors = []
+    for key in majors_keys_sorted_descending:
+        majors.append(majors_sort_key_pairs[key])
     return majors
 
 def get_major_dictionary(row):
@@ -105,10 +108,10 @@ def get_major_dictionary(row):
         index = index + 1
     return major
 
-def get_sort_key_percent(major, divisor):
-    if(major['total'] is not None and row[divisor] is not None):
-        return int(major['total'])/int(major[divisor])
-    else:
+def get_sort_key_percent(major, dividend):
+    try:
+        return int(major[dividend])/int(major['total'])
+    except:
         return 0
 
 def get_url_query_string_args(category_id, minimum_salary, major_contains, sort_by, limit):
@@ -141,8 +144,8 @@ def get_query_requirements(arguments):
         query_requirements = query_requirements + "major LIKE '%" + arguments['major_contains'].upper() + "%' AND "
     if (len(query_requirements) > 0):
         query_requirements = query_requirements[:-5] # remove extra ' AND '
-    if arguments['sort_by'] != None:
-        query_requirements = query_requirements + 'ORDER BY ' + arguments['sort_by']
+    #if arguments['sort_by'] != None:
+    #    query_requirements = query_requirements + 'ORDER BY ' + arguments['sort_by']
     if arguments['limit'] != None:
         query_requirements = query_requirements + 'LIMIT ' + arguments['limit']
     print(query_requirements)
