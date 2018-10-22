@@ -60,13 +60,6 @@ def get_majors(category_id = None, minimum_salary = None, major_contains = None,
     except Exception as e:
         print(e)
         exit()
-    #percent woman and percent man calculation for each major
-    #for row in cursor:
-        #tell me by what to sort and call it X
-        #find the percent of X
-        #add it into the end of cursor
-        #write a sql Query - order by the new added column in the each row in the end
-        #cursor.execute(new SQL query )
     print(arguments['sort_by'])
     if(arguments['sort_by'] != None):
         majors = get_list_of_sorted_majors(cursor, arguments)
