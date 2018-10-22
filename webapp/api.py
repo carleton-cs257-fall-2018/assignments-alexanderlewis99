@@ -71,22 +71,36 @@ def get_majors(category_id = None, minimum_salary = None, major_contains = None,
     keys = ["id", "major", "total", "men", "women", "category", "employed", "full_time", "part_time", "unemployed",
     "median", "p25th", "p75th", "college_jobs",  "non_college_jobs", "low_wage_jobs"]
 
+    #percent woman and percent man calculation for each major 
+
     for row in cursor:
-        text_to_return = text_to_return + "{"
-        index = 0
+        #tell me by what to sort and call it X
+        #find the percent of X
+        #add it into the end of cursor
+        #write a sql Query - order by the new added column in the each row in the end
+        #cursor.execute(new SQL query )
+
+
+    for row in cursor:
         for cell in row:
             text_to_return = text_to_return + keys[index] + ": " + str(cell) + ", "
+            
+
             if (keys[index] == "unemployed"):
                 if(row[9] is not None and row[2] is not None):
                     text_to_return = text_to_return + "unemployment_rate" + ":" + str(int(row[9])/int(row[2])) + ", "
                 else:
                     text_to_return = text_to_return + "unemployment_rate" + ":" + "NULL" + ", "
+
+
             index = index + 1
         text_to_return = text_to_return[:-2]
         text_to_return = text_to_return + "}, "
     text_to_return = text_to_return[:-2]
     if (text_to_return):
         text_to_return = text_to_return + ']'
+
+
 
 
     return(text_to_return)
@@ -126,8 +140,8 @@ def get_query_requirements(arguments):
         query_requirements = query_requirements + ' ORDER BY ' + arguments['sort_by']
     if arguments['limit'] != None:
         query_requirements = query_requirements + ' LIMIT ' + arguments['limit']
-
     print(query_requirements)
+
     return(query_requirements)
 
 if __name__ == '__main__':
