@@ -45,6 +45,8 @@ def get_majors(category_id = None, minimum_salary = None, major_contains = None,
     arguments = get_url_query_string_args(category_id, minimum_salary, major_contains, sort_by, limit)
     sql_query_requirements = get_query_requirements(arguments)
 
+
+
     text_to_return = ""
     text_to_return = text_to_return + 'Hello!'
 
@@ -81,8 +83,8 @@ def get_majors(category_id = None, minimum_salary = None, major_contains = None,
                 if(row[9] is not None and row[2] is not None):
                     print(str(row[2]), str(row[9]))
                     text_to_return = text_to_return + "unemployment_rate" + ":" + str(int(row[9])/int(row[2])) + ", "
-            else:
-                  text_to_return = text_to_return + "unemployment_rate" + ":" + "NULL" + ", "
+                else:
+                    text_to_return = text_to_return + "unemployment_rate" + ":" + "NULL" + ", "
             index = index + 1
         text_to_return = text_to_return[:-1]
         text_to_return = text_to_return + "}, "
