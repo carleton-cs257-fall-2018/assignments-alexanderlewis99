@@ -48,8 +48,6 @@ def get_majors(category_id = None, minimum_salary = None, major_contains = None,
 
 
     text_to_return = ""
-    text_to_return = text_to_return + 'Hello!'
-
     try:
         connection = psycopg2.connect(database=database, user=user, password=password)
     except Exception as e:
@@ -69,16 +67,15 @@ def get_majors(category_id = None, minimum_salary = None, major_contains = None,
     except Exception as e:
         print(e)
         exit()
-
-    text_to_return = text_to_return + '===== Majors ====='
-
+    text_to_return = text_to_return + '['
     keys = ["id", "major", "total", "men", "women", "category", "employed", "full_time", "part_time", "unemployed",
     "median", "p25th", "p75th", "college_jobs",  "non_college_jobs", "low_wage_jobs"]
+
     for row in cursor:
         text_to_return = text_to_return + "{"
         index = 0
         for cell in row:
-            text_to_return = text_to_return + keys[index] + ":" + str(cell) + ", "
+            text_to_return = text_to_return + keys[index] + ": " + str(cell) + ", "
             if (keys[index] == "unemployed"):
                 if(row[9] is not None and row[2] is not None):
                     print(str(row[2]), str(row[9]))
@@ -86,8 +83,10 @@ def get_majors(category_id = None, minimum_salary = None, major_contains = None,
                 else:
                     text_to_return = text_to_return + "unemployment_rate" + ":" + "NULL" + ", "
             index = index + 1
-        text_to_return = text_to_return[:-1]
+        text_to_return = text_to_return[:-2]
         text_to_return = text_to_return + "}, "
+    text_to_return = text_to_return[:-1]
+    text_to_return = text_to_return + ']'
     return(text_to_return)
 
     # Don't forget to close the database connection.
