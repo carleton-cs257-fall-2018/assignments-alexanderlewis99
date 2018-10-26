@@ -144,11 +144,11 @@ def get_list_of_sorted_majors(cursor, arguments, categories):
     # in the order of their matching keys.
     majors_order_key_pairs = {}
     sort_type = arguments['sort_by']
-    print('sort_type:' + sort_type)
+    print('sort_type:' + str(sort_type))
     for row in cursor:
         major = get_major_dictionary(row, categories)
         order_key = get_order_key(major, sort_type)
-        print('order_key:' + order_key)
+        print('order_key:' + str(order_key))
         majors_order_key_pairs[order_key] = major
     majors_keys_sorted_descending = sorted(majors_order_key_pairs, reverse=True)
     majors = []
@@ -164,7 +164,7 @@ def get_order_key(major, sort_type):
         print('percent;')
     else:
         order_key = get_order_key_as_numeric(major, sort_type)
-    print(order_key)
+    print(str(order_key))
     return order_key
 
 def get_order_key_as_percent(major, dividend):
