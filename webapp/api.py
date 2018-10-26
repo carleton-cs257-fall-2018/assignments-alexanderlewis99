@@ -18,56 +18,71 @@ app = flask.Flask(__name__)
 @app.route('/')
 def hello():
     # Connect to the database
-    text_to_return = ""
-    text_to_return = text_to_return + 'Hello!'
-    try:
-        connection = psycopg2.connect(database=database, user=user, password=password)
-    except Exception as e:
-        text_to_return + e
-        exit()
-    try:
-        cursor = connection.cursor()
-        sql_query = 'SELECT * FROM majors'
-        cursor.execute(sql_query)
-        for row in cursor:
-            text_to_return = text_to_return + ('===== Majors =====')
-            text_to_return = text_to_return + row[1]
-        return(text_to_return)
-    except Exception as e:
-        text_to_return = text_to_return + ":( It didn't work"
-        text_to_return = text_to_return + e
-        return(text_to_return)
-        exit()
-
-
+    return("Hello! Welcome to Bat and Alec's API."
+                + "Use query strings in the URL: cat=category_id, min_sal=minimum_salary,"
+                + "maj=major_search_text, sort=sort_by, lim=limit."
+                + "You can sort by any dictionary key in a major. Enjoy!")
 
 @app.route('/majors')
 def get_majors(category_id = None, minimum_salary = None, major_contains = None, sort_by = None, limit = None):
     try:
         connection = psycopg2.connect(database=database, user=user, password=password)
     except Exception as e:
-        text_to_return + e
+        print(e)
         exit()
-
-    arguments = get_url_query_string_args(category_id, minimum_salary, major_contains, sort_by, limit)
-    sql_query = 'SELECT * FROM majors ' + get_query_requirements(arguments)
-    print(sql_query)
-
+    user_parameters = get_user_parameters(category_id, minimum_salary, major_contains, sort_by, limit)
+    sql_query = get_sql_query(user_parameters)
     try:
         cursor = connection.cursor()
         cursor.execute(sql_query)
-
     except Exception as e:
         print(e)
         exit()
-    print(arguments['sort_by'])
-    if(arguments['sort_by'] != None):
-        majors = get_list_of_sorted_majors(cursor, arguments)
+    if(user_parameters['sort_by'] != None):
+        majors = get_list_of_sorted_majors(cursor, user_parameters)
     else:
-	       majors = get_list_of_unsorted_majors(cursor)
+	    majors = get_list_of_unsorted_majors(cursor)
     return json.dumps(majors)
-    # Don't forget to close the database connection.
     connection.close()
+
+def get_user_parameters(category_id, minimum_salary, major_contains, sort_by, limit):
+    if (flask.request.args.get('cat')):
+        category_id = flask.request.args.get('cat')
+    if (flask.request.args.get('min_sal')):
+        minimum_salary  = flask.request.args.get('min_sal')
+    if (flask.request.args.get('maj')):
+        major_contains = flask.request.args.get('maj')
+    if (flask.request.args.get('sort')):
+        sort_by = flask.request.args.get('sort')
+    if (flask.request.args.get('lim')):
+        limit = flask.request.args.get('lim')
+    user_parameters = {'category_id': category_id,
+                 'median': minimum_salary,
+                 'major_contains': major_contains,
+                 'sort_by': sort_by,
+                 'limit': limit}
+    return user_parameters
+
+def get_sql_query(user_parameters):
+    query_where_clause = get_query_where_clause(user_parameters)
+    query = 'SELECT * FROM majors ' + query_where_clause
+    return(query)
+
+def get_query_where_clause(arguments):
+    where_clause = ' '
+    if arguments['category_id'] != None or arguments['median'] != None or arguments['major_contains'] != None:
+        where_clause = where_clause + 'WHERE '
+    if arguments['category_id'] != None:
+        where_clause = where_clause + 'category_id = ' + arguments['category_id'] + ' AND '
+    if arguments['median'] != None:
+        where_clause = where_clause + 'median > ' + arguments['median'] + ' AND '
+    if arguments['major_contains'] != None:
+        where_clause = where_clause + "major LIKE '%" + arguments['major_contains'].upper() + "%' AND "
+    if (len(query_requirements) > 0):
+        where_clause = where_clause[:-5] # remove extra ' AND '
+    if arguments['limit'] != None:
+        where_clause = where_clause + 'LIMIT ' + arguments['limit']
+    return(where_clause)
 
 def get_list_of_unsorted_majors(cursor):
     majors = []
@@ -114,42 +129,7 @@ def get_sort_key_percent(major, dividend):
     except:
         return 0
 
-def get_url_query_string_args(category_id, minimum_salary, major_contains, sort_by, limit):
-    if (flask.request.args.get('cat')):
-        category_id = flask.request.args.get('cat')
-    if (flask.request.args.get('min_sal')):
-        minimum_salary  = flask.request.args.get('min_sal')
-    if (flask.request.args.get('maj')):
-        major_contains = flask.request.args.get('maj')
-    if (flask.request.args.get('sort')):
-        sort_by = flask.request.args.get('sort')
-    if (flask.request.args.get('lim')):
-        limit = flask.request.args.get('lim')
-    arguments = {'category_id': category_id,
-                 'median': minimum_salary,
-                 'major_contains': major_contains,
-                 'sort_by': sort_by,
-                 'limit': limit}
-    return arguments
 
-def get_query_requirements(arguments):
-    query_requirements = ' '
-    if arguments['category_id'] != None or arguments['median'] != None or arguments['major_contains'] != None:
-        query_requirements = query_requirements + 'WHERE '
-    if arguments['category_id'] != None:
-        query_requirements = query_requirements + 'category_id = ' + arguments['category_id'] + ' AND '
-    if arguments['median'] != None:
-        query_requirements = query_requirements + 'median > ' + arguments['median'] + ' AND '
-    if arguments['major_contains'] != None:
-        query_requirements = query_requirements + "major LIKE '%" + arguments['major_contains'].upper() + "%' AND "
-    if (len(query_requirements) > 0):
-        query_requirements = query_requirements[:-5] # remove extra ' AND '
-    #if arguments['sort_by'] != None:
-    #    query_requirements = query_requirements + 'ORDER BY ' + arguments['sort_by']
-    if arguments['limit'] != None:
-        query_requirements = query_requirements + 'LIMIT ' + arguments['limit']
-    print(query_requirements)
-    return(query_requirements)
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:
