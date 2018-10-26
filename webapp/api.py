@@ -39,11 +39,10 @@ def get_majors(category_id = None, minimum_salary = None, major_contains = None,
         print(e)
         exit()
     categories = get_category_id_pairs(connection)
-    print(categories)
     if(user_parameters['sort_by'] != None):
-        majors = get_list_of_sorted_majors(cursor, user_parameters)
+        majors = get_list_of_sorted_majors(cursor, user_parameters, categories)
     else:
-	    majors = get_list_of_unsorted_majors(cursor)
+	    majors = get_list_of_unsorted_majors(cursor, categories)
     return json.dumps(majors)
     connection.close()
 
@@ -86,7 +85,7 @@ def get_query_where_clause(arguments):
         where_clause = where_clause + 'LIMIT ' + arguments['limit']
     return(where_clause)
 
-def get_major_dictionary(row):
+def get_major_dictionary(row, categories):
     data_types = ["id", "major", "total", "men", "women", "category_id", "employed", "full_time", "part_time", "unemployed",
             "median", "p25th", "p75th", "college_jobs",  "non_college_jobs", "low_wage_jobs"]
     major = collections.OrderedDict()
@@ -99,6 +98,13 @@ def get_major_dictionary(row):
             else:
                 major["unemployment_rate"] = "NULL"
         index = index + 1
+    major = replace_category_id_with_category(major, categories)
+    return major
+
+def replace_category_id_with_category(major, categories):
+    category_id = major["category_id"]
+    major["category"] = categories[category_id]
+    major.pop('category_id', None)
     return major
 
 def get_category_id_pairs(connection):
@@ -114,21 +120,17 @@ def get_category_id_pairs(connection):
         categories[row[0]] = row[1]
     return categories
 
-def change_category_id_to_category(major):
-    category_id = major["category_id"]
-
-
-def get_list_of_unsorted_majors(cursor):
+def get_list_of_unsorted_majors(cursor, categories):
     majors = []
     for row in cursor:
-        major = get_major_dictionary(row)
+        major = get_major_dictionary(row, categories)
         majors.append(major)
     return majors
 
-def get_list_of_sorted_majors(cursor, arguments):
+def get_list_of_sorted_majors(cursor, arguments, categories):
     majors_sort_key_pairs = {}
     for row in cursor:
-        major = get_major_dictionary(row)
+        major = get_major_dictionary(row, categories)
         if arguments['sort_by'] in ('men', 'women', 'employed, full_time', 'part_time', 'unemployment_rate', 'employed',
                 'college_jobs', "non_college_jobs", "low_wage_jobs"):
             sort_key = get_sort_key_percent(major, arguments['sort_by'])
