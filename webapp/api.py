@@ -179,6 +179,7 @@ def get_order_key_as_numeric(major, sort_type):
         return 0
     else:
         int(order_key)
+        return order_key
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:
