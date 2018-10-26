@@ -78,7 +78,7 @@ def get_query_where_clause(arguments):
         where_clause = where_clause + 'median > ' + arguments['median'] + ' AND '
     if arguments['major_contains'] != None:
         where_clause = where_clause + "major LIKE '%" + arguments['major_contains'].upper() + "%' AND "
-    if (len(query_requirements) > 0):
+    if (len(where_clause) > 0):
         where_clause = where_clause[:-5] # remove extra ' AND '
     if arguments['limit'] != None:
         where_clause = where_clause + 'LIMIT ' + arguments['limit']
