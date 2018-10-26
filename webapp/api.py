@@ -21,7 +21,8 @@ def hello():
     return("Hello! Welcome to Bat and Alec's API."
                 + "Use query strings in the URL: cat=category_id, min_sal=minimum_salary,"
                 + "maj=major_search_text, sort=sort_by, lim=limit."
-                + "You can sort by any dictionary key in a major. Enjoy!")
+                + "You can sort by any dictionary key in a major."
+                + "If you want to search by percent instead of raw numbers, use 'percent_key' (i.e. 'percent_women'). Enjoy!")
 
 @app.route('/majors')
 def get_majors(category_id = None, minimum_salary = None, major_contains = None, sort_by = None, limit = None):
@@ -138,28 +139,31 @@ def get_list_of_unsorted_majors(cursor, categories):
     return majors
 
 def get_list_of_sorted_majors(cursor, arguments, categories):
-    majors_sort_key_pairs = {}
+    # Every major is linked with a key called an "order key"
+    # The order keys are sorted and then the majors are retrieved
+    # in the order of their matching keys.
+    majors_order_key_pairs = {}
     for row in cursor:
         major = get_major_dictionary(row, categories)
         sort_type = arguments['sort_by']
-        sort_key = get_sort_key(major, sort_type)
-        print(sort_key)
-        majors_sort_key_pairs[sort_key] = major
-    majors_keys_sorted_descending = sorted(majors_sort_key_pairs, reverse=True)
+        order_key = get_order_key(major, sort_type)
+        majors_order_key_pairs[order_key] = major
+    majors_keys_sorted_descending = sorted(majors_order_key_pairs, reverse=True)
     majors = []
     for key in majors_keys_sorted_descending:
-        majors.append(majors_sort_key_pairs[key])
+        majors.append(majors_order_key_pairs[key])
     return majors
 
-def get_sort_key(major, sort_type):
-    if sort_type in ('men', 'women', 'employed, full_time', 'part_time', 'unemployment_rate', 'employed',
-            'college_jobs', "non_college_jobs", "low_wage_jobs"):
-        sort_key = get_sort_key_as_percent(major, sort_type)
+def get_order_key(major, sort_type):
+    if sort_type in ('percent_men', 'percent_women', 'percent_employed', 'percent_full_time', 'percent_part_time',
+                     'percent_unemployed', 'percent_employed', 'percent_college_jobs', 'percent_non_college_jobs',
+                     'percent_low_wage_jobs'):
+        order_key = get_sort_order_as_percent(major, sort_type[8:])
     else:
-        sort_key = major[sort_type]
-    return sort_key
+        order_key = major[sort_type]
+    return order_key
 
-def get_sort_key_as_percent(major, dividend):
+def get_order_key_as_percent(major, dividend):
     try:
         return int(major[dividend])/int(major['total'])
     except:
