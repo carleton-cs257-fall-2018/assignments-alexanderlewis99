@@ -58,7 +58,7 @@ def get_data_from_server(connection, sql_query):
 
 def reduce_number_of_majors_to_limit(majors, limit):
     if(limit is not None):
-        while len(majors) > limit:
+        while len(majors) > int(limit):
             majors.pop()
     return majors
 
