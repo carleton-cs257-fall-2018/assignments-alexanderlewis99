@@ -26,26 +26,41 @@ def hello():
 
 @app.route('/majors')
 def get_majors(category_id = None, minimum_salary = None, major_contains = None, sort_by = None, limit = None):
+    connection = get_connection_to_server()
+    user_parameters = get_user_parameters(category_id, minimum_salary, major_contains, sort_by, limit)
+    sql_query = get_sql_query(user_parameters)
+    cursor = get_data_from_server(connection, sql_query)
+    categories = get_category_id_pairs(connection)
+    if(user_parameters['sort_by'] is not None):
+        majors = get_list_of_sorted_majors(cursor, user_parameters, categories)
+    else:
+	    majors = get_list_of_unsorted_majors(cursor, categories)
+    majors = reduce_number_of_majors_to_limit(majors, user_parameters['limit'])
+    return json.dumps(majors)
+    connection.close()
+
+def get_connection_to_server():
     try:
         connection = psycopg2.connect(database=database, user=user, password=password)
     except Exception as e:
         print(e)
         exit()
-    user_parameters = get_user_parameters(category_id, minimum_salary, major_contains, sort_by, limit)
-    sql_query = get_sql_query(user_parameters)
+    return connection
+
+def get_data_from_server(connection, sql_query):
     try:
         cursor = connection.cursor()
         cursor.execute(sql_query)
     except Exception as e:
         print(e)
         exit()
-    categories = get_category_id_pairs(connection)
-    if(user_parameters['sort_by'] != None):
-        majors = get_list_of_sorted_majors(cursor, user_parameters, categories)
-    else:
-	    majors = get_list_of_unsorted_majors(cursor, categories)
-    return json.dumps(majors)
-    connection.close()
+    return cursor
+
+def reduce_number_of_majors_to_limit(majors, limit):
+    if(limit is not None):
+        while len(majors) > limit:
+            majors.pop()
+    return majors
 
 def get_user_parameters(category_id, minimum_salary, major_contains, sort_by, limit):
     if (flask.request.args.get('cat')):
@@ -82,8 +97,6 @@ def get_query_where_clause(arguments):
         where_clause = where_clause + "major LIKE '%" + arguments['major_contains'].upper() + "%' AND "
     if (len(where_clause) > 0):
         where_clause = where_clause[:-5] # remove extra ' AND '
-    if arguments['limit'] != None:
-        where_clause = where_clause + 'LIMIT ' + arguments['limit']
     return(where_clause)
 
 def get_major_dictionary(row, categories):
