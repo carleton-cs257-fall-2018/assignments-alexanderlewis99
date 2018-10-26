@@ -91,15 +91,23 @@ def get_major_dictionary(row, categories):
     major = collections.OrderedDict()
     index = 0
     for cell in row:
-        major[data_types[index]] = str(cell)
-        if(index==9):
-            if(row[9] is not None and row[2] is not None):
-                major["unemployment_rate"] = str(int(row[9])/int(row[2]))
-            else:
-                major["unemployment_rate"] = "NULL"
+        data_type = data_types[index]
+        major[data_type] = str(cell)
+        if(data_type == "unemployed"):
+            unemployment_rate = get_unemployment_rate(row)
+            major["unemployment_rate"] = unemployment_rate
         index = index + 1
     major = replace_category_id_with_category(major, categories)
     return major
+
+def get_unemployment_rate(row):
+    total = row[2]
+    unemployed = row[9]
+    if(total is not None and unemployed is not None):
+        unemployment_rate = str(int(unemployed)/int(total))
+    else:
+        unemployment_rate = "NULL"
+    return unemployment_rate
 
 def replace_category_id_with_category(major, categories):
     category_id = major["category_id"]
@@ -117,7 +125,9 @@ def get_category_id_pairs(connection):
         print(e)
         exit()
     for row in cursor:
-        categories[row[0]] = row[1]
+        id = row[0]
+        category = row[1]
+        categories[id] = category
     return categories
 
 def get_list_of_unsorted_majors(cursor, categories):
@@ -131,11 +141,8 @@ def get_list_of_sorted_majors(cursor, arguments, categories):
     majors_sort_key_pairs = {}
     for row in cursor:
         major = get_major_dictionary(row, categories)
-        if arguments['sort_by'] in ('men', 'women', 'employed, full_time', 'part_time', 'unemployment_rate', 'employed',
-                'college_jobs', "non_college_jobs", "low_wage_jobs"):
-            sort_key = get_sort_key_percent(major, arguments['sort_by'])
-        else:
-            sort_key = major[arguments['sort_by']]
+        sort_type = arguments['sort_by']
+        sort_key = get_sort_key(major, sort_type)
         print(sort_key)
         majors_sort_key_pairs[sort_key] = major
     majors_keys_sorted_descending = sorted(majors_sort_key_pairs, reverse=True)
@@ -144,8 +151,15 @@ def get_list_of_sorted_majors(cursor, arguments, categories):
         majors.append(majors_sort_key_pairs[key])
     return majors
 
+def get_sort_key(major, sort_type):
+    if sort_type in ('men', 'women', 'employed, full_time', 'part_time', 'unemployment_rate', 'employed',
+            'college_jobs', "non_college_jobs", "low_wage_jobs"):
+        sort_key = get_sort_key_as_percent(major, sort_type)
+    else:
+        sort_key = major[sort_type]
+    return sort_key
 
-def get_sort_key_percent(major, dividend):
+def get_sort_key_as_percent(major, dividend):
     try:
         return int(major[dividend])/int(major['total'])
     except:
