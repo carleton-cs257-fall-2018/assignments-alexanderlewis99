@@ -38,6 +38,8 @@ def get_majors(category_id = None, minimum_salary = None, major_contains = None,
     except Exception as e:
         print(e)
         exit()
+    categories = get_category_id_pairs(connection)
+    print(categories)
     if(user_parameters['sort_by'] != None):
         majors = get_list_of_sorted_majors(cursor, user_parameters)
     else:
@@ -84,6 +86,38 @@ def get_query_where_clause(arguments):
         where_clause = where_clause + 'LIMIT ' + arguments['limit']
     return(where_clause)
 
+def get_major_dictionary(row):
+    data_types = ["id", "major", "total", "men", "women", "category_id", "employed", "full_time", "part_time", "unemployed",
+            "median", "p25th", "p75th", "college_jobs",  "non_college_jobs", "low_wage_jobs"]
+    major = collections.OrderedDict()
+    index = 0
+    for cell in row:
+        major[data_types[index]] = str(cell)
+        if(index==9):
+            if(row[9] is not None and row[2] is not None):
+                major["unemployment_rate"] = str(int(row[9])/int(row[2]))
+            else:
+                major["unemployment_rate"] = "NULL"
+        index = index + 1
+    return major
+
+def get_category_id_pairs(connection):
+    sql_query = 'SELECT * FROM categories'
+    categories = {}
+    try:
+        cursor = connection.cursor()
+        cursor.execute(sql_query)
+    except Exception as e:
+        print(e)
+        exit()
+    for row in cursor:
+        categories[row[0]] = row[1]
+    return categories
+
+def change_category_id_to_category(major):
+    category_id = major["category_id"]
+
+
 def get_list_of_unsorted_majors(cursor):
     majors = []
     for row in cursor:
@@ -108,28 +142,12 @@ def get_list_of_sorted_majors(cursor, arguments):
         majors.append(majors_sort_key_pairs[key])
     return majors
 
-def get_major_dictionary(row):
-    data_types = ["id", "major", "total", "men", "women", "category", "employed", "full_time", "part_time", "unemployed",
-            "median", "p25th", "p75th", "college_jobs",  "non_college_jobs", "low_wage_jobs"]
-    major = collections.OrderedDict()
-    index = 0
-    for cell in row:
-        major[data_types[index]] = str(cell)
-        if(index==9):
-            if(row[9] is not None and row[2] is not None):
-                major["unemployment_rate"] = str(int(row[9])/int(row[2]))
-            else:
-                major["unemployment_rate"] = "NULL"
-        index = index + 1
-    return major
 
 def get_sort_key_percent(major, dividend):
     try:
         return int(major[dividend])/int(major['total'])
     except:
         return 0
-
-
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:
