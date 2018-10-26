@@ -157,11 +157,9 @@ def get_list_of_sorted_majors(cursor, arguments, categories):
     # in the order of their matching keys.
     majors_order_key_pairs = {}
     sort_type = arguments['sort_by']
-    print('sort_type:' + str(sort_type))
     for row in cursor:
         major = get_major_dictionary(row, categories)
         order_key = get_order_key(major, sort_type)
-        print('order_key:' + str(order_key))
         majors_order_key_pairs[order_key] = major
     majors_keys_sorted_descending = sorted(majors_order_key_pairs, reverse=True)
     majors = []
@@ -174,10 +172,8 @@ def get_order_key(major, sort_type):
                      'percent_unemployed', 'percent_employed', 'percent_college_jobs', 'percent_non_college_jobs',
                      'percent_low_wage_jobs'):
         order_key = get_order_key_as_percent(major, sort_type[8:])
-        print('percent;')
     else:
         order_key = get_order_key_as_numeric(major, sort_type)
-    print(str(order_key))
     return order_key
 
 def get_order_key_as_percent(major, dividend):
@@ -202,35 +198,3 @@ if __name__ == '__main__':
     host = sys.argv[1]
     port = int(sys.argv[2])
     app.run(host=host, port=port, debug=True)
-
-
-	# csv_file = open(recent-grads-category-ids.csv, encoding='utf-8')
-    # reader = csv.reader(csv_file)
-    # to_return = []
-	#
-    # if category_id:
-    #     for row in reader:
-    #         if row[6] == category_id:
-    #         	to_return.add(row)
-    # if major_contains:
-    # 	for item in to_return:
-    # 		if item[2] not in major_contains.lower():
-    # 			to_return.remove(item)
-    # if minimum_salary:
-    # 	for item in to_return:
-    # 		if item[15] < minimum_salary
-    # 			to_return(x)
-    # if to_return.len() > limit:
-    # 	to_return = to_return[0:limit-1]
-	#
-    # if sort_by:
-	#
-	#
-    # return (to_return)
-	#
-
-
-
-
-	#Get a list of all the undergraduate majors
-	#try to get the data and loop and add them into a list then print
