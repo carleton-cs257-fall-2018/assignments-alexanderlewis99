@@ -175,7 +175,7 @@ def get_order_key_as_percent(major, dividend):
 
 def get_order_key_as_numeric(major, sort_type):
     order_key = major[sort_type]
-    if(order_key == 'None' or order_key == 'NULL' or order_key is None)
+    if(order_key == 'None' or order_key == 'NULL' or order_key is None):
         return 0
     else:
         int(order_key)
