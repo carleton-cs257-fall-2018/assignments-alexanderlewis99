@@ -103,8 +103,8 @@ def get_major_dictionary(row, categories):
 
 def replace_category_id_with_category(major, categories):
     category_id = major["category_id"]
-    major["category"] = categories[category_id]
-    major.pop('category_id', None)
+    major["category"] = categories[int(category_id)]
+    major.pop("category_id", None)
     return major
 
 def get_category_id_pairs(connection):
