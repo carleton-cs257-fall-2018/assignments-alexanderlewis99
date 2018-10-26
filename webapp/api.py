@@ -178,8 +178,7 @@ def get_order_key_as_numeric(major, sort_type):
     if(order_key == 'None' or order_key == 'NULL' or order_key is None):
         return 0
     else:
-        int(order_key)
-        return order_key
+        return int(order_key)
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:
