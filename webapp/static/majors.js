@@ -47,7 +47,8 @@ function onMajorsButtonClicked() {
     var myParam = '?';
 
 
-    myParam = myParam + $('form').serialize();
+    //myParam = myParam + $('form').serialize();
+    var myParam = new FormData(document.querySelector('form'))
 
 
     //var min_sal = document.getElementById("min_sal").value;
@@ -67,7 +68,7 @@ function onMajorsButtonClicked() {
         myParam = myParam + min_sal + '&';
     if (!sort):
         myParam = myParam + sort + '&';*/
- 
+
    //myParam = myParam.substring(0, myParam.length-1);
 
 
