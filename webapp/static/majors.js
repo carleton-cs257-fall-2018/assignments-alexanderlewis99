@@ -43,10 +43,10 @@ function getBaseURL() {
 }
 
 function onMajorsButtonClicked() {
-    var url = getBaseURL() + '/majors';
+    var url = getBaseURL() + '/majors/';
 
     // Send the request to the Books API /majors/ endpoint
-    fetch(url, {method: 'get'})
+    fetch(url, {method: 'get', mode: "no-cors"})
 
     // When the results come back, transform them from JSON string into
     // a Javascript object (in this case, a list of author dictionaries).
