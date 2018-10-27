@@ -80,11 +80,12 @@ def reduce_number_of_majors_to_limit(majors, limit):
     return majors
 
 def produce_category_id(categories, input_category):
-    input_category = input_category.lower().replace(" and ", " & ").replace(" ", "")
+    input_category = input_category.lower().replace("%20", " ").replace(" and ", " & ").replace(" ", "")
     categories_reversed = {}
     for id in range(1, len(categories) + 1):
         category = categories[id].lower().replace(" ", "")
         categories_reversed[category] = id
+    print(categories_reversed)
     return categories_reversed[input_category]
 
 def get_user_parameters(category_id, minimum_salary, major_contains, sort_by, limit, categories):
