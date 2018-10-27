@@ -56,7 +56,7 @@ function onMajorsButtonClicked() {
         myParam = myParam + 'lim=' + args['lim'] + '&';
       }
       if (args["cat"]){
-        myParam = myParam + 'cat=' + args['cat'] + '&';
+        myParam = myParam + 'cat=' + args['cat'].replace("&", "and") + '&';
       }
       if (args["maj"]){
         myParam = myParam + 'maj=' + args['maj'] + '&';
@@ -69,7 +69,7 @@ function onMajorsButtonClicked() {
     } else {
       myParam = ""
     }
-    
+
     var url = getBaseURL() + '/majors/' + myParam;
     // Send the request to the Books API /majors/ endpoint
     //wish able to see the url
