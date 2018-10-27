@@ -106,12 +106,11 @@ def get_major_dictionary(row, categories):
     index = 0
     for cell in row:
         data_type = data_types[index]
-        major = add_cell_data_to_major(major, cell, data_type, row)
+        major = add_cell_data_to_major(major, cell, data_type, row, categories)
         index = index + 1
-    major = replace_category_id_with_category(major, categories)
     return major
 
-def add_cell_data_to_major(major, cell, data_type, row):
+def add_cell_data_to_major(major, cell, data_type, row, categories):
     if cell is None:
         major[data_type] = "NULL"
     elif data_type == "major":
@@ -121,6 +120,8 @@ def add_cell_data_to_major(major, cell, data_type, row):
         if(data_type == "unemployed"):
             unemployment_rate = get_unemployment_rate(row)
             major["unemployment_rate"] = unemployment_rate
+    if data_type == "category_id":
+        major = replace_category_id_with_category(major, categories)
     return major
 
 def get_unemployment_rate(row):
