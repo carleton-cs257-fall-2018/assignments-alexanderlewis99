@@ -112,7 +112,9 @@ def get_major_dictionary(row, categories):
     return major
 
 def add_cell_data_to_major(major, cell, data_type, row):
-    if data_type == "major":
+    if cell is None:
+        major[data_type] = "NULL"
+    elif data_type == "major":
         major[data_type] = str(cell)
     else:
         major[data_type] = int(cell)
