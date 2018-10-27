@@ -43,29 +43,32 @@ function getBaseURL() {
 }
 
 function onMajorsButtonClicked() {
-    var lim = document.getElementById("lim").value;
-    var cat = document.getElementById("cat").value;
-    var maj = document.getElementById("maj").value;
-    //var min_sal = document.getElementById("min_sal").value;
-    //var sort = document.getElementById("sort").value;
 
     var myParam = '?';
 
-    if (lim.lenght > 0){
-      myParam = myParam + 'lim=' + lim + '&';
-    }
-    if (cat.length > 0){
-      myParam = myParam + 'cat=' + cat + '&';
-    }
-    if (maj.length > 0){
-      myParam = myParam + 'maj=' + maj + '&';
-    }
+
+    myParam = myParam + $('form').serialize();
+
+
+    //var min_sal = document.getElementById("min_sal").value;
+    //var sort = document.getElementById("sort").value;
+
+
+    // if (lim.lenght > 0){
+    //   myParam = myParam + 'lim=' + lim + '&';
+    // }
+    // if (cat.length > 0){
+    //   myParam = myParam + 'cat=' + cat + '&';
+    // }
+    // if (maj.length > 0){
+    //   myParam = myParam + 'maj=' + maj + '&';
+    // }
     /*if (!min_sal):
         myParam = myParam + min_sal + '&';
     if (!sort):
         myParam = myParam + sort + '&';*/
-
-    myParam = myParam.substring(0, myParam.length-1);
+ 
+   //myParam = myParam.substring(0, myParam.length-1);
 
 
     var url = getBaseURL() + '/majors/' + myParam;
