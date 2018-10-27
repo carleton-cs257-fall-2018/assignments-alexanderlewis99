@@ -51,14 +51,14 @@ function onMajorsButtonClicked() {
 
     var myParam = '?';
 
-    if (!lim){
-      myParam = myParam + lim + '&';
+    if (lim.lenght > 0){
+      myParam = myParam + 'lim=' + lim + '&';
     }
-    if (!cat){
-      myParam = myParam + cat + '&';
+    if (cat.length > 0){
+      myParam = myParam + 'cat=' + cat + '&';
     }
-    if (!maj){
-      myParam = myParam + maj + '&';
+    if (maj.length > 0){
+      myParam = myParam + 'maj=' + maj + '&';
     }
     /*if (!min_sal):
         myParam = myParam + min_sal + '&';
@@ -66,8 +66,11 @@ function onMajorsButtonClicked() {
         myParam = myParam + sort + '&';*/
 
     myParam = myParam.substring(0, myParam.length-1);
+
+
     var url = getBaseURL() + '/majors/' + myParam;
     // Send the request to the Books API /majors/ endpoint
+    //wish able to see the url
     fetch(url, {method: 'get'})
 
     // When the results come back, transform them from JSON string into
@@ -79,7 +82,7 @@ function onMajorsButtonClicked() {
     .then(function(majorsList) {
         // Build the table body.
         var tableBody = '';
-        tableBody += myParam;
+        tableBody += url;
         tableBody += '<tr> <th>ID</th> <th>Major</th> <th>Category</th> </tr>'
 
         for (var k = 0; k < majorsList.length; k++) {
