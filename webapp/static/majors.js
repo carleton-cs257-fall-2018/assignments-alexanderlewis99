@@ -60,12 +60,13 @@ function onMajorsButtonClicked() {
     if (args["maj"]){
       myParam = myParam + 'maj=' + args['maj'] + '&';
     }
+    myParam = myParam.substring(0, myParam.length-1);
     /*if (!min_sal):
         myParam = myParam + min_sal + '&';
     if (!sort):
         myParam = myParam + sort + '&';*/
 
-   //myParam = myParam.substring(0, myParam.length-1);
+
 
 
     var url = getBaseURL() + '/majors/' + myParam;
