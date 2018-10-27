@@ -47,9 +47,9 @@ function onMajorsButtonClicked() {
     var myParam = '?';
     var formData = document.getElementById("majors_form");
     var args = [
-    ["lim", formData.elements[0].value], // Note the quotes around "10%"
-    ["cat", formData.elements[1].value],
-    ["maj", formData.elements[1].value]
+    ["lim", JSON.stringify(formData.elements[0].value)], // Note the quotes around "10%"
+    ["cat", JSON.stringify(formData.elements[1].value)],
+    ["maj", JSON.stringify(formData.elements[1].value)]
 ];
     if (!(args["lim"])){
       myParam = myParam + 'lim=' + lim + '&';
