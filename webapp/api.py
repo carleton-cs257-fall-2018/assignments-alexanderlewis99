@@ -106,12 +106,12 @@ def get_major_dictionary(row, categories):
     index = 0
     for cell in row:
         data_type = data_types[index]
-        major = add_cell_data_to_major(major, cell, data_type)
+        major = add_cell_data_to_major(major, cell, data_type, row)
         index = index + 1
     major = replace_category_id_with_category(major, categories)
     return major
 
-def add_cell_data_to_major(major, cell, data_type):
+def add_cell_data_to_major(major, cell, data_type, row):
     if data_type == "major":
         major[data_type] = str(cell)
     else:
