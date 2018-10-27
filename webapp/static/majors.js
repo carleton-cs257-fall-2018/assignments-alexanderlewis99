@@ -51,13 +51,13 @@ function onMajorsButtonClicked() {
     ["cat", formData.elements[1].value],
     ["maj", formData.elements[1].value]
 ];
-    if (args["lim"].length > 0){
+    if (!(args["lim"])){
       myParam = myParam + 'lim=' + lim + '&';
     }
-    if (args["cat"].length > 0){
+    if (!(args["cat"])){
       myParam = myParam + 'cat=' + cat + '&';
     }
-    if (args["maj"].length > 0){
+    if (!(args["maj"])){
       myParam = myParam + 'maj=' + maj + '&';
     }
     /*if (!min_sal):
