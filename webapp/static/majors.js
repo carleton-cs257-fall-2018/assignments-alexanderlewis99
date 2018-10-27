@@ -42,13 +42,42 @@ function getBaseURL() {
     return baseURL;
 }
 
+
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+
 function onMajorsButtonClicked() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const myParam = urlParams.get('myParam');
 
+
+    var lim = getParameterByName('lim');
+    var cat = getParameterByName('cat');
+    var maj = getParameterByName('maj');
+    var min_sal = getParameterByName('min_sal');
+    var sort = getParameterByName('sort');
+
+    String myParam = '?';
+
+    if (!lim):
+        myParam = myParam + lim + '&';
+    if (!cat):
+        myParam = myParam + cat + '&';
+    if (!maj):
+        myParam = myParam + maj + '&';
+    if (!min_sal):
+        myParam = myParam + min_sal + '&';
+    if (!sort):
+        myParam = myParam + sort + '&';
+
+    myParam = myParam[:-1]
     var url = getBaseURL() + '/majors/' + myParam;
-
-
     // Send the request to the Books API /majors/ endpoint
     fetch(url, {method: 'get'})
 
