@@ -24,7 +24,7 @@ def hello():
                 + "You can sort by any dictionary key in a major."
                 + "If you want to search by percent instead of raw numbers, use 'percent_key' (i.e. 'percent_women'). Enjoy!")
 
-@app.route('/majors')
+@app.route('/majors/')
 def get_majors(category_id = None, minimum_salary = None, major_contains = None, sort_by = None, limit = None):
     connection = get_connection_to_server()
     user_parameters = get_user_parameters(category_id, minimum_salary, major_contains, sort_by, limit)
