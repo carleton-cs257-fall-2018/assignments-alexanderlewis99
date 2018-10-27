@@ -49,7 +49,7 @@ function onMajorsButtonClicked() {
     //var min_sal = document.getElementById("min_sal").value;
     //var sort = document.getElementById("sort").value;
 
-    String myParam = '?';
+    var myParam = '?';
 
     if (!lim):
         myParam = myParam + lim + '&';
