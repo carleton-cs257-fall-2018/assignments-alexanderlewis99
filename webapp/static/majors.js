@@ -45,6 +45,7 @@ function getBaseURL() {
 function onMajorsButtonClicked() {
     const urlParams = new URLSearchParams(window.location.search);
     const myParam = urlParams.get('myParam');
+
     var url = getBaseURL() + '/majors/' + myParam;
 
 
@@ -60,7 +61,7 @@ function onMajorsButtonClicked() {
     .then(function(majorsList) {
         // Build the table body.
         var tableBody = '';
-
+        tableBody += myParam;
         tableBody += '<tr> <th>ID</th> <th>Major</th> <th>Category</th> </tr>'
 
         for (var k = 0; k < majorsList.length; k++) {
