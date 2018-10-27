@@ -42,26 +42,12 @@ function getBaseURL() {
     return baseURL;
 }
 
-
-function getParameterByName(name, url) {
-    if (!url) url = window.location.href;
-    name = name.replace(/[\[\]]/g, '\\$&');
-    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-        results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, ' '));
-}
-
-
 function onMajorsButtonClicked() {
-
-
-    var lim = getParameterByName('lim');
-    var cat = getParameterByName('cat');
-    var maj = getParameterByName('maj');
-    var min_sal = getParameterByName('min_sal');
-    var sort = getParameterByName('sort');
+    var lim = document.getElementById("lim").value;
+    var cat = document.getElementById("cat").value;
+    var maj = document.getElementById("maj").value;
+    //var min_sal = document.getElementById("min_sal").value;
+    //var sort = document.getElementById("sort").value;
 
     String myParam = '?';
 
@@ -71,10 +57,10 @@ function onMajorsButtonClicked() {
         myParam = myParam + cat + '&';
     if (!maj):
         myParam = myParam + maj + '&';
-    if (!min_sal):
+    /*if (!min_sal):
         myParam = myParam + min_sal + '&';
     if (!sort):
-        myParam = myParam + sort + '&';
+        myParam = myParam + sort + '&';*/
 
     myParam = myParam[:-1]
     var url = getBaseURL() + '/majors/' + myParam;
