@@ -45,25 +45,21 @@ function getBaseURL() {
 function onMajorsButtonClicked() {
 
     var myParam = '?';
-
-
-    //myParam = myParam + $('form').serialize();
-    var myParam = new FormData(document.querySelector('form'))
-
-
-    //var min_sal = document.getElementById("min_sal").value;
-    //var sort = document.getElementById("sort").value;
-
-
-    // if (lim.lenght > 0){
-    //   myParam = myParam + 'lim=' + lim + '&';
-    // }
-    // if (cat.length > 0){
-    //   myParam = myParam + 'cat=' + cat + '&';
-    // }
-    // if (maj.length > 0){
-    //   myParam = myParam + 'maj=' + maj + '&';
-    // }
+    var formData = document.getElementById("majors_form");
+    var args = [
+    ["lim", formData.elements[0].value], // Note the quotes around "10%"
+    ["cat", formData.elements[1].value],
+    ["maj", formData.elements[1].value]
+];
+    if (args["lim"].length > 0){
+      myParam = myParam + 'lim=' + lim + '&';
+    }
+    if (args["cat"].length > 0){
+      myParam = myParam + 'cat=' + cat + '&';
+    }
+    if (args["maj"].length > 0){
+      myParam = myParam + 'maj=' + maj + '&';
+    }
     /*if (!min_sal):
         myParam = myParam + min_sal + '&';
     if (!sort):
@@ -86,6 +82,7 @@ function onMajorsButtonClicked() {
     .then(function(majorsList) {
         // Build the table body.
         var tableBody = '';
+        tableBody += args["lim"] + args["cat"] + args["maj"];
         tableBody += url;
         tableBody += '<tr> <th>ID</th> <th>Major</th> <th>Category</th> </tr>'
 
