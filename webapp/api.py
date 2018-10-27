@@ -186,6 +186,8 @@ def get_order_key_as_numeric(major, sort_type):
     order_key = major[sort_type]
     if(order_key == 'None' or order_key == 'NULL' or order_key is None):
         return 0
+    elif sort_type == "unemployment_rate":
+        return float(order_key)
     else:
         return int(order_key)
 
