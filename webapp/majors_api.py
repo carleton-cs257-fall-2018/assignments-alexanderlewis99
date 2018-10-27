@@ -80,7 +80,7 @@ def reduce_number_of_majors_to_limit(majors, limit):
     return majors
 
 def get_category_id(categories, input_category):
-    input_category = input_category.lower().replace("%20", "").replace("and", "&")
+    input_category = input_category.lower().replace("%20", "").replace("and", "&").replace(" ", "")
     categories_reversed = {}
     for id in range(1, len(categories) + 1):
         category = categories[id].lower().replace(" ", "")
