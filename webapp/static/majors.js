@@ -65,7 +65,7 @@ function onMajorsButtonClicked() {
     if (!sort):
         myParam = myParam + sort + '&';*/
 
-    myParam = myParam[:-1]
+    myParam = myParam.substring(0, myParam.length-1);
     var url = getBaseURL() + '/majors/' + myParam;
     // Send the request to the Books API /majors/ endpoint
     fetch(url, {method: 'get'})
