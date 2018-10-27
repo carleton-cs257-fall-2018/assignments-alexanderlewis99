@@ -36,8 +36,10 @@ def get_majors(category_id = None, minimum_salary = None, major_contains = None,
     else:
 	    majors = get_list_of_unsorted_majors(cursor, categories)
     majors = reduce_number_of_majors_to_limit(majors, user_parameters['limit'])
-    return json.dumps(majors)
+    resp = flask.Response(json.dumps(majors))
+    resp.headers['Access-Control-Allow-Origin'] = '*'
     connection.close()
+    return resp
 
 def get_connection_to_server():
     try:
