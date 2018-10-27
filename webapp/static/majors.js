@@ -46,29 +46,30 @@ function onMajorsButtonClicked() {
 
     var myParam = '?';
     var formData = document.getElementById("majors_form");
-    var args = {
-    "lim": formData.elements[0].value, // Note the quotes around "10%"
-    "cat": formData.elements[1].value,
-    "maj": formData.elements[2].value
-  };
-    if (args["lim"]){
-      myParam = myParam + 'lim=' + args['lim'] + '&';
+    if(formData){
+      var args = {
+      "lim": formData.elements[0].value,
+      "cat": formData.elements[1].value,
+      "maj": formData.elements[2].value
+        };
+      if (args["lim"]){
+        myParam = myParam + 'lim=' + args['lim'] + '&';
+      }
+      if (args["cat"]){
+        myParam = myParam + 'cat=' + args['cat'] + '&';
+      }
+      if (args["maj"]){
+        myParam = myParam + 'maj=' + args['maj'] + '&';
+      }
+      myParam = myParam.substring(0, myParam.length-1);
+      /*if (!min_sal):
+          myParam = myParam + min_sal + '&';
+      if (!sort):
+          myParam = myParam + sort + '&';*/
+    } else {
+      myParam = ""
     }
-    if (args["cat"]){
-      myParam = myParam + 'cat=' + args['cat'] + '&';
-    }
-    if (args["maj"]){
-      myParam = myParam + 'maj=' + args['maj'] + '&';
-    }
-    myParam = myParam.substring(0, myParam.length-1);
-    /*if (!min_sal):
-        myParam = myParam + min_sal + '&';
-    if (!sort):
-        myParam = myParam + sort + '&';*/
-
-
-
-
+    
     var url = getBaseURL() + '/majors/' + myParam;
     // Send the request to the Books API /majors/ endpoint
     //wish able to see the url
