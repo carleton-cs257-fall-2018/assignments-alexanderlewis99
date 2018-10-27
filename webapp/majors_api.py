@@ -27,10 +27,10 @@ def hello():
 @app.route('/majors/')
 def get_majors(category_id = None, minimum_salary = None, major_contains = None, sort_by = None, limit = None):
     connection = get_connection_to_server()
-    user_parameters = get_user_parameters(category_id, minimum_salary, major_contains, sort_by, limit)
+    categories = get_category_id_pairs(connection)
+    user_parameters = get_user_parameters(category_id, minimum_salary, major_contains, sort_by, limit, categories)
     sql_query = get_sql_query(user_parameters)
     cursor = get_data_from_server(connection, sql_query)
-    categories = get_category_id_pairs(connection)
     if(user_parameters['sort_by'] is not None):
         majors = get_list_of_sorted_majors(cursor, user_parameters, categories)
     else:
@@ -48,6 +48,21 @@ def get_connection_to_server():
         print(e)
         exit()
     return connection
+
+def get_category_id_pairs(connection):
+    sql_query = 'SELECT * FROM categories'
+    categories = {}
+    try:
+        cursor = connection.cursor()
+        cursor.execute(sql_query)
+    except Exception as e:
+        print(e)
+        exit()
+    for row in cursor:
+        id = row[0]
+        category = row[1]
+        categories[id] = category
+    return categories
 
 def get_data_from_server(connection, sql_query):
     try:
@@ -72,7 +87,7 @@ def produce_category_id(categories, input_category):
         categories_reversed[category] = id
     return categories_reversed[input_category]
 
-def get_user_parameters(categories, category_id, minimum_salary, major_contains, sort_by, limit):
+def get_user_parameters(category_id, minimum_salary, major_contains, sort_by, limit, categories):
     if (flask.request.args.get('cat')):
         input_category = flask.request.args.get('cat')
         category_id = produce_category_id(categories, input_category)
@@ -149,21 +164,6 @@ def replace_category_id_with_category(major, categories):
     major["category"] = categories[int(category_id)]
     major.pop("category_id", None)
     return major
-
-def get_category_id_pairs(connection):
-    sql_query = 'SELECT * FROM categories'
-    categories = {}
-    try:
-        cursor = connection.cursor()
-        cursor.execute(sql_query)
-    except Exception as e:
-        print(e)
-        exit()
-    for row in cursor:
-        id = row[0]
-        category = row[1]
-        categories[id] = category
-    return categories
 
 def get_list_of_unsorted_majors(cursor, categories):
     majors = []
