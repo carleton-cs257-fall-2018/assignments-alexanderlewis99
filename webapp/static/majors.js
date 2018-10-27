@@ -43,7 +43,10 @@ function getBaseURL() {
 }
 
 function onMajorsButtonClicked() {
-    var url = getBaseURL() + '/majors/';
+    const urlParams = new URLSearchParams(window.location.search);
+    const myParam = urlParams.get('myParam');
+    var url = getBaseURL() + '/majors/' + myParam;
+
 
     // Send the request to the Books API /majors/ endpoint
     fetch(url, {method: 'get'})
@@ -58,7 +61,7 @@ function onMajorsButtonClicked() {
         // Build the table body.
         var tableBody = '';
 
-        tableBody += '<tr> <th>ID</th> <th>Major</th> <th>Category</th> </tr>' 
+        tableBody += '<tr> <th>ID</th> <th>Major</th> <th>Category</th> </tr>'
 
         for (var k = 0; k < majorsList.length; k++) {
             tableBody += '<tr>';
