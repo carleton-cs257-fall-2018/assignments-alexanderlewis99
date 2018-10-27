@@ -63,10 +63,20 @@ def reduce_number_of_majors_to_limit(majors, limit):
         while len(majors) > int(limit):
             majors.pop()
     return majors
+def produce_category_id(categories)
+    for key in range(1, categories.length()+1):
+        categories[key] = categories[key].lower()
+        categories[key] = categories[key].replace(" ", "")
+        categories[key] = categories[key].replace("&", "and")
+    
+    reversed_categories_with_lowerCats_and = dict (zip(categories.values().lower(),categories.keys()))
+    return reversed_categories_with_lowerCats_and[String(flask.request.args.get('cat')).lower]  
 
-def get_user_parameters(category_id, minimum_salary, major_contains, sort_by, limit):
+
+
+def get_user_parameters(categories, category_id, minimum_salary, major_contains, sort_by, limit):
     if (flask.request.args.get('cat')):
-        category_id = flask.request.args.get('cat')
+        category_id = produce_category_id(categories, category_id)
     if (flask.request.args.get('min_sal')):
         minimum_salary  = flask.request.args.get('min_sal')
     if (flask.request.args.get('maj')):
