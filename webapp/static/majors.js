@@ -84,7 +84,6 @@ function onMajorsButtonClicked() {
     .then(function(majorsList) {
         // Build the table body.
         var tableBody = '';
-        tableBody += args["lim"] + args["cat"] + args["maj"];
         tableBody += url;
         tableBody += '<tr> <th>ID</th> <th>Major</th> <th>Category</th> </tr>'
 
