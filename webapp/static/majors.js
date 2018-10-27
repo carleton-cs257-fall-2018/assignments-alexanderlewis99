@@ -49,15 +49,15 @@ function onMajorsButtonClicked() {
     var args = {
     "lim": formData.elements[0].value, // Note the quotes around "10%"
     "cat": formData.elements[1].value,
-    "maj": formData.elements[1].value
+    "maj": formData.elements[2].value
   };
-    if (!(args["lim"])){
+    if (args["lim"]){
       myParam = myParam + 'lim=' + args['lim'] + '&';
     }
-    if (!(args["cat"])){
+    if (args["cat"]){
       myParam = myParam + 'cat=' + args['cat'] + '&';
     }
-    if (!(args["maj"])){
+    if (args["maj"]){
       myParam = myParam + 'maj=' + args['maj'] + '&';
     }
     /*if (!min_sal):
