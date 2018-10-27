@@ -51,12 +51,15 @@ function onMajorsButtonClicked() {
 
     var myParam = '?';
 
-    if (!lim):
-        myParam = myParam + lim + '&';
-    if (!cat):
-        myParam = myParam + cat + '&';
-    if (!maj):
-        myParam = myParam + maj + '&';
+    if (!lim){
+      myParam = myParam + lim + '&';
+    }
+    if (!cat){
+      myParam = myParam + cat + '&';
+    }
+    if (!maj){
+      myParam = myParam + maj + '&';
+    }
     /*if (!min_sal):
         myParam = myParam + min_sal + '&';
     if (!sort):
