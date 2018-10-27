@@ -75,7 +75,7 @@ def get_data_from_server(connection, sql_query):
 
 def reduce_number_of_majors_to_limit(majors, limit):
     if(limit is not None):
-        while len(majors) > int(limit):
+        while len(majors) > limit:
             majors.pop()
     return majors
 
@@ -92,13 +92,13 @@ def get_user_parameters(category_id, minimum_salary, major_contains, sort_by, li
         input_category = flask.request.args.get('cat')
         category_id = produce_category_id(categories, input_category)
     if (flask.request.args.get('min_sal')):
-        minimum_salary  = flask.request.args.get('min_sal')
+        minimum_salary  = int(flask.request.args.get('min_sal'))
     if (flask.request.args.get('maj')):
         major_contains = flask.request.args.get('maj')
     if (flask.request.args.get('sort')):
         sort_by = flask.request.args.get('sort')
     if (flask.request.args.get('lim')):
-        limit = flask.request.args.get('lim')
+        limit = int(flask.request.args.get('lim'))
     user_parameters = {'category_id': category_id,
                  'median': minimum_salary,
                  'major_contains': major_contains,
@@ -116,7 +116,7 @@ def get_query_where_clause(arguments):
     if arguments['category_id'] != None or arguments['median'] != None or arguments['major_contains'] != None:
         where_clause = where_clause + 'WHERE '
     if arguments['category_id'] != None:
-        where_clause = where_clause + 'category_id = ' + arguments['category_id'] + ' AND '
+        where_clause = where_clause + 'category_id = ' + str(arguments['category_id']) + ' AND '
     if arguments['median'] != None:
         where_clause = where_clause + 'median > ' + arguments['median'] + ' AND '
     if arguments['major_contains'] != None:
