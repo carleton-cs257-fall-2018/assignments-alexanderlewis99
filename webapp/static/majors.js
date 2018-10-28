@@ -140,6 +140,7 @@ function toggleAdvancedOptions() {
     var advanced_options_button = document.getElementById("advanced_options_button");
     var advanced_options_form_html = "";
     if(!advanced_options_visible){
+      advanced_options_visible = true;
       advanced_options_button.value = "Hide Advanced Options";
       advanced_options_form_html += advanced_options_form_html += "<input type='checkbox' value='category' id='category' checked><label for='category'>Category</label>";
       advanced_options_form_html += "<input type='checkbox' value='total' id='total'><label for='total'>Total Students</label>";
@@ -170,6 +171,7 @@ function toggleAdvancedOptions() {
       advanced_options_form_html += "<input type='checkbox' value='percent_non_college_jobs' id='percent_non_college_jobs'><label for='percent_non_college_jobs'>Percent Non-College Jobs</label>";
       advanced_options_form_html += "<input type='checkbox' value='percent_low_wage_jobs' id='percent_low_wage_jobs'><label for='percent_low_wage_jobs'>Percent Low-Wage Jobs</label>";
     } else {
+      advanced_options_visible = false;
       advanced_options_button.value = "Show Advanced Options";
     }
     document.getElementById("advanced_options_form").innerHTML = advanced_options_form_html;
