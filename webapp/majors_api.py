@@ -178,7 +178,7 @@ def add_cell_data_to_major(major, cell, data_type, row, categories, data_types):
 def get_percent_from_data(row, data_type, data_types):
     total = row[2]
     number = row[data_types.index(data_type)]
-    if(total is not None and number is not None):
+    if(total is not None and number is not None and not number == 'NULL'):
         percent = float(int(number)/int(total))
     else:
         percent = "NULL"
@@ -214,7 +214,8 @@ def get_list_of_sorted_majors(cursor, arguments, categories):
     return majors
 
 def get_order_key(major, sort_type):
-    order_key = major[sort_type]
+    print(major.keys())
+    order_key = major[str(sort_type)]
     if(order_key == 'None' or order_key == 'NULL' or order_key is None):
         return 0
     elif sort_type in ("major", "category"):
