@@ -32,7 +32,8 @@
       <br>
       Minimum Salary:<br>
       <input type="text" name="MinimumSalary" id="min_sal">
-      <br>
+        
+      <br>   
       Sort By:<br>
       <select name="SortBy" id="sort">
         <option value=""></option>
@@ -61,7 +62,14 @@
         <option value="percent_non_college_jobs">Percent Non-College Jobs</option>
         <option value="percent_low_wage_jobs">Percent Low Wage Jobs</option>
       </select>
+      </form>
 
+      <h1>
+        Advanced Columns
+      </h1>
+
+      <form id = "column_requirements_form">
+  
       <input type="checkbox" value="category" id="category"><label for="Cctegory"> Category</label>
       <input type="checkbox" value="total" id="total"><label for="total"> Total Students</label>
 
@@ -86,7 +94,9 @@
       <input type="checkbox" value="percent_college_jobs" id="percent_college_jobs"><label for="percent_college_jobs"> Percent College Jobs</label>
       <input type="checkbox" value="percent_non_college_jobs" id="percent_non_college_jobs"><label for="percent_non_college_jobs"> Percent Non-College Jobs</label>
       <input type="checkbox" value="percent_low_wage_jobs" id="percent_low_wage_jobs"><label for="percent_low_wage_jobs"> Percent Low-Wage Jobs</label>
-    </form>
+      </form>
+
+
 
     <p><button id="majors_button">Get majors</button></p>
 

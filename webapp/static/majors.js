@@ -70,10 +70,7 @@ function onMajorsButtonClicked() {
         myParam = myParam + 'sort=' + args['sort'] + '&';
       }
       myParam = myParam.substring(0, myParam.length-1);
-      /*if (!min_sal):
-          myParam = myParam + min_sal + '&';
-      if (!sort):
-          myParam = myParam + sort + '&';*/
+
     } else {
       myParam = ""
     }
@@ -81,6 +78,27 @@ function onMajorsButtonClicked() {
     var url = getBaseURL() + '/majors/' + myParam;
     // Send the request to the Books API /majors/ endpoint
     //wish able to see the url
+
+    var column_requirements = document.getElementById("column_requirements_form");
+    if(column_requirements){
+        var args = {
+        "category": formData.elements[0].value,
+        "total": formData.elements[1].value,
+        "percent_men": formData.elements[2].value,
+        "percent_women": formData.elements[3].value,
+        "median": formData.elements[4].value
+        "p75th": formData.elements[5].value,
+        "p25th": formData.elements[6].value,
+        "percent_employed": formData.elements[7].value,
+        "percent_full_time": formData.elements[8].value,
+        "percent_part_time": formData.elements[9].value
+        "unemployment_rate": formData.elements[10].value,
+        "percent_college_jobs": formData.elements[11].value,
+        "percent_non_college_jobs": formData.elements[12].value,
+        "percent_low_wage_jobs": formData.elements[13].value,
+        };
+    }
+
     fetch(url, {method: 'get'})
 
     // When the results come back, transform them from JSON string into
