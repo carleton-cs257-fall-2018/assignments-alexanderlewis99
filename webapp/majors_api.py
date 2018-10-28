@@ -144,7 +144,6 @@ def add_cell_data_to_major(major, cell, data_type, row, categories, data_types):
         major[data_type] = str(cell)
     else:
         major[data_type] = int(cell)
-         "college_jobs",  "non_college_jobs", "low_wage_jobs"
         if(data_type == "men"):
             percent_men = get_percent_from_data(row, "men", data_types)
             major["percent_men"] = percent_men
