@@ -140,12 +140,14 @@ def get_major_dictionary(row, categories):
 def add_cell_data_to_major(major, cell, data_type, row, categories, data_types):
     if cell is None:
         major[data_type] = "NULL"
-    elif data_type == "major":
+    if data_type == "major":
         major[data_type] = str(cell)
     else:
         major[data_type] = int(cell)
         if(data_type == "men"):
             percent_men = get_percent_from_data(row, "men", data_types)
+            if (percent_men == "NULL"):
+                print("UH OH UH OH UH OH UH OH")
             major["percent_men"] = percent_men
         if(data_type == "women"):
             percent_women = get_percent_from_data(row, "women", data_types)
@@ -182,6 +184,8 @@ def get_percent_from_data(row, data_type, data_types):
         percent = float(int(number)/int(total))
     else:
         percent = "NULL"
+        print("NULL NULL NULL NULL NULL NULL NULL NULL NULL")
+    print("return" + str(data_type) + str(percent))
     return percent
 
 def replace_category_id_with_category(major, categories):
