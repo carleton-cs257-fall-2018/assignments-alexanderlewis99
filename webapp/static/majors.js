@@ -80,17 +80,14 @@ function onMajorsButtonClicked() {
     //wish able to see the url
     var columns = ['major'];
     var requested_data_types = document.getElementById("column_requirements_form");
+    var double_check;
     if(requested_data_types){
-        /*for (var k = 0; k < requested_data_types.length; k++){
-          data_type = requested_data_types.elements[k].name;
-          if (data_type != ""){
-              columns.push(data_type);
+        for (var j = 0; j < requested_data_types.length; j++){
+          var element = requested_data_types.elements[j];
+          if (element.checked){
+              double_check = double_check + element.getAttribute("value");
+              columns.push(element.getAttribute("value"));
           }
-        }*/
-        for (var element in requested_data_types.elements){
-            if (element.checked){
-                columns.push(element.value);
-            }
         }
     }
     var top ='<tr>';
@@ -110,7 +107,8 @@ function onMajorsButtonClicked() {
         // Build the table body.
         var tableBody = '';
         tableBody += url;
-        tableBody += "length of columns:" + columns.length;
+        tableBody += "length of columns:" + columns.length + " ";
+        tableBody += double_check;
         for (data_type in columns){
           tableBody += data_type + " ";
         }
