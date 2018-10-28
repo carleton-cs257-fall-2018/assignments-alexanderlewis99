@@ -30,6 +30,8 @@
 
 initialize();
 
+var advanced_options_visible = false;
+
 function initialize() {
     var element = document.getElementById('majors_button');
     if (element) {
@@ -78,7 +80,12 @@ function onMajorsButtonClicked() {
     var url = getBaseURL() + '/majors/' + myParam;
     // Send the request to the Books API /majors/ endpoint
     //wish able to see the url
-    var columns = ['major'];
+    if(advanced_options_visible){
+      var columns = ['major'];
+    } else {
+      var columns = ['major', 'category', 'median'];
+    }
+
     var requested_data_types = document.getElementById("advanced_options_form");
     if(requested_data_types){
         for (var j = 0; j < requested_data_types.length; j++){
