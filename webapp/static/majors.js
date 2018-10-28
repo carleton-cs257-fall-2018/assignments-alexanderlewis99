@@ -82,9 +82,9 @@ function onMajorsButtonClicked() {
     var column_requirements = document.getElementById("column_requirements_form");
     if(column_requirements){
         var columns = [];
-        for (var i in range(22)){
-            if (column_requirements.elements[i].value != ""){
-                columns.append(column_requirements.elements[i].value)
+        for (var element in column_requirements.elements){
+            if (element.value != ""){
+                columns.append(element.value)
             }
         }
     }
