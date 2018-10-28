@@ -111,10 +111,11 @@ function onMajorsButtonClicked() {
         // Build the table body.
         var tableBody = '';
         tableBody += url;
-        tableBody += top;
+        tableBody += "length of columns:" + columns.length;
         for (data_type in columns){
           tableBody += data_type;
         }
+        tableBody += top;
         for (var k = 0; k < majorsList.length; k++) {
             tableBody += '<tr>';
             for (data_type in columns){
