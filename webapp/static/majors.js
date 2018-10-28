@@ -79,7 +79,7 @@ function onMajorsButtonClicked() {
     // Send the request to the Books API /majors/ endpoint
     //wish able to see the url
     var columns = ['major'];
-    var requested_data_types = document.getElementById("column_requirements_form");
+    var requested_data_types = document.getElementById("advanced_options_form");
     if(requested_data_types){
         for (var j = 0; j < requested_data_types.length; j++){
           var element = requested_data_types.elements[j];
@@ -128,31 +128,35 @@ function onMajorsButtonClicked() {
     });
 }
 
-function getAuthor(authorID, authorName) {
-    // Very similar pattern to onAuthorsButtonClicked, so I'm not
-    // repeating those comments here. Read through this code
-    // and see if it makes sense to you.
-    var url = getBaseURL() + '/books/author/' + authorID;
+// later make "toggleAdvancedOptions"
+function showAdvancedOptions() {
+    advanced_options_form_html += advanced_options_form_html += "<input type='checkbox' value='category' id='category' checked><label for='category'>Category</label>";
+    advanced_options_form_html += "<input type='checkbox' value='total' id='total'><label for='total'>Total Students</label>";
 
-    fetch(url, {method: 'get'})
+    advanced_options_form_html += "<input type='checkbox' value='employed' id='employed'><label for='employed'>Employed</label>";
+    advanced_options_form_html += "<input type='checkbox' value='full_time' id='full_time'><label for='full_time'>Employed Full Time</label>";
+    advanced_options_form_html += "<input type='checkbox' value='part_time' id='part_time'><label for='part_time'>Employed Part Time</label>";
+    advanced_options_form_html += "<input type='checkbox' value='unemployed' id='unemployed'><label for='unemployed'>Unemployed</label>";
 
-    .then((response) => response.json())
+    advanced_options_form_html += "<input type='checkbox' value='college_jobs' id='college_jobs'><label for='college_jobs'>College Jobs</label>";
+    advanced_options_form_html += "<input type='checkbox' value='non_college_jobs' id='non_college_jobs'><label for='non_college_jobs'>Non College Jobs</label>";
+    advanced_options_form_html += "<input type='checkbox' value='low_wage_jobs' id='low_wage_jobs'><label for='low_wage_jobs'>Low Wage Jobs</label>";
 
-    .then(function(booksList) {
-        var tableBody = '<tr><th>' + authorName + '</th></tr>';
-        for (var k = 0; k < booksList.length; k++) {
-            tableBody += '<tr>';
-            tableBody += '<td>' + booksList[k]['title'] + '</td>';
-            tableBody += '<td>' + booksList[k]['publication_year'] + '</td>';
-            tableBody += '</tr>';
-        }
-        var resultsTableElement = document.getElementById('results_table');
-        if (resultsTableElement) {
-            resultsTableElement.innerHTML = tableBody;
-        }
-    })
 
-    .catch(function(error) {
-        console.log(error);
-    });
+    advanced_options_form_html += "<input type='checkbox' value='percent_men' id='percent_men'><label for='percent_men'>Percent Male</label>";
+    advanced_options_form_html += "<input type='checkbox' value='percent_women' id='percent_women'><label for='percent_women'>Percent Female</label>";
+
+    advanced_options_form_html += "<input type='checkbox' value='median' id='median' checked><label for='median'>Median Salary</label>";
+    advanced_options_form_html += "<input type='checkbox' value='p75th' id='p75th'><label for='p75th'>75th Percentile Salary</label>";
+    advanced_options_form_html += "<input type='checkbox' value='p25th' id='p25th'><label for='p25th'>25th Percentile Salary</label>";
+
+    advanced_options_form_html += "<input type='checkbox' value='percent_employed' id='percent_employed' checked><label for='percent_employed'>Percent Employed</label>";
+    advanced_options_form_html += "<input type='checkbox' value='percent_full_time' id='percent_full_time'><label for='percent_full_time'>Percent Employed Full-time</label>";
+    advanced_options_form_html += "<input type='checkbox' value='percent_part_time' id='percent_part_time'><label for='percent_part_time'>Percent Employed Part-time</label>";
+    advanced_options_form_html += "<input type='checkbox' value='unemployment_rate' id='unemployment_rate'><label for='unemployment_rate'>Unemployed Rate</label>";
+
+    advanced_options_form_html += "<input type='checkbox' value='percent_college_jobs' id='percent_college_jobs'><label for='percent_college_jobs'>Percent College Jobs</label>";
+    advanced_options_form_html += "<input type='checkbox' value='percent_non_college_jobs' id='percent_non_college_jobs'><label for='percent_non_college_jobs'>Percent Non-College Jobs</label>";
+    advanced_options_form_html += "<input type='checkbox' value='percent_low_wage_jobs' id='percent_low_wage_jobs'><label for='percent_low_wage_jobs'>Percent Low-Wage Jobs</label>";
+    document.getElementById("advanced_options_form").innerHTML = advanced_options_form_html;
 }
