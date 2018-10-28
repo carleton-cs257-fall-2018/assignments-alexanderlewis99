@@ -209,6 +209,8 @@ def get_order_key_as_numeric(major, sort_type):
         return 0
     elif sort_type == "unemployment_rate":
         return float(order_key)
+    elif sort_type in ("major", "category"):
+        return str(order_key)
     else:
         return int(order_key)
 
