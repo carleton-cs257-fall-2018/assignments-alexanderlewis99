@@ -206,7 +206,9 @@ def get_list_of_sorted_majors(cursor, arguments, categories):
         major = get_major_dictionary(row, categories)
         order_key = get_order_key(major, sort_type)
         majors_order_key_pairs[order_key] = major
+    print(majors_order_key_pairs)
     majors_keys_sorted_descending = sorted(majors_order_key_pairs, reverse=True)
+    print(majors_keys_sorted_descending)
     majors = []
     for key in majors_keys_sorted_descending:
         majors.append(majors_order_key_pairs[key])
