@@ -31,8 +31,8 @@
       <input type="text" name="Major" id="maj">
       <br>
       Minimum Salary:<br>
-      <br>
       <input type="text" name="MinimumSalary" id="min_sal">
+      <br>
       Sort By:<br>
       <select name="SortBy" id="sort">
         <option value=""></option>
@@ -58,9 +58,26 @@
         <option value="percent_part_time">percent Employed Part Time</option>
         <option value="unemployment_rate">Unemployment Rate</option>
         <option value="percent_college_jobs">Percent College Jobs</option>
-        <option value="percent_non_college_jobs">Percent Non College Jobs</option>
+        <option value="percent_non_college_jobs">Percent Non-College Jobs</option>
         <option value="percent_low_wage_jobs">Percent Low Wage Jobs</option>
       </select>
+
+      <input type="checkbox" value="category" id="category"><label for="Cctegory"> Category</label>
+      <input type="checkbox" value="total" id="total"><label for="total"> Total Students</label>
+      <input type="checkbox" value="percent_male" id="percent_male"><label for="percent_male"> Percent Male</label>
+      <input type="checkbox" value="percent_female" id="percent_female"><label for="percent_female"> Percent Female</label>
+
+      <input type="checkbox" value="median" id="median"><label for="median"> Median Salary</label>
+      <input type="checkbox" value="p75th" id="p75th"><label for="p75th"> 75th Percentile Salary</label>
+
+      <input type="checkbox" value="percent_employed" id="percent_employed"><label for="percent_employed"> Percent Employed</label>
+      <input type="checkbox" value="percent_part_time" id="percent_part_time"><label for="percent_part_time"> Percent Employed Full-time</label>
+      <input type="checkbox" value="percent_part_time" id="percent_part_time"><label for="percent_part_time"> Percent Employed Part-time</label>
+      <input type="checkbox" value="unemployment_rate" id="unemployment_rate"><label for="unemployment_rate"> Unemployed Rate</label>
+
+      <input type="checkbox" value="percent_college_jobs" id="percent_college_jobs"><label for="percent_college_jobs"> Percent College Jobs</label>
+      <input type="checkbox" value="percent_non_college_jobs" id="percent_non_college_jobs"><label for="percent_non_college_jobs"> Percent Non-College Jobs</label>
+      <input type="checkbox" value="percent_low_wage_jobs" id="percent_low_wage_jobs"><label for="percent_low_wage_jobs"> Percent Low-Wage Jobs</label>
     </form>
 
     <p><button id="majors_button">Get majors</button></p>
