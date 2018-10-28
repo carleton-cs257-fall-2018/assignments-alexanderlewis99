@@ -112,6 +112,9 @@ function onMajorsButtonClicked() {
         var tableBody = '';
         tableBody += url;
         tableBody += top;
+        for (data_type in columns){
+          tableBody += data_type;
+        }
         for (var k = 0; k < majorsList.length; k++) {
             tableBody += '<tr>';
             for (data_type in columns){
