@@ -119,7 +119,7 @@ def get_query_where_clause(arguments):
     if arguments['category_id'] != None:
         where_clause = where_clause + 'category_id = ' + str(arguments['category_id']) + ' AND '
     if arguments['median'] != None:
-        where_clause = where_clause + 'median > ' + arguments['median'] + ' AND '
+        where_clause = where_clause + 'median > ' + str(arguments['median']) + ' AND '
     if arguments['major_contains'] != None:
         where_clause = where_clause + "major LIKE '%" + arguments['major_contains'].upper() + "%' AND "
     if (len(where_clause) > 0):
