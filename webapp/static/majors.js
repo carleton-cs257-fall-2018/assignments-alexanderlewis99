@@ -86,11 +86,12 @@ function onMajorsButtonClicked() {
             if (column_requirements.elements[i].value != ""){
                 columns.append(column_requirements.elements[i].value)
             }
-        }  
+        }
     }
-    var top ='<tr><td>major</td>';
-    for (i in columns) 
-        top +  = '<th>' + String(i) +'</th>' 
+    var top ='<tr><th>Major</th>';
+    for (data_type in columns){
+      top += '<th>' + data_type +'</th>'
+    }
     top += '</tr>'
     fetch(url, {method: 'get'})
     // When the results come back, transform them from JSON string into
@@ -103,19 +104,15 @@ function onMajorsButtonClicked() {
         // Build the table body.
         var tableBody = '';
         tableBody += url;
-        tableBody += '<tr><th>Major</th> <th>Category</th> </tr>'
+        tableBody += top;
         for (var k = 0; k < majorsList.length; k++) {
             tableBody += '<tr>';
-            tableBody += '<td>' + majorsList[k]['major'] + '</td>'
-                         + '<td>' + majorsList[k]['category'] + '</td>';
+            tableBody += '<td>' + majorsList[k]['major'] +'</td>'
+            for (data_type in columns){
+              tableBody += '<td>' + majorsList[k][data_type] +'</td>'
+            }
             tableBody += '</tr>';
         }
-/*
-        tableBody += "<tr><th></th><th>Antlers?</th><th>Wings?</th><th>Noisy?</th></tr>"
-    + "<tr><td>Seagull</td><td>No</td><td>Yes</td><td>Yes</td></tr>"
-    + "<tr><td>Elk</td><td>Yes</td><td>No</td><td>Sometimes</td></tr>"
-    + "<tr><td>Moth</td><td>No</td><td>Yes</td><td>No, but kinda creepy</td></tr>";
-*/
         // Put the table body we just built inside the table that's already on the page.
         var resultsTableElement = document.getElementById('results_table');
         if (resultsTableElement) {
