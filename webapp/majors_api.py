@@ -75,6 +75,7 @@ def get_data_from_server(connection, sql_query):
 
 def reduce_number_of_majors_to_limit(majors, limit):
     if(limit is not None):
+        print("IS LIMIT IS LIMIT IS LIMIT")
         while len(majors) > limit:
             majors.pop()
     return majors
@@ -212,11 +213,14 @@ def get_list_of_sorted_majors(cursor, arguments, categories):
     majors = []
     for key in majors_keys_sorted_descending:
         majors.append(majors_order_key_pairs[key])
+        if(key==0):
+            print(majors_order_key_pairs[key])
     return majors
 
 def get_order_key(major, sort_type):
     order_key = major[str(sort_type)]
     if(order_key == 'None' or order_key == 'NULL' or order_key is None):
+        print(major["major"] + "0")
         return 0
     elif sort_type in ("major", "category"):
         return str(order_key)
