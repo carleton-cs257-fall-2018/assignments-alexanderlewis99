@@ -113,7 +113,7 @@ function onMajorsButtonClicked() {
         tableBody += url;
         tableBody += "length of columns:" + columns.length;
         for (data_type in columns){
-          tableBody += data_type;
+          tableBody += data_type + " ";
         }
         tableBody += top;
         for (var k = 0; k < majorsList.length; k++) {
