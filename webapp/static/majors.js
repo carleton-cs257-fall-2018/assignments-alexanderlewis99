@@ -80,19 +80,17 @@ function onMajorsButtonClicked() {
     //wish able to see the url
     var columns = ['major'];
     var requested_data_types = document.getElementById("column_requirements_form");
-    var double_check;
     if(requested_data_types){
         for (var j = 0; j < requested_data_types.length; j++){
           var element = requested_data_types.elements[j];
           if (element.checked){
-              double_check = double_check + element.getAttribute("value");
               columns.push(element.getAttribute("value"));
           }
         }
     }
     var top ='<tr>';
-    for (var data_type in columns){
-      data_type = data_type.replace("_", " ");
+    for (var c = 0; c < columns.length; c++){
+      var data_type = columns[c].replace("_", " ");
       top += '<th>' + data_type +'</th>';
     }
     top += '</tr>';
@@ -107,16 +105,13 @@ function onMajorsButtonClicked() {
         // Build the table body.
         var tableBody = '';
         tableBody += url;
-        tableBody += "length of columns:" + columns.length + " ";
-        tableBody += double_check;
-        for (data_type in columns){
-          tableBody += data_type + " ";
-        }
         tableBody += top;
         for (var k = 0; k < majorsList.length; k++) {
             tableBody += '<tr>';
-            for (data_type in columns){
-              tableBody += '<td>' + majorsList[k][data_type] +'</td>';
+            var major = majorsList[k]
+            for (var c = 0; c < columns.length; c++){
+              var dat = columns[c];
+              tableBody += '<td>' + major[dat] +'</td>';
             }
             tableBody += '</tr>';
         }
