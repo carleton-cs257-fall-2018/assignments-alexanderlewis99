@@ -78,21 +78,28 @@ function onMajorsButtonClicked() {
     var url = getBaseURL() + '/majors/' + myParam;
     // Send the request to the Books API /majors/ endpoint
     //wish able to see the url
-
-    var column_requirements = document.getElementById("column_requirements_form");
-    if(column_requirements){
-        var columns = [];
-        for (var element in column_requirements.elements){
-            if (element.value != ""){
-                columns.push(element.value)
+    var columns = ['major'];
+    var requested_data_types = document.getElementById("column_requirements_form");
+    if(requested_data_types){
+        /*for (var k = 0; k < requested_data_types.length; k++){
+          data_type = requested_data_types.elements[k].value;
+          if (data_type != ""){
+              columns.push(data_type)
+          }
+        }*/
+        for (var element in requested_data_types.elements){
+            data_type = element.value;
+            if (data_type != ""){
+                columns.push(data_type)
             }
         }
     }
-    var top ='<tr><th>Major</th>';
+    var top ='<tr>';
     for (data_type in columns){
-      top += '<th>' + data_type +'</th>'
+      data_type = data_type.replace("_", " ");
+      top += '<th>' + data_type +'</th>';
     }
-    top += '</tr>'
+    top += '</tr>';
     fetch(url, {method: 'get'})
     // When the results come back, transform them from JSON string into
     // a Javascript object (in this case, a list of author dictionaries).
@@ -107,9 +114,8 @@ function onMajorsButtonClicked() {
         tableBody += top;
         for (var k = 0; k < majorsList.length; k++) {
             tableBody += '<tr>';
-            tableBody += '<td>' + majorsList[k]['major'] +'</td>'
             for (data_type in columns){
-              tableBody += '<td>' + majorsList[k][data_type] +'</td>'
+              tableBody += '<td>' + majorsList[k][data_type] +'</td>';
             }
             tableBody += '</tr>';
         }
