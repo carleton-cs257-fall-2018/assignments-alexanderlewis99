@@ -81,21 +81,20 @@ function onMajorsButtonClicked() {
     var columns = ['major'];
     var requested_data_types = document.getElementById("column_requirements_form");
     if(requested_data_types){
-        for (var k = 0; k < requested_data_types.length; k++){
-          data_type = requested_data_types.elements[k].value;
+        /*for (var k = 0; k < requested_data_types.length; k++){
+          data_type = requested_data_types.elements[k].name;
           if (data_type != ""){
-              columns.push(data_type)
+              columns.push(data_type);
           }
-        }
-        /*for (var element in requested_data_types.elements){
-            data_type = element.value;
-            if (data_type != ""){
-                columns.push(data_type)
-            }
         }*/
+        for (var element in requested_data_types.elements){
+            if (element.checked){
+                columns.push(element.value);
+            }
+        }
     }
     var top ='<tr>';
-    for (data_type in columns){
+    for (var data_type in columns){
       data_type = data_type.replace("_", " ");
       top += '<th>' + data_type +'</th>';
     }
