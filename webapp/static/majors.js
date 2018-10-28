@@ -81,26 +81,18 @@ function onMajorsButtonClicked() {
 
     var column_requirements = document.getElementById("column_requirements_form");
     if(column_requirements){
-        var args = {
-        "category": formData.elements[0].value,
-        "total": formData.elements[1].value,
-        "percent_men": formData.elements[2].value,
-        "percent_women": formData.elements[3].value,
-        "median": formData.elements[4].value
-        "p75th": formData.elements[5].value,
-        "p25th": formData.elements[6].value,
-        "percent_employed": formData.elements[7].value,
-        "percent_full_time": formData.elements[8].value,
-        "percent_part_time": formData.elements[9].value
-        "unemployment_rate": formData.elements[10].value,
-        "percent_college_jobs": formData.elements[11].value,
-        "percent_non_college_jobs": formData.elements[12].value,
-        "percent_low_wage_jobs": formData.elements[13].value,
-        };
+        var columns = [];
+        for (var i in range(22)){
+            if (column_requirements.elements[i].value != ""){
+                columns.append(column_requirements.elements[i].value)
+            }
+        }  
     }
-
+    var top ='<tr><td>major</td>';
+    for (i in columns) 
+        top +  = '<th>' + String(i) +'</th>' 
+    top += '</tr>'
     fetch(url, {method: 'get'})
-
     // When the results come back, transform them from JSON string into
     // a Javascript object (in this case, a list of author dictionaries).
     .then((response) => response.json())
@@ -111,12 +103,10 @@ function onMajorsButtonClicked() {
         // Build the table body.
         var tableBody = '';
         tableBody += url;
-        tableBody += '<tr> <th>ID</th> <th>Major</th> <th>Category</th> </tr>'
-
+        tableBody += '<tr><th>Major</th> <th>Category</th> </tr>'
         for (var k = 0; k < majorsList.length; k++) {
             tableBody += '<tr>';
-            tableBody += '<td>' + majorsList[k]['id'] + '</td>'
-                         + '<td>' + majorsList[k]['major'] + '</td>'
+            tableBody += '<td>' + majorsList[k]['major'] + '</td>'
                          + '<td>' + majorsList[k]['category'] + '</td>';
             tableBody += '</tr>';
         }
