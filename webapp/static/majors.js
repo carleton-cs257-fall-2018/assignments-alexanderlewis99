@@ -84,7 +84,7 @@ function onMajorsButtonClicked() {
         var columns = [];
         for (var element in column_requirements.elements){
             if (element.value != ""){
-                columns.append(element.value)
+                columns.push(element.value)
             }
         }
     }
