@@ -206,21 +206,24 @@ def get_list_of_sorted_majors(cursor, arguments, categories):
     for row in cursor:
         major = get_major_dictionary(row, categories)
         order_key = get_order_key(major, sort_type)
+        # fix problem with duplicate keys
+        while order_key in majors_order_key_pairs.keys():
+            if(type(order_key) == int):
+                order_key = order_key - 1
+            if(type(order_key) == float):
+                order_key = order_key - 0.0000
+            if(type(order_key) == str):
+                order_key = order_key + "z"
         majors_order_key_pairs[order_key] = major
-    print(majors_order_key_pairs)
     majors_keys_sorted_descending = sorted(majors_order_key_pairs, reverse=True)
-    print(majors_keys_sorted_descending)
     majors = []
     for key in majors_keys_sorted_descending:
         majors.append(majors_order_key_pairs[key])
-        if(key==0):
-            print(majors_order_key_pairs[key])
     return majors
 
 def get_order_key(major, sort_type):
     order_key = major[str(sort_type)]
     if(order_key == 'None' or order_key == 'NULL' or order_key is None):
-        print(major["major"] + "0")
         return 0
     elif sort_type in ("major", "category"):
         return str(order_key)
