@@ -133,32 +133,57 @@ def get_major_dictionary(row, categories):
     index = 0
     for cell in row:
         data_type = data_types[index]
-        major = add_cell_data_to_major(major, cell, data_type, row, categories)
+        major = add_cell_data_to_major(major, cell, data_type, row, categories, data_types)
         index = index + 1
     return major
 
-def add_cell_data_to_major(major, cell, data_type, row, categories):
+def add_cell_data_to_major(major, cell, data_type, row, categories, data_types):
     if cell is None:
         major[data_type] = "NULL"
     elif data_type == "major":
         major[data_type] = str(cell)
     else:
         major[data_type] = int(cell)
+         "college_jobs",  "non_college_jobs", "low_wage_jobs"
+        if(data_type == "men"):
+            percent_men = get_percent_from_data(row, "men", data_types)
+            major["percent_men"] = percent_men
+        if(data_type == "women"):
+            percent_women = get_percent_from_data(row, "women", data_types)
+            major["percent_women"] = percent_women
+        if(data_type == "employed"):
+            percent_employed = get_percent_from_data(row, "employed", data_types)
+            major["percent_employed"] = percent_employed
+        if(data_type == "full_time"):
+            percent_full_time = get_percent_from_data(row, "full_time", data_types)
+            major["percent_full_time"] = percent_full_time
+        if(data_type == "part_time"):
+            percent_part_time = get_percent_from_data(row, "part_time", data_types)
+            major["percent_part_time"] = percent_part_time
         if(data_type == "unemployed"):
-            unemployment_rate = get_unemployment_rate(row)
+            unemployment_rate = get_percent_from_data(row, "unemployed", data_types)
             major["unemployment_rate"] = unemployment_rate
+        if(data_type == "college_jobs"):
+            percent_college_jobs = get_percent_from_data(row, "college_jobs", data_types)
+            major["percent_college_jobs"] = percent_college_jobs
+        if(data_type == "non_college_jobs"):
+            percent_non_college_jobs = get_percent_from_data(row, "non_college_jobs", data_types)
+            major["percent_non_college_jobs"] = percent_non_college_jobs
+        if(data_type == "low_wage_jobs"):
+            percent_low_wage_jobs = get_percent_from_data(row, "low_wage_jobs", data_types)
+            major["percent_low_wage_jobs"] = percent_low_wage_jobs
     if data_type == "category_id":
         major = replace_category_id_with_category(major, categories)
     return major
 
-def get_unemployment_rate(row):
+def get_percent_from_data(row, data_type, data_types):
     total = row[2]
-    unemployed = row[9]
-    if(total is not None and unemployed is not None):
-        unemployment_rate = float(int(unemployed)/int(total))
+    number = row[data_types.index(data_type)]
+    if(total is not None and number is not None):
+        percent = float(int(number)/int(total))
     else:
-        unemployment_rate = "NULL"
-    return unemployment_rate
+        percent = "NULL"
+    return percent
 
 def replace_category_id_with_category(major, categories):
     category_id = major["category_id"]
