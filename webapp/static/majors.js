@@ -137,6 +137,7 @@ function onMajorsButtonClicked() {
 
 // later make "toggleAdvancedOptions"
 function showAdvancedOptions() {
+    var advanced_options_form_html = "";
     advanced_options_form_html += advanced_options_form_html += "<input type='checkbox' value='category' id='category' checked><label for='category'>Category</label>";
     advanced_options_form_html += "<input type='checkbox' value='total' id='total'><label for='total'>Total Students</label>";
 
