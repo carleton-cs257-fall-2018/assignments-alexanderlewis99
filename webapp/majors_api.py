@@ -191,8 +191,7 @@ def get_list_of_sorted_majors(cursor, arguments, categories):
 
 def get_order_key(major, sort_type):
     if sort_type in ('percent_men', 'percent_women', 'percent_employed', 'percent_full_time', 'percent_part_time',
-                     'percent_unemployed', 'percent_employed', 'percent_college_jobs', 'percent_non_college_jobs',
-                     'percent_low_wage_jobs'):
+                     'percent_unemployed', 'percent_college_jobs', 'percent_non_college_jobs', 'percent_low_wage_jobs'):
         order_key = get_order_key_as_percent(major, sort_type[8:])
     else:
         order_key = get_order_key_as_numeric(major, sort_type)

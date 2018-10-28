@@ -50,7 +50,9 @@ function onMajorsButtonClicked() {
       var args = {
       "lim": formData.elements[0].value,
       "cat": formData.elements[1].value,
-      "maj": formData.elements[2].value
+      "maj": formData.elements[2].value,
+      "min_sal": formData.elements[3].value,
+      "sort": formData.elements[4].value
         };
       if (args["lim"]){
         myParam = myParam + 'lim=' + args['lim'] + '&';
@@ -60,6 +62,12 @@ function onMajorsButtonClicked() {
       }
       if (args["maj"]){
         myParam = myParam + 'maj=' + args['maj'] + '&';
+      }
+      if (args["min_sal"]){
+        myParam = myParam + 'min_sal=' + args['min_sal'] + '&';
+      }
+      if (args["sort"]){
+        myParam = myParam + 'sort=' + args['sort'] + '&';
       }
       myParam = myParam.substring(0, myParam.length-1);
       /*if (!min_sal):
