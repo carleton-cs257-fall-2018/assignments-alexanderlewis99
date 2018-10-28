@@ -219,8 +219,8 @@ def get_order_key(major, sort_type):
         return 0
     elif sort_type in ("major", "category"):
         return str(order_key)
-    elif sort_type in ("unemployment_rate", 'percent_men', 'percent_women', 'percent_employed', 'percent_full_time', 'percent_part_time',
-                     'percent_unemployed', 'percent_college_jobs', 'percent_non_college_jobs', 'percent_low_wage_jobs'):
+    elif sort_type in ("unemployment_rate", "percent_men", "percent_women", "percent_employed", "percent_full_time", "percent_part_time",
+                     "percent_unemployed", "percent_college_jobs", "percent_non_college_jobs", "percent_low_wage_jobs"):
         return float(order_key)
     else:
         return int(order_key)
