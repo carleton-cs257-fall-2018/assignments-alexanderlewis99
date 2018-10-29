@@ -143,44 +143,44 @@ function toggleAdvancedOptions() {
       advanced_options_visible = true;
       advanced_options_button.textContent = "Hide Advanced Options";
       advanced_options_form_html += "<div class = 'column'>";
-      advanced_options_form_html += "<input type='checkbox' value='category' checked><label for='category'>Category</label>";
-      advanced_options_form_html += "<input type='checkbox' value='total'><label for='total'>Total Students</label>";
-      advanced_options_form_html += "<input type='checkbox' value='men'><label for='men'>Men</label>";
-      advanced_options_form_html += "<input type='checkbox' value='women'><label for='men'>Women</label>";
-      advanced_options_form_html += "<input type='checkbox' value='percent_men'><label for='percent_men'>Percent Men</label>";
-      advanced_options_form_html += "<input type='checkbox' value='percent_women'><label for='percent_women'>Percent Women</label>";
+        advanced_options_form_html += "<input type='checkbox' value='category' checked><label for='category'>Category</label><br>";
+        advanced_options_form_html += "<input type='checkbox' value='total'><label for='total'>Total Students</label><br>";
+        advanced_options_form_html += "<input type='checkbox' value='men'><label for='men'>Men</label><br>";
+        advanced_options_form_html += "<input type='checkbox' value='women'><label for='men'>Women</label><br>";
+        advanced_options_form_html += "<input type='checkbox' value='percent_men'><label for='percent_men'>Percent Men</label><br>";
+        advanced_options_form_html += "<input type='checkbox' value='percent_women'><label for='percent_women'>Percent Women</label><br>";
       advanced_options_form_html += "</div>";
 
       advanced_options_form_html += "<div class = 'column'>";
-      advanced_options_form_html += "<input type='checkbox' value='employed'><label for='employed'>Employed</label>";
-      advanced_options_form_html += "<input type='checkbox' value='full_time'><label for='full_time'>Employed Full Time</label>";
-      advanced_options_form_html += "<input type='checkbox' value='part_time'><label for='part_time'>Employed Part Time</label>";
-      advanced_options_form_html += "<input type='checkbox' value='unemployed'><label for='unemployed'>Unemployed</label>";
+        advanced_options_form_html += "<input type='checkbox' value='employed'><label for='employed'>Employed</label><br>";
+        advanced_options_form_html += "<input type='checkbox' value='full_time'><label for='full_time'>Employed Full Time</label><br>";
+        advanced_options_form_html += "<input type='checkbox' value='part_time'><label for='part_time'>Employed Part Time</label><br>";
+        advanced_options_form_html += "<input type='checkbox' value='unemployed'><label for='unemployed'>Unemployed</label><br>";
       advanced_options_form_html += "</div>";
 
       advanced_options_form_html += "<div class = 'column'>";
-      advanced_options_form_html += "<input type='checkbox' value='percent_employed' checked><label for='percent_employed'>Percent Employed</label>";
-      advanced_options_form_html += "<input type='checkbox' value='percent_full_time'><label for='percent_full_time'>Percent Employed Full-time</label>";
-      advanced_options_form_html += "<input type='checkbox' value='percent_part_time'><label for='percent_part_time'>Percent Employed Part-time</label>";
-      advanced_options_form_html += "<input type='checkbox' value='unemployment_rate'><label for='unemployment_rate'>Unemployed Rate</label>";
+        advanced_options_form_html += "<input type='checkbox' value='percent_employed' checked><label for='percent_employed'>Percent Employed</label><br>";
+        advanced_options_form_html += "<input type='checkbox' value='percent_full_time'><label for='percent_full_time'>Percent Employed Full-time</label><br>";
+        advanced_options_form_html += "<input type='checkbox' value='percent_part_time'><label for='percent_part_time'>Percent Employed Part-time</label><br>";
+        advanced_options_form_html += "<input type='checkbox' value='unemployment_rate'><label for='unemployment_rate'>Unemployed Rate</label><br>";
       advanced_options_form_html += "</div>";
 
       advanced_options_form_html += "<div class = 'column'>";
-      advanced_options_form_html += "<input type='checkbox' value='median' checked><label for='median'>Median Salary</label>";
-      advanced_options_form_html += "<input type='checkbox' value='p75th'><label for='p75th'>75th Percentile Salary</label>";
-      advanced_options_form_html += "<input type='checkbox' value='p25th'><label for='p25th'>25th Percentile Salary</label>";
+        advanced_options_form_html += "<input type='checkbox' value='median' checked><label for='median'>Median Salary</label><br>";
+        advanced_options_form_html += "<input type='checkbox' value='p75th'><label for='p75th'>75th Percentile Salary</label><br>";
+        advanced_options_form_html += "<input type='checkbox' value='p25th'><label for='p25th'>25th Percentile Salary</label><br>";
       advanced_options_form_html += "</div>";
 
       advanced_options_form_html += "<div class = 'column'>";
-      advanced_options_form_html += "<input type='checkbox' value='college_jobs'><label for='college_jobs'>College Jobs</label>";
-      advanced_options_form_html += "<input type='checkbox' value='non_college_jobs'><label for='non_college_jobs'>Non College Jobs</label>";
-      advanced_options_form_html += "<input type='checkbox' value='low_wage_jobs'><label for='low_wage_jobs'>Low Wage Jobs</label>";
+        advanced_options_form_html += "<input type='checkbox' value='college_jobs'><label for='college_jobs'>College Jobs</label><br>";
+        advanced_options_form_html += "<input type='checkbox' value='non_college_jobs'><label for='non_college_jobs'>Non College Jobs</label><br>";
+        advanced_options_form_html += "<input type='checkbox' value='low_wage_jobs'><label for='low_wage_jobs'>Low Wage Jobs</label><br>";
       advanced_options_form_html += "</div>";
 
       advanced_options_form_html += "<div class = 'column'>";
-      advanced_options_form_html += "<input type='checkbox' value='percent_college_jobs'><label for='percent_college_jobs'>Percent College Jobs</label>";
-      advanced_options_form_html += "<input type='checkbox' value='percent_non_college_jobs'><label for='percent_non_college_jobs'>Percent Non-College Jobs</label>";
-      advanced_options_form_html += "<input type='checkbox' value='percent_low_wage_jobs'><label for='percent_low_wage_jobs'>Percent Low-Wage Jobs</label>";
+        advanced_options_form_html += "<input type='checkbox' value='percent_college_jobs'><label for='percent_college_jobs'>Percent College Jobs</label><br>";
+        advanced_options_form_html += "<input type='checkbox' value='percent_non_college_jobs'><label for='percent_non_college_jobs'>Percent Non-College Jobs</label><br>";
+        advanced_options_form_html += "<input type='checkbox' value='percent_low_wage_jobs'><label for='percent_low_wage_jobs'>Percent Low-Wage Jobs</label><br>";
       advanced_options_form_html += "</div>";
     } else {
       advanced_options_visible = false;
