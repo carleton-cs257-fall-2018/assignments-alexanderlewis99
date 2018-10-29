@@ -108,11 +108,11 @@ function getBaseURL() {
 }
 
 function getDataTypesForTableColumns() {
-  if(advanced_options_visible){
-    var columns = ['major'];
+  if(!(advanced_options_visible)){
+    var columns = ['major', 'category', 'median', 'percent_employed'];
   }
   else {
-    var columns = ['major', 'category', 'median', 'percent_employed'];
+    var columns = ['major'];
     var checkboxes = document.getElementById("advanced_options_form");
     if(checkboxes){
       for (var j = 0; j < checkboxes.length; j++){
