@@ -27,7 +27,7 @@
   text-align: center;
 }
 
-.boxy {
+.settings {
   font-size: 25px;
   font-family: Lucida Console;
   color: white;
@@ -36,10 +36,9 @@
   text-align: center;
 }
 
-.real_box{
-  background-color: gray;
+.outer_box{
+  background-color: lightgray;
   width: 25%;
-  text-align: center;
 }
 table {
     border-collapse: collapse;
