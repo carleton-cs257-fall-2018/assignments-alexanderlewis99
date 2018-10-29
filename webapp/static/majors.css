@@ -37,7 +37,7 @@
 
 .settings_box{
   font-size: 18px;
-  float: center;
+  display: inline-block;
   width: 300px;
   border: 25px solid #78BE97;
   background-color: #CEF19E;
@@ -54,7 +54,7 @@
   background-color: #398689;
   width: 300px;
   text-align: center;
-}
+
 
 
 table {
