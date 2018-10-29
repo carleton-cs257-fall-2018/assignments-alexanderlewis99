@@ -39,100 +39,112 @@ function initialize() {
     }
 }
 
-function getBaseURL() {
-    var baseURL = window.location.protocol + '//' + window.location.hostname + ':' + api_port;
-    return baseURL;
-}
-
 function onMajorsButtonClicked() {
-
-    var myParam = '?';
-    var formData = document.getElementById("majors_form");
-    if(formData){
-      var args = {
-      "lim": formData.elements[0].value,
-      "cat": formData.elements[1].value,
-      "maj": formData.elements[2].value,
-      "min_sal": formData.elements[3].value,
-      "sort": formData.elements[4].value
-        };
-      if (args["lim"]){
-        myParam = myParam + 'lim=' + args['lim'] + '&';
-      }
-      if (args["cat"]){
-        myParam = myParam + 'cat=' + args['cat'].replace("&", "and") + '&';
-      }
-      if (args["maj"]){
-        myParam = myParam + 'maj=' + args['maj'] + '&';
-      }
-      if (args["min_sal"]){
-        myParam = myParam + 'min_sal=' + args['min_sal'] + '&';
-      }
-      if (args["sort"]){
-        myParam = myParam + 'sort=' + args['sort'] + '&';
-      }
-      myParam = myParam.substring(0, myParam.length-1);
-
-    } else {
-      myParam = ""
-    }
-
-    var url = getBaseURL() + '/majors/' + myParam;
+    var url = getUrl();
+    var columns = getDataTypesForTableColumns();
     // Send the request to the Books API /majors/ endpoint
     //wish able to see the url
-    if(advanced_options_visible){
-      var columns = ['major'];
-    } else {
-      var columns = ['major', 'category', 'median', 'percent_employed'];
-    }
-
-    var requested_data_types = document.getElementById("advanced_options_form");
-    if(requested_data_types){
-        for (var j = 0; j < requested_data_types.length; j++){
-          var element = requested_data_types.elements[j];
-          if (element.checked){
-              columns.push(element.getAttribute("value"));
-          }
-        }
-    }
-    var top ='<tr>';
-    for (var c = 0; c < columns.length; c++){
-      var data_type = columns[c].replace("_", " ");
-      top += '<th>' + data_type +'</th>';
-    }
-    top += '</tr>';
     fetch(url, {method: 'get'})
     // When the results come back, transform them from JSON string into
     // a Javascript object (in this case, a list of author dictionaries).
     .then((response) => response.json())
-
     // Once you have your list of author dictionaries, use it to build
     // an HTML table displaying the author names and lifespan.
     .then(function(majorsList) {
         // Build the table body.
         var tableBody = '';
         tableBody += url;
-        tableBody += top;
-        for (var k = 0; k < majorsList.length; k++) {
-            tableBody += '<tr>';
-            var major = majorsList[k]
-            for (var c = 0; c < columns.length; c++){
-              var dat = columns[c];
-              tableBody += '<td>' + major[dat] +'</td>';
-            }
-            tableBody += '</tr>';
-        }
+        tableBody += buildTableHeader(columns);
+        tableBody += buildTableBody(majorsList, columns);
         // Put the table body we just built inside the table that's already on the page.
         var resultsTableElement = document.getElementById('results_table');
         if (resultsTableElement) {
             resultsTableElement.innerHTML = tableBody;
         }
     })
-
     // Log the error if anything went wrong during the fetch.
     .catch(function(error) {
         console.log(error);
     });
+}
+
+function getBaseURL() {
+    var baseURL = window.location.protocol + '//' + window.location.hostname + ':' + api_port;
+    return baseURL;
+}
+
+function getUrl() {
+  var myParam = '?';
+  var formData = document.getElementById("majors_form");
+  if(formData){
+    var args = {
+    "lim": formData.elements[0].value,
+    "cat": formData.elements[1].value,
+    "maj": formData.elements[2].value,
+    "min_sal": formData.elements[3].value,
+    "sort": formData.elements[4].value
+      };
+    if (args["lim"]){
+      myParam = myParam + 'lim=' + args['lim'] + '&';
+    }
+    if (args["cat"]){
+      myParam = myParam + 'cat=' + args['cat'].replace("&", "and") + '&';
+    }
+    if (args["maj"]){
+      myParam = myParam + 'maj=' + args['maj'] + '&';
+    }
+    if (args["min_sal"]){
+      myParam = myParam + 'min_sal=' + args['min_sal'] + '&';
+    }
+    if (args["sort"]){
+      myParam = myParam + 'sort=' + args['sort'] + '&';
+    }
+    myParam = myParam.substring(0, myParam.length-1);
+  } else {
+    myParam = ""
+  }
+  var url = getBaseURL() + '/majors/' + myParam;
+  return url;
+}
+
+function getDataTypesForTableColumns() {
+  if(advanced_options_visible){
+    var columns = ['major'];
+  } else {
+    var columns = ['major', 'category', 'median', 'percent_employed'];
+  }
+  var requested_data_types = document.getElementById("advanced_options_form");
+  if(requested_data_types){
+    for (var j = 0; j < requested_data_types.length; j++){
+      var element = requested_data_types.elements[j];
+      if (element.checked){
+          columns.push(element.getAttribute("value"));
+      }
+    }
+  }
+  return columns;
+}
+
+function buildTableHeader(columns) {
+  var header ='<tr>';
+  for (var c = 0; c < columns.length; c++){
+    var data_type = columns[c].replace("_", " ");
+    header += '<th>' + data_type +'</th>';
+  }
+  header += '</tr>';
+  return header;
+}
+
+function buildTableBody(majorsList, columns){
+  for (var k = 0; k < majorsList.length; k++) {
+      var body = '<tr>';
+      var major = majorsList[k]
+      for (var c = 0; c < columns.length; c++){
+        var dat = columns[c];
+        body += '<td>' + major[dat] +'</td>';
+      }
+      body += '</tr>';
+  }
 }
 
 // later make "toggleAdvancedOptions"
@@ -156,6 +168,8 @@ function toggleAdvancedOptions() {
         advanced_options_form_html += "<input type='checkbox' value='full_time'><label for='full_time'>Employed Full Time</label><br>";
         advanced_options_form_html += "<input type='checkbox' value='part_time'><label for='part_time'>Employed Part Time</label><br>";
         advanced_options_form_html += "<input type='checkbox' value='unemployed'><label for='unemployed'>Unemployed</label><br>";
+        advanced_options_form_html += "<br>"
+        advanced_options_form_html += "<br>"
       advanced_options_form_html += "</div>";
 
       advanced_options_form_html += "<div class = 'column'>";
@@ -163,24 +177,35 @@ function toggleAdvancedOptions() {
         advanced_options_form_html += "<input type='checkbox' value='percent_full_time'><label for='percent_full_time'>Percent Employed Full-time</label><br>";
         advanced_options_form_html += "<input type='checkbox' value='percent_part_time'><label for='percent_part_time'>Percent Employed Part-time</label><br>";
         advanced_options_form_html += "<input type='checkbox' value='unemployment_rate'><label for='unemployment_rate'>Unemployed Rate</label><br>";
+        advanced_options_form_html += "<br>"
+        advanced_options_form_html += "<br>"
       advanced_options_form_html += "</div>";
 
       advanced_options_form_html += "<div class = 'column'>";
         advanced_options_form_html += "<input type='checkbox' value='median' checked><label for='median'>Median Salary</label><br>";
         advanced_options_form_html += "<input type='checkbox' value='p75th'><label for='p75th'>75th Percentile Salary</label><br>";
         advanced_options_form_html += "<input type='checkbox' value='p25th'><label for='p25th'>25th Percentile Salary</label><br>";
+        advanced_options_form_html += "<br>"
+        advanced_options_form_html += "<br>"
+        advanced_options_form_html += "<br>"
       advanced_options_form_html += "</div>";
 
       advanced_options_form_html += "<div class = 'column'>";
         advanced_options_form_html += "<input type='checkbox' value='college_jobs'><label for='college_jobs'>College Jobs</label><br>";
         advanced_options_form_html += "<input type='checkbox' value='non_college_jobs'><label for='non_college_jobs'>Non College Jobs</label><br>";
         advanced_options_form_html += "<input type='checkbox' value='low_wage_jobs'><label for='low_wage_jobs'>Low Wage Jobs</label><br>";
+        advanced_options_form_html += "<br>"
+        advanced_options_form_html += "<br>"
+        advanced_options_form_html += "<br>"
       advanced_options_form_html += "</div>";
 
       advanced_options_form_html += "<div class = 'column'>";
         advanced_options_form_html += "<input type='checkbox' value='percent_college_jobs'><label for='percent_college_jobs'>Percent College Jobs</label><br>";
         advanced_options_form_html += "<input type='checkbox' value='percent_non_college_jobs'><label for='percent_non_college_jobs'>Percent Non-College Jobs</label><br>";
         advanced_options_form_html += "<input type='checkbox' value='percent_low_wage_jobs'><label for='percent_low_wage_jobs'>Percent Low-Wage Jobs</label><br>";
+        advanced_options_form_html += "<br>"
+        advanced_options_form_html += "<br>"
+        advanced_options_form_html += "<br>"
       advanced_options_form_html += "</div>";
     } else {
       advanced_options_visible = false;
