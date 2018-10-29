@@ -16,9 +16,13 @@
   border: 5px solid #78BE97;
 }
 
+.toggle_advanced_options_button{
+  float: center;
+}
+
 .column {
   float: left;
-  width: 175px;
+  width: 200px;
   padding: 10px;
   background-color: #CEF19E;
   overflow: auto;
@@ -33,6 +37,7 @@
 
 .settings_box{
   font-size: 18px;
+  float: center;
   width: 300px;
   border: 25px solid #78BE97;
   background-color: #CEF19E;
