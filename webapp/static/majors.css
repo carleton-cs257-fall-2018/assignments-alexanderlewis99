@@ -17,16 +17,19 @@
   width: 16.66%
   padding: 10px;
   background-color: lightgray;
+
 }
 
 .heading {
-  font-size: 25;
+  font-size: 25px;
   color: darkgreen;
   font-family: Arial;
+  width: 25%;
+  text-align: center;
 }
 
 .boxy {
-  font-size: 25;
+  font-size: 25px;
   font-family: Lucida Console;
   color: white;
   background-color: palegreen;
