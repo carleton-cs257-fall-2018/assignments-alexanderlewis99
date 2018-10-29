@@ -20,9 +20,16 @@
 }
 
 .heading {
-  font-size = 25;
-  color = darkgreen;
-  font-family = Arial;
+  font-size: 25;
+  color: darkgreen;
+  font-family: Arial;
+}
+
+.boxy {
+  font-size: 25;
+  font-family: Lucida Console;
+  color: white;
+  background-color: palegreen;
 }
 
 table {
