@@ -109,7 +109,7 @@ function getBaseURL() {
 
 function getDataTypesForTableColumns() {
   if(!(advanced_options_visible)){
-    var columns = ['major', 'category', 'median', 'percent_employed'];
+    var columns = ['major', 'category', 'percent_employed', 'median'];
   }
   else {
     var columns = ['major'];
