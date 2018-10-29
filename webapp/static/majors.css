@@ -19,6 +19,12 @@
   background-color: lightgray;
 }
 
+.heading {
+  font-size = 25;
+  color = darkgreen;
+  font-family = Arial;
+}
+
 table {
     border-collapse: collapse;
 }

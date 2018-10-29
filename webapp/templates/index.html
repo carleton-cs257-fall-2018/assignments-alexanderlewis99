@@ -5,21 +5,15 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='majors.css') }}" />
     <script>var api_port = {{ api_port }};</script>
     <script type="text/javascript" src="{{ url_for('static', filename='majors.js') }}" defer></script>
-    <link rel="shortcut icon" href="{{ url_for('static', filename='emoji_smile.jpg') }}" />
+    <link rel="shortcut icon" href="{{ url_for('static', filename='mcdonnellp.jpg') }}" />
     <title>CS 257: Software Design, Spring 2017</title>
 
-    <style>
-.whoa {
-    font-family: "Comic Sans MS", cursive, sans-serif;
-    color: red;
-    font-size: 250%;
-}
-    </style>
 </head>
 
 <body>
-    <h1>CS 257: Alec and Bat's Web App</h1>
-    <h2>Query Settings</h2>
+    <div class = 'heading'>Find majors and compare with economic data</div>
+    <div class = 'real box'> 
+    <div class = 'boxy' >Settings</div>
     <form id = "majors_form">
       Number of entries:<br>
       <input type="text" name="Limit" id="lim">
@@ -62,18 +56,18 @@
         <option value="percent_low_wage_jobs">Percent Low Wage Jobs</option>
       </select>
     </form>
+    </div>
     <br>
     <div class = "toggle_advanced_options_button">
-      <button id="advanced_options_button" onclick="toggleAdvancedOptions()" style="font-family: Verdana; font-size : 16px; width: 40%; height: 26px; background-color: powderBlue; color: mediumBlue;">Show Advanced Options</button>
+      <button id="advanced_options_button" onclick="toggleAdvancedOptions()" style="font-family: Verdana; font-size : 16px; height: 26px; background-color: powderBlue; color: mediumBlue;">Show Advanced Options</button>
     </div>
     <div class = "advanced_options_form">
       <form id = "advanced_options_form"></form>
     </div>
     <p> "World is beautiful and find your vocation! We are believing in you"</p>
     <div class = "majors_button">
-      <button id="majors_button" style="font-family: Verdana; font-size : 22px; width: 30%; height: 50px; background-color: forestGreen; color: seashell; font-weight: bold;">Get majors</button>
+      <button id="majors_button" style="font-family: Verdana; font-size : 22px; height: 50px; background-color: forestGreen; color: seashell; font-weight: bold;">Get majors</button>
     </div>
     <p><table id="results_table"></table></p>
-
   </body>
 </html>
