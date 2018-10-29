@@ -118,7 +118,7 @@ function getDataTypesForTableColumns() {
       for (var j = 0; j < checkboxes.length; j++){
         var checkbox = checkboxes.elements[j];
         if (checkbox.checked){
-          var data_type = checkbox.getAttribute("value")
+          var data_type = checkbox.getAttribute("value");
           columns.push(data_type);
         }
       }
@@ -141,7 +141,7 @@ function buildTableBody(majorsList, columns){
   var body = "";
   for (var k = 0; k < majorsList.length; k++) {
       var row = '<tr>';
-      var major = majorsList[k]
+      var major = majorsList[k];
       for (var c = 0; c < columns.length; c++){
         var data_type = columns[c];
         row += '<td>' + major[data_type] +'</td>';
