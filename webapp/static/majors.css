@@ -15,8 +15,9 @@
 .column {
   float: left;
   width: 16.66%
+  border: 5px solid #78BE97;
   padding: 10px;
-  background-color: lightgray;
+  background-color: #CEF19E;
 
 }
 
@@ -27,7 +28,17 @@
   text-align: center;
 }
 
-.settings {
+.settings_box{
+  font-size: 18px;
+  width: 300px;
+  border: 25px solid #78BE97;
+  background-color: #CEF19E;
+  padding: 25px;
+  margin: 5px;
+  text-align: right;
+}
+
+.settings_header {
   font-size: 30px;
   text-height: 35px;
   font-family: Lucida Console;
@@ -37,15 +48,6 @@
   text-align: center;
 }
 
-.outer_box{
-  font-size: 18px;
-  width: 300px;
-  border: 25px solid #78BE97;
-  background-color: #CEF19E;
-  padding: 25px;
-  margin: 5px;
-  text-align: right;
-}
 
 table {
     border-collapse: collapse;
