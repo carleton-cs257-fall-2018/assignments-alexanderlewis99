@@ -22,7 +22,7 @@
 
 .column {
   float: left;
-  width: 200px;
+  width: 190px;
   padding: 10px;
   background-color: #CEF19E;
   overflow: auto;
@@ -36,8 +36,9 @@
 }
 
 .settings_box{
-  font-size: 18px;
-  display: inline-block;
+  margin-left: auto;
+  margin-right: auto;
+   font-size: 18px;
   width: 300px;
   border: 25px solid #78BE97;
   background-color: #CEF19E;
