@@ -68,11 +68,6 @@ function onMajorsButtonClicked() {
     });
 }
 
-function getBaseURL() {
-    var baseURL = window.location.protocol + '//' + window.location.hostname + ':' + api_port;
-    return baseURL;
-}
-
 function getUrl() {
   var myParam = '?';
   var formData = document.getElementById("majors_form");
@@ -101,24 +96,31 @@ function getUrl() {
     }
     myParam = myParam.substring(0, myParam.length-1);
   } else {
-    myParam = ""
+    myParam = "";
   }
   var url = getBaseURL() + '/majors/' + myParam;
   return url;
 }
 
+function getBaseURL() {
+    var baseURL = window.location.protocol + '//' + window.location.hostname + ':' + api_port;
+    return baseURL;
+}
+
 function getDataTypesForTableColumns() {
   if(advanced_options_visible){
     var columns = ['major'];
-  } else {
-    var columns = ['major', 'category', 'median', 'percent_employed'];
   }
-  var requested_data_types = document.getElementById("advanced_options_form");
-  if(requested_data_types){
-    for (var j = 0; j < requested_data_types.length; j++){
-      var element = requested_data_types.elements[j];
-      if (element.checked){
-          columns.push(element.getAttribute("value"));
+  else {
+    var columns = ['major', 'category', 'median', 'percent_employed'];
+    var checkboxes = document.getElementById("advanced_options_form");
+    if(checkboxes){
+      for (var j = 0; j < checkboxes.length; j++){
+        var checkbox = checkboxes.elements[j];
+        if (checkbox.checked){
+          var data_type = checkbox.getAttribute("value")
+          columns.push(data_type);
+        }
       }
     }
   }
@@ -136,15 +138,18 @@ function buildTableHeader(columns) {
 }
 
 function buildTableBody(majorsList, columns){
+  var body = "";
   for (var k = 0; k < majorsList.length; k++) {
-      var body = '<tr>';
+      var row = '<tr>';
       var major = majorsList[k]
       for (var c = 0; c < columns.length; c++){
-        var dat = columns[c];
-        body += '<td>' + major[dat] +'</td>';
+        var data_type = columns[c];
+        row += '<td>' + major[data_type] +'</td>';
       }
-      body += '</tr>';
+      row += '</tr>';
+      body += row;
   }
+  return body;
 }
 
 // later make "toggleAdvancedOptions"
