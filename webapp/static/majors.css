@@ -28,8 +28,8 @@
 }
 
 .settings {
-  font-size: 25px;
-  text-height: 28px;
+  font-size: 30px;
+  text-height: 35px;
   font-family: Lucida Console;
   color: white;
   background-color: palegreen;
@@ -38,16 +38,13 @@
 }
 
 .outer_box{
+  font-size: 15px;
   width: 300px;
   border: 25px solid green;
   background-color: silver;
   padding: 25px;
   margin: 5px;
   text-align: right;
-}
-
-.text_box_formatting{
-
 }
 
 table {
