@@ -186,8 +186,10 @@ function toggleAdvancedOptions() {
           advanced_options_form_html += "<br>"
           advanced_options_form_html += "<br>"
         advanced_options_form_html += "</div>";
+      advanced_options_form_html += "</div>";
 
-        advanced_options_form_html += "<div class = 'column'>";
+      advanced_options_form_html += "<div class = 'advanced_options_form_box'>";
+          advanced_options_form_html += "<div class = 'column'>";
           advanced_options_form_html += "<input type='checkbox' value='median' checked><label for='median'>Median Salary</label><br>";
           advanced_options_form_html += "<input type='checkbox' value='p75th'><label for='p75th'>75th Percentile Salary</label><br>";
           advanced_options_form_html += "<input type='checkbox' value='p25th'><label for='p25th'>25th Percentile Salary</label><br>";
@@ -213,7 +215,9 @@ function toggleAdvancedOptions() {
           advanced_options_form_html += "<br>"
           advanced_options_form_html += "<br>"
         advanced_options_form_html += "</div>";
-      advanced_options_form_html += "</div>";
+        advanced_options_form_html += "</div>";
+
+
     } else {
       advanced_options_visible = false;
       advanced_options_button.textContent = "Show Advanced Options";
