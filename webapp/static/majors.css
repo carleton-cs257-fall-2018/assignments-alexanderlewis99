@@ -20,9 +20,17 @@
   float: center;
 }
 
-.column {
+.small_column {
   float: left;
-  width: 190px;
+  width: 180px;
+  padding: 10px;
+  background-color: #CEF19E;
+  overflow: auto;
+}
+
+.large_column {
+  float: left;
+  width: 200px;
   padding: 10px;
   background-color: #CEF19E;
   overflow: auto;
