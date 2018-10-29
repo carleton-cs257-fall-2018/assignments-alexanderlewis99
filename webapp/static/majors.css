@@ -29,6 +29,7 @@
 
 .settings {
   font-size: 25px;
+  text-height: 28px;
   font-family: Lucida Console;
   color: white;
   background-color: palegreen;
@@ -41,8 +42,13 @@
   border: 25px solid green;
   background-color: silver;
   padding: 25px;
-  margin: 25px;
+  margin: 5px;
 }
+
+.text_box_formatting{
+  float: left;
+}
+
 table {
     border-collapse: collapse;
 }
