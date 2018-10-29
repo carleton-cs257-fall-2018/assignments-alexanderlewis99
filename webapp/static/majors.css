@@ -21,6 +21,7 @@
   width: 16.66%
   padding: 10px;
   background-color: #CEF19E;
+  overflow: auto;
 }
 
 .heading {

@@ -167,7 +167,7 @@ function toggleAdvancedOptions() {
           advanced_options_form_html += "<input type='checkbox' value='women'><label for='men'>Women</label><br>";
           advanced_options_form_html += "<input type='checkbox' value='percent_men'><label for='percent_men'>Percent Men</label><br>";
           //extra spaces to fix column breaks
-          advanced_options_form_html += "<input type='checkbox' value='percent_women'><label for='percent_women'>Percent Women         </label><br>";
+          advanced_options_form_html += "<input type='checkbox' value='percent_women'><label for='percent_women'>Percent Women</label><br>";
         advanced_options_form_html += "</div>";
 
         advanced_options_form_html += "<div class = 'column'>";
