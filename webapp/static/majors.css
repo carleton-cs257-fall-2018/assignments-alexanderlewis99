@@ -43,10 +43,12 @@
   background-color: silver;
   padding: 25px;
   margin: 5px;
+  float: right;
+  text-align: center;
 }
 
 .text_box_formatting{
-  float: right;
+
 }
 
 table {
