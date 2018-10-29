@@ -7,6 +7,12 @@
     for CS 257, Spring 2016.
 */
 
+.advanced_options_form {
+  content: "";
+  display: table;
+  clear: both;
+}
+
 .column {
   float: left;
   width: 16.66%
