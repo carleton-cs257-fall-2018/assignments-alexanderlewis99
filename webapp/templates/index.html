@@ -5,7 +5,7 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='majors.css') }}" />
     <script>var api_port = {{ api_port }};</script>
     <script type="text/javascript" src="{{ url_for('static', filename='majors.js') }}" defer></script>
-    <link rel="shortcut icon" href="{{ url_for('static', filename='mcdonnellp.jpg') }}" />
+    <link rel="shortcut icon" href="{{ url_for('static', filename='emoji_smile.jpg') }}" />
     <title>CS 257: Software Design, Spring 2017</title>
 
     <style>
@@ -63,12 +63,16 @@
       </select>
     </form>
     <br>
-    <button id="advanced_options_button" onclick="toggleAdvancedOptions()">Show Advanced Options</button>
+    <div class = "toggle_advanced_options_button">
+      <button id="advanced_options_button" onclick="toggleAdvancedOptions()">Show Advanced Options</button>
+    </div>
     <div class = "advanced_options_form">
-        <form id = "advanced_options_form"></form>
+      <form id = "advanced_options_form"></form>
     </div>
     <p> "World is beautiful and find your vocation! We are believing in you"</p>
-    <p><button id="majors_button">Get majors</button></p>
+    <div class = "majors_button">
+      <button id="majors_button">Get majors</button>
+    </div>
     <p><table id="results_table"></table></p>
 
   </body>
