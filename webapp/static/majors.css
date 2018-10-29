@@ -6,25 +6,6 @@
     Styles for the "books and authors" webapp sample
     for CS 257, Spring 2016.
 */
-.majors_button {
-  font-family: Verdana;
-  font-size : 22px;
-  width: 30%;
-  height: 50px;
-  background-color: forestGreen;
-  color: seashell;
-  font-weight: bold;
-}
-
-.toggle_advanced_options_button {
-  font-family: Verdana;
-  font-size : 16px;
-  width: 40%;
-  height: 26px;
-  background-color: powderBlue;
-  color: mediumBlue;
-}
-
 .advanced_options_form {
   content: "";
   display: table;
