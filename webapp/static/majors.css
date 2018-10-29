@@ -4,8 +4,15 @@
     Updated 6 May 2018
 
     Styles for the "books and authors" webapp sample
-    for CS 257, Spring 2016. 
+    for CS 257, Spring 2016.
 */
+
+.column {
+  float: left;
+  width: 16.66%
+  padding: 10px;
+  background-color: lightgray;
+}
 
 table {
     border-collapse: collapse;
@@ -26,4 +33,3 @@ a:hover {
   text-decoration: none;
   cursor: pointer;
 }
-
