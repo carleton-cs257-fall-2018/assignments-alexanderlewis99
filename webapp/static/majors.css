@@ -22,7 +22,7 @@
 
 .heading {
   font-size: 25px;
-  color: darkgreen;
+  color: #0B476D;
   font-family: Arial;
   text-align: center;
 }
@@ -32,7 +32,7 @@
   text-height: 35px;
   font-family: Lucida Console;
   color: white;
-  background-color: sienna;
+  background-color: #CEF19E;
   width: 300px;
   text-align: center;
 }
@@ -40,7 +40,7 @@
 .outer_box{
   font-size: 18px;
   width: 300px;
-  border: 25px solid saddleBrown;
+  border: 25px solid #78BE97;
   background-color: silver;
   padding: 25px;
   margin: 5px;
