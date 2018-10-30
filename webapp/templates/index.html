@@ -29,7 +29,6 @@
           <input type="text" name="MinimumSalary" id="min_sal">
           <br><br>
           Sort By:
-          <div align="left"> 
           <select name="SortBy" id="sort">
             <option value=""></option>
             <option value="major">Major</option>
@@ -57,21 +56,25 @@
             <option value="percent_non_college_jobs">Percent Non-College Jobs</option>
             <option value="percent_low_wage_jobs">Percent Low Wage Jobs</option>
           </select>
-        </div>
         </form>
     </div>
+    
     <br>
-    <div class = "toggle_advanced_options_button">
+
+    <div class = "toggle_advanced_options_button"> 
       <button id="advanced_options_button" onclick="toggleAdvancedOptions()" style="font-family: Verdana; font-size : 16px; height: 26px; background-color: #A7DDA7; color: #0B476D;">Show Advanced Options</button>
     </div>
-    <div class = "advanced_options_form">
+
+    <div align = "left" class = "advanced_options_form">
       <form id = "advanced_options_form"></form>
     </div>
+
+
     <p> "World is beautiful and find your vocation! We are believing in you"</p>
     <div class = "majors_button">
       <button id="majors_button" style="font-family: Verdana; font-size : 22px; height: 50px; background-color: #398689; color: seashell; font-weight: bold;">Get majors</button>
     </div>
-  </center>
+    </center>
     <p><table id="results_table"></table></p>
   </body>
 </html>
