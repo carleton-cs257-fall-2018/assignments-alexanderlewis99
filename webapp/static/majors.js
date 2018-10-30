@@ -155,7 +155,7 @@ function buildTableBody(majorsList, columns){
 
 
 function toggle_help(){
-  var help_button = document.getElementById("help_button_id");
+  var help_button = document.getElementById("help_button");
   var help_button_html = "";
   if (!help_button_visible){
     help_button_visible = true;
@@ -163,7 +163,7 @@ function toggle_help(){
     help_button_html = "Don't use special characters, Keep doing the research!";
   }
   else{
-    //help_button_visible = false;
+    help_button_visible = false;
     help_button.textContent = "Show help text";
   }
   document.getElementById("help_text").innerHTML = help_button_html;
