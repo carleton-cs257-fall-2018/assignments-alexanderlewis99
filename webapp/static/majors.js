@@ -166,7 +166,7 @@ function toggle_help(){
     help_button_visible = false;
     help_button.textContent = "Show help text";
   }
-  document.getElementById("help_button").innerHTML = help_button_html;
+  document.getElementById("help_text").innerHTML = help_button_html;
 }
 // later make "toggleAdvancedOptions"
 function toggleAdvancedOptions() {
