@@ -179,7 +179,7 @@ def get_percent_from_data(row, data_type, data_types):
     total = row[2]
     number = row[data_types.index(data_type)]
     if(total is not None and number is not None and not number == 'NULL'):
-        percent = float(int(number)/int(total))
+        percent = round(float(int(number)/int(total)),1)
     else:
         percent = "NULL"
     return percent
