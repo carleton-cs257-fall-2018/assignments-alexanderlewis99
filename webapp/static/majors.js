@@ -155,7 +155,7 @@ function buildTableBody(majorsList, columns){
 
 
 function toggle_help(){
-  var help_button = document.getElementById("help_button");
+  var help_button = document.getElementById("help_button_id");
   var help_button_html = "";
   if (!help_button_visible){
     help_button_visible = true;
