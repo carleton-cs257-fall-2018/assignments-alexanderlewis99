@@ -160,7 +160,7 @@ function toggle_help(){
   if (!help_button_visible){
     help_button_visible = true;
     help_button.textContent = "Hide help text";
-    help_button_html += "Don't use special characters, Keep doing the research!"
+    help_button_html = "Don't use special characters, Keep doing the research!";
   }
   else{
     help_button_visible = false;
