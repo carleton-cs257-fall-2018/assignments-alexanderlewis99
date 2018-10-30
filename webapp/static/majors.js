@@ -163,11 +163,14 @@ function toggle_help(){
     help_button_html = "Don't use special characters, Keep doing the research!";
   }
   else{
-    help_button_visible = false;
+    //help_button_visible = false;
     help_button.textContent = "Show help text";
   }
   document.getElementById("help_text").innerHTML = help_button_html;
 }
+
+
+
 // later make "toggleAdvancedOptions"
 function toggleAdvancedOptions() {
     var advanced_options_button = document.getElementById("advanced_options_button");
