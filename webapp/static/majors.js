@@ -31,6 +31,7 @@
 initialize();
 
 var advanced_options_visible = false;
+var help_button_visible = false;
 
 function initialize() {
     var element = document.getElementById('majors_button');
@@ -152,6 +153,21 @@ function buildTableBody(majorsList, columns){
   return body;
 }
 
+
+function toggle_help(){
+  var help_button = document.getElementById("help_button");
+  var help_button_html = "";
+  if (!help_button_visible){
+    help_button_visible = true;
+    help_button.textContent = "Hide help text";
+    help_button_html += "Don't use special characters, Keep doing the research!"
+  }
+  else{
+    help_button_visible = false;
+    help_button.textContent = "Show help text";
+  }
+  document.getElementById("help_button").innerHTML = help_button_html;
+}
 // later make "toggleAdvancedOptions"
 function toggleAdvancedOptions() {
     var advanced_options_button = document.getElementById("advanced_options_button");

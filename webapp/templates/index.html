@@ -13,6 +13,7 @@
 <body>
     <center>
     <div class = 'heading'>Find majors and compare with economic data</div>
+    <p> "The world is beautiful. Find your vocation and be smart! We are believing in you"</p>
     <div class = 'settings_box'>
         <div class = 'settings_header'> Settings </div><br>
         <form id = "majors_form">
@@ -56,6 +57,9 @@
             <option value="percent_non_college_jobs">Percent Non-College Jobs</option>
             <option value="percent_low_wage_jobs">Percent Low Wage Jobs</option>
           </select>
+        <div class = "help_button">
+            <button id="help_button" onclick ="toggle_help()" style="font-family: Verdana; font-size : 16px; height: 26px; background-color: #A7DDA7; color: #0B476D;">Show help text</button>
+        </div>
         </form>
     </div>
     
@@ -69,11 +73,12 @@
       <form id = "advanced_options_form"></form>
     </div>
 
-
-    <p> "World is beautiful and find your vocation! We are believing in you"</p>
     <div class = "majors_button">
       <button id="majors_button" style="font-family: Verdana; font-size : 22px; height: 50px; background-color: #398689; color: seashell; font-weight: bold;">Get majors</button>
     </div>
+
+
+
     </center>
     <p><table id="results_table"></table></p>
   </body>
