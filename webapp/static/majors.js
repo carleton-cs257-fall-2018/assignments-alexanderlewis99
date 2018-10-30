@@ -157,7 +157,7 @@ function buildTableBody(majorsList, columns){
 function toggle_help(){
   var help_button = document.getElementById("help_button");
   var help_button_html = "";
-  if (help_button.textContent == "Show help text";){
+  if (help_button.textContent == "Show help text"){
     help_button.textContent = "Hide help text";
     help_button_html = "Don't use special characters, Keep doing the research!";
   }
