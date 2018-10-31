@@ -6,6 +6,10 @@
     Styles for the "books and authors" webapp sample
     for CS 257, Spring 2016.
 */
+.help_text {
+  font-size: 10px;
+}
+
 .advanced_options_form {
   content: "";
   display: table;
@@ -44,7 +48,6 @@
 }
 
 .settings_box{
-  
   font-size: 18px;
   width: 300px;
   border: 25px solid #78BE97;
