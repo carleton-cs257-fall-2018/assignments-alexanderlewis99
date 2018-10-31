@@ -9,6 +9,7 @@
 .help_text {
   font-size: 14px;
   text-align: left;
+  padding: 4px;
   background-color: #398689;
   color: seashell;
 }
