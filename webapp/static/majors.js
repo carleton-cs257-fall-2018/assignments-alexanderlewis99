@@ -24,8 +24,12 @@ function onMajorsButtonClicked() {
     .then(function(majorsList) {
         // Build the table body.
         var tableBody = '';
-        tableBody += buildTableHeader(columns);
-        tableBody += buildTableBody(majorsList, columns);
+        if majorsList.length > 0{
+          tableBody += buildTableHeader(columns);
+          tableBody += buildTableBody(majorsList, columns);
+        } else {
+          var tableBody = '<h2> No majors found </h2>';
+        }
         // Put the table body we just built inside the table that's already on the page.
         var resultsTableElement = document.getElementById('results_table');
         if (resultsTableElement) {
@@ -129,11 +133,11 @@ function toggle_help(){
     help_button.textContent = "Hide help text";
     help_button_html += "<div class = 'help_text_box'>";
     help_button_html += "Max # of results: The maximum number of results to be displayed in the table. <br><br>";
-    help_button_html += "Category: Filter results by the category of the majors <br><br>";
+    help_button_html += "Category: Filter majors by their department. <br><br>";
     help_button_html += "Major: Search text used to find majors (i.e. physics) <br><br>";
     help_button_html += "Minimum Salary: Filters results so that they include only majors whose median salaries match or exceed the miniumum salary.<br><br>";
     help_button_html += "Sort By: Sorts the results by the given element in alphabetical or descending order.<br><br>";
-    help_button_html += "Show Advanced Options: Allows you to specify the type of data you would like in the table. Only enabled if the options open. <br>";
+    help_button_html += "Show Advanced Options: Allows you to specify the type of data you would like in the table. Only enabled if the options are open. <br>";
     help_button_html += "</div>";
   }
   else{
