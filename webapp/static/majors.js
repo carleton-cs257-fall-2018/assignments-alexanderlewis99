@@ -12,11 +12,6 @@ function initialize() {
     }
 }
 
-function onInstructionsButtonClicked(){
-  <input id="instructions_button" type="button" value="Check"
-       onclick="window.location.href = window.location.href + '/instructions'" />
-}
-
 function onMajorsButtonClicked() {
     var url = getUrl();
     var columns = getDataTypesForTableColumns();
