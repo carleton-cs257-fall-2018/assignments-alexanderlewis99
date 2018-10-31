@@ -127,7 +127,8 @@ function toggle_help(){
   var help_button_html = "";
   if (help_button.textContent == "Show help text"){
     help_button.textContent = "Hide help text";
-    help_button_html += "Max # of results: The max number of results to be displayed in the table <br><br>";
+    help_button_html += "<div class = 'help_text_box'>";
+    help_button_html += "Max # of results: The max number of results to be displayed in the table. <br><br>";
     help_button_html += "Category: Filter results by the following categories:<br>";
     help_button_html += "<ol>";
     help_button_html += "<li>Agriculture & Natural Resources</li>";
@@ -147,9 +148,10 @@ function toggle_help(){
     help_button_html += "<li>Psychology & Social Work</li>";
     help_button_html += "<li>Social Science</li>";
     help_button_html += "</ol>";
-    help_button_html += "Major: Search text used to find majors. <br><br>";
+    help_button_html += "Major: Search text used to find majors (i.e. physics) <br><br>";
     help_button_html += "Minimum Salary: Filters results so that they include only majors whose median salaries match or exceed the min salary.<br><br>";
     help_button_html += "Sort By: Sorts the results by the data in descending order.<br>";
+    help_button_html += "</div>";
   }
   else{
     help_button.textContent = "Show help text";
