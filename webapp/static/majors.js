@@ -127,11 +127,11 @@ function toggle_help(){
   var help_button_html = "";
   if (help_button.textContent == "Show help text"){
     help_button.textContent = "Hide help text";
-    help_button_html =+ "Max number of results: The max number of rows in the table";
-    help_button_html =+ "Category: The category of the major (i.e. engineering, health, arts)";
-    help_button_html =+ "Major: Search text used to find majors.";
-    help_button_html =+ "Minimum Salary: Filters results so that the median of graduates of the major match or exceed the given salary.";
-    help_button_html =+ "Sort By: Sorts the results by the element in descending order.";
+    help_button_html += "Max number of results: The max number of rows in the table <br>";
+    help_button_html += "Category: The category of the major (i.e. engineering, health, arts) <br>";
+    help_button_html += "Major: Search text used to find majors. <br>";
+    help_button_html += "Minimum Salary: Filters results so that the median of graduates of the major match or exceed the given salary. <br>";
+    help_button_html += "Sort By: Sorts the results by the element in descending order. <br>";
   }
   else{
     help_button.textContent = "Show help text";
