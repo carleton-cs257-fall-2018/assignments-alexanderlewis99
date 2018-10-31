@@ -24,11 +24,12 @@ function onMajorsButtonClicked() {
     .then(function(majorsList) {
         // Build the table body.
         var tableBody = '';
-        if majorsList.length > 0{
+        tableBody += majorsList.length;
+        if (majorsList.length > 0) {
           tableBody += buildTableHeader(columns);
           tableBody += buildTableBody(majorsList, columns);
         } else {
-          var tableBody = '<h2> No majors found </h2>';
+          tableBody += '<h2> No majors found </h2>';
         }
         // Put the table body we just built inside the table that's already on the page.
         var resultsTableElement = document.getElementById('results_table');
