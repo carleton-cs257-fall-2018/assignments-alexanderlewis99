@@ -212,9 +212,12 @@ def get_list_of_sorted_majors(cursor, arguments, categories):
             if(type(order_key) == str):
                 order_key = order_key + "z"
         majors_order_key_pairs[order_key] = major
-    majors_keys_sorted_descending = sorted(majors_order_key_pairs, reverse=True)
+    if (sort_type in ("major", "category")):
+        majors_keys_sorted = sorted(majors_order_key_pairs, reverse=False)
+    else:
+        majors_keys_sorted = sorted(majors_order_key_pairs, reverse=True)
     majors = []
-    for key in majors_keys_sorted_descending:
+    for key in majors_keys_sorted:
         majors.append(majors_order_key_pairs[key])
     return majors
 
