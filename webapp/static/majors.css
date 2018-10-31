@@ -9,6 +9,8 @@
 .help_text {
   font-size: 14px;
   text-align: left;
+  background-color: #398689;
+  color: seashell;
 }
 
 .advanced_options_form {

@@ -146,9 +146,9 @@ function toggle_help(){
     help_button_html += "<li>Physical Sciences</li>";
     help_button_html += "<li>Psychology & Social Work</li>";
     help_button_html += "<li>Social Science</li>";
-    help_button_html += "</ol><br><br>";
-    help_button_html += "Major: Search text used to find majors. <br>";
-    help_button_html += "Minimum Salary: Filters results so that they include only majors whose median salaries match or exceed the min salary.<br>";
+    help_button_html += "</ol>";
+    help_button_html += "Major: Search text used to find majors. <br><br>";
+    help_button_html += "Minimum Salary: Filters results so that they include only majors whose median salaries match or exceed the min salary.<br><br>";
     help_button_html += "Sort By: Sorts the results by the element in descending order.<br>";
   }
   else{
