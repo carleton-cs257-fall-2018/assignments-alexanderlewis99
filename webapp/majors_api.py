@@ -1,6 +1,4 @@
-#Alec Wang and Bat-Orgil Batjargal
-
-#methods that we will use on the api - CareerSalaryDataSource
+# Alec Wang and Bat-Orgil Batjargal
 
 import re
 import csv
@@ -17,7 +15,6 @@ app = flask.Flask(__name__)
 
 @app.route('/')
 def hello():
-    # Connect to the database
     return("Hello! Welcome to Bat and Alec's API."
                 + "Use query strings in the URL: cat=category_id, min_sal=minimum_salary,"
                 + "maj=major_search_text, sort=sort_by, lim=limit."
@@ -179,7 +176,7 @@ def get_percent_from_data(row, data_type, data_types):
     total = row[2]
     number = row[data_types.index(data_type)]
     if(total is not None and number is not None and not number == 'NULL'):
-        percent = round(100 * float(int(number)/int(total)),3)
+        percent = round(100 * float(int(number)/int(total)),1)
     else:
         percent = "NULL"
     return percent
@@ -206,7 +203,7 @@ def get_list_of_sorted_majors(cursor, arguments, categories):
     for row in cursor:
         major = get_major_dictionary(row, categories)
         order_key = get_order_key(major, sort_type)
-        # fix problem with duplicate keys
+        # fixes problem with duplicate keys
         while order_key in majors_order_key_pairs.keys():
             if(type(order_key) == int):
                 order_key = order_key - 1

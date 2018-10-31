@@ -1,32 +1,4 @@
-/*
- * books.js
- * Jeff Ondich, 27 April 2016
- * Updated, 4 May 2018
- *
- * A little bit of Javascript showing one small example of AJAX
- * within the "books and authors" sample for Carleton CS257,
- * Spring Term 2017.
- *
- * This example uses a very simple-minded approach to Javascript
- * program structure, which suffers from the problem of
- * "global namespace pollution". We'll talk more about this after
- * you get a feel for some Javascript basics.
- */
-
-// IMPORTANT CONFIGURATION INFORMATION
-// The contents of getBaseURL below reflects our assumption that
-// the web application (books_website.py) and the API (books_api.py)
-// will be running on the same host but on different ports.
-//
-// But if you take a look at the contents of getBaseURL, you may
-// ask: where does the value of api_port come from? The answer is
-// a little bit convoluted. (1) The command-line syntax of
-// books_website.py includes an argument for the API port;
-// and (2) the index.html Flask/Jinja2 template includes a tiny
-// bit of Javascript that declares api_port and assigns that
-// command-line API port argument to api_port. This happens
-// before books.js is loaded, so the functions in books.js (like
-// getBaseURL) can access api_port as needed.
+// Alec Wang and Bat-Orgil Batjargal
 
 initialize();
 
@@ -43,8 +15,6 @@ function initialize() {
 function onMajorsButtonClicked() {
     var url = getUrl();
     var columns = getDataTypesForTableColumns();
-    // Send the request to the Books API /majors/ endpoint
-    //wish able to see the url
     fetch(url, {method: 'get'})
     // When the results come back, transform them from JSON string into
     // a Javascript object (in this case, a list of author dictionaries).
@@ -54,7 +24,6 @@ function onMajorsButtonClicked() {
     .then(function(majorsList) {
         // Build the table body.
         var tableBody = '';
-        tableBody += url;
         tableBody += buildTableHeader(columns);
         tableBody += buildTableBody(majorsList, columns);
         // Put the table body we just built inside the table that's already on the page.
@@ -153,13 +122,18 @@ function buildTableBody(majorsList, columns){
   return body;
 }
 
-
 function toggle_help(){
   var help_button = document.getElementById("help_button");
   var help_button_html = "";
   if (help_button.textContent == "Show help text"){
     help_button.textContent = "Hide help text";
-    help_button_html = "Don't use special characters, Keep doing the research!";
+    help_button_html =+ "<div class='help_text'>";
+    help_button_html =+ "Max number of results: The max number of rows in the table";
+    help_button_html =+ "Category: The category of the major (i.e. engineering, health, arts)";
+    help_button_html =+ "Major: Search text used to find majors.";
+    help_button_html =+ "Minimum Salary: Filters results so that the median of graduates of the major match or exceed the given salary.";
+    help_button_html =+ "Sort By: Sorts the results by the element in descending order.";
+    help_button_html =+ "</div>";
   }
   else{
     help_button.textContent = "Show help text";
@@ -167,9 +141,6 @@ function toggle_help(){
   document.getElementById("help_text").innerHTML = help_button_html;
 }
 
-
-
-// later make "toggleAdvancedOptions"
 function toggleAdvancedOptions() {
     var advanced_options_button = document.getElementById("advanced_options_button");
     var advanced_options_form_html = "";
@@ -232,8 +203,6 @@ function toggleAdvancedOptions() {
         advanced_options_form_html += "</div>";
 
       advanced_options_form_html += "</div>";
-
-
     } else {
       advanced_options_visible = false;
       advanced_options_button.textContent = "Show Advanced Options";

@@ -13,11 +13,11 @@
 <body>
     <center>
     <div class = 'heading'>Find majors and compare with economic data</div>
-    <p> "The world is beautiful. Find your vocation and be smart! We are believing in you"</p>
+    <p> "The world is beautiful. Find your vocation and work hard at it! We believe in you :)" </p>
     <div class = 'settings_box'>
         <div class = 'settings_header'> Settings </div><br>
         <form id = "majors_form">
-          Number of entries:
+          Max number of results:
           <input type="text" name="Limit" id="lim">
           <br><br>
           Category:
@@ -62,7 +62,7 @@
         </form>
         <br>
         <button id="help_button" onclick ="toggle_help()" style="font-family: Verdana; font-size : 16px; height: 26px; background-color: #A7DDA7; color: #0B476D;">Show help text</button>
-        <p id="help_text"></p>    
+        <p id="help_text"></p>
     </div>
     <br>
     <div class = "toggle_advanced_options_button">
@@ -76,9 +76,6 @@
     <div class = "majors_button">
       <button id="majors_button" style="font-family: Verdana; font-size : 22px; height: 50px; background-color: #398689; color: seashell; font-weight: bold;">Get majors</button>
     </div>
-
-
-
     </center>
     <p><table id="results_table"></table></p>
   </body>
