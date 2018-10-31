@@ -10,10 +10,6 @@
   font-size: 14px;
 }
 
-.instructions_button_format{
-    float: right;
-}
-
 .advanced_options_form {
   content: "";
   display: table;
