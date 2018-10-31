@@ -7,7 +7,11 @@
     for CS 257, Spring 2016.
 */
 .help_text {
-  font-size: 10px;
+  font-size: 14px;
+}
+
+.instructions_button_format{
+    float: center;
 }
 
 .advanced_options_form {
@@ -18,10 +22,6 @@
 
 .advanced_options_form_box{
   border: 5px solid #78BE97;
-}
-
-.toggle_advanced_options_button{
-  float: center;
 }
 
 .small_column {

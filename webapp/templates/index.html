@@ -6,76 +6,79 @@
     <script>var api_port = {{ api_port }};</script>
     <script type="text/javascript" src="{{ url_for('static', filename='majors.js') }}" defer></script>
     <link rel="shortcut icon" href="{{ url_for('static', filename='mcdonnellp.jpg') }}" />
-    <title>CS 257: Software Design, Spring 2017</title>
-
+    <title>Majors Database</title>
 </head>
 
 <body>
     <center>
-    <div class = 'heading'>Find majors and compare with economic data</div>
-    <p> "The world is beautiful. Find your vocation and work hard at it! We believe in you :)" </p>
-    <div class = 'settings_box'>
-        <div class = 'settings_header'> Settings </div><br>
-        <form id = "majors_form">
-          Max number of results:
-          <input type="text" name="Limit" id="lim">
-          <br><br>
-          Category:
-          <input type="text" name="Category" id="cat">
-          <br><br>
-          Major:
-          <input type="text" name="Major" id="maj">
-          <br><br>
-          Minimum Salary:
-          <input type="text" name="MinimumSalary" id="min_sal">
-          <br><br>
-          Sort By:
-          <select name="SortBy" id="sort">
-            <option value=""></option>
-            <option value="major">Major</option>
-            <option value="total">Total</option>
-            <option value="men">Men</option>
-            <option value="women">Women</option>
-            <option value="category">Category</option>
-            <option value="employed">Employed</option>
-            <option value="full_time">Employed Full Time</option>
-            <option value="part_time">Employed Part Time</option>
-            <option value="unemployed">Unemployed</option>
-            <option value="median">Median Salary</option>
-            <option value="p25th">25th Percentile Salary</option>
-            <option value="p75th">75th Percentile Salary</option>
-            <option value="college_jobs">College Jobs</option>
-            <option value="non_college_jobs">Non College Jobs</option>
-            <option value="low_wage_jobs">Low Wage Jobs</option>
-            <option value="percent_men">Percent Men</option>
-            <option value="percent_women">Percent Women</option>
-            <option value="percent_employed">Percent Employed</option>
-            <option value="percent_full_time">Percent Employed Full Time</option>
-            <option value="percent_part_time">Percent Employed Part Time</option>
-            <option value="unemployment_rate">Unemployment Rate</option>
-            <option value="percent_college_jobs">Percent College Jobs</option>
-            <option value="percent_non_college_jobs">Percent Non-College Jobs</option>
-            <option value="percent_low_wage_jobs">Percent Low Wage Jobs</option>
-          </select>
-        <br>
-        <br>
-        </form>
-        <br>
-        <button id="help_button" onclick ="toggle_help()" style="font-family: Verdana; font-size : 16px; height: 26px; background-color: #A7DDA7; color: #0B476D;">Show help text</button>
-        <div class="help_text" id="help_text"></div>
+      <div class = 'heading'>Find majors and compare with economic data</div>
+    </center>
+    <div class = "instructions_button_format" >
+      <button id="instructions_button" onclick="onInstructionsButtonClicked()"
+          style="font-family: Verdana; font-size : 16px; height: 26px; background-color: #A7DDA7; color: #0B476D;">
+          Instructions </button>
     </div>
-    <br>
-    <div class = "toggle_advanced_options_button">
+    <center>
+      <p> "The world is beautiful. Find your vocation and work hard at it! We believe in you :)" </p>
+      <div class = 'settings_box'>
+          <div class = 'settings_header'> Settings </div><br>
+          <form id = "majors_form">
+            Max # of results:
+            <input type="text" name="Limit" id="lim">
+            <br><br>
+            Category:
+            <input type="text" name="Category" id="cat">
+            <br><br>
+            Major:
+            <input type="text" name="Major" id="maj">
+            <br><br>
+            Minimum Salary:
+            <input type="text" name="MinimumSalary" id="min_sal">
+            <br><br>
+            Sort By:
+            <select name="SortBy" id="sort">
+              <option value=""></option>
+              <option value="major">Major</option>
+              <option value="total">Total</option>
+              <option value="men">Men</option>
+              <option value="women">Women</option>
+              <option value="category">Category</option>
+              <option value="employed">Employed</option>
+              <option value="full_time">Employed Full Time</option>
+              <option value="part_time">Employed Part Time</option>
+              <option value="unemployed">Unemployed</option>
+              <option value="median">Median Salary</option>
+              <option value="p25th">25th Percentile Salary</option>
+              <option value="p75th">75th Percentile Salary</option>
+              <option value="college_jobs">College Jobs</option>
+              <option value="non_college_jobs">Non College Jobs</option>
+              <option value="low_wage_jobs">Low Wage Jobs</option>
+              <option value="percent_men">Percent Men</option>
+              <option value="percent_women">Percent Women</option>
+              <option value="percent_employed">Percent Employed</option>
+              <option value="percent_full_time">Percent Employed Full Time</option>
+              <option value="percent_part_time">Percent Employed Part Time</option>
+              <option value="unemployment_rate">Unemployment Rate</option>
+              <option value="percent_college_jobs">Percent College Jobs</option>
+              <option value="percent_non_college_jobs">Percent Non-College Jobs</option>
+              <option value="percent_low_wage_jobs">Percent Low Wage Jobs</option>
+            </select>
+          <br>
+          <br>
+          </form>
+          <br>
+          <button id="help_button" onclick ="toggle_help()" style="font-family: Verdana; font-size : 16px; height: 26px; background-color: #A7DDA7; color: #0B476D;">Show help text</button>
+          <div class="help_text" id="help_text"></div>
+      </div>
+      <br>
       <button id="advanced_options_button" onclick="toggleAdvancedOptions()" style="font-family: Verdana; font-size : 16px; height: 26px; background-color: #A7DDA7; color: #0B476D;">Show Advanced Options</button>
-    </div>
-
-    <div align = "left" class = "advanced_options_form">
-      <form id = "advanced_options_form"></form>
-    </div>
-    <br>
-    <div class = "majors_button">
-      <button id="majors_button" style="font-family: Verdana; font-size : 22px; height: 50px; background-color: #398689; color: seashell; font-weight: bold;">Get majors</button>
-    </div>
+      <div align = "left" class = "advanced_options_form">
+        <form id = "advanced_options_form"></form>
+      </div>
+      <br>
+      <div class = "majors_button">
+        <button id="majors_button" style="font-family: Verdana; font-size : 22px; height: 50px; background-color: #398689; color: seashell; font-weight: bold;">Get majors</button>
+      </div>
     </center>
     <p><table id="results_table"></table></p>
   </body>
