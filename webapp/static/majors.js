@@ -151,7 +151,7 @@ function toggle_help(){
     help_button_html += "Major: Search text used to find majors (i.e. physics) <br><br>";
     help_button_html += "Minimum Salary: Filters results so that they include only majors whose median salaries match or exceed the miniumum salary.<br><br>";
     help_button_html += "Sort By: Sorts the results by the given element in alphabetical or descending order.<br>";
-    help_button_html += "Show Advanced Options: Allows you to specify the type of data you would like in the table. Only functions if the options open. <br>";
+    help_button_html += "Show Advanced Options: Allows you to specify the type of data you would like in the table. Only enabled if the options open. <br>";
     help_button_html += "</div>";
   }
   else{
@@ -172,8 +172,8 @@ function toggleAdvancedOptions() {
           advanced_options_form_html += "<input type='checkbox' value='total'><label for='total'>Total Students</label><br>";
           advanced_options_form_html += "<input type='checkbox' value='men'><label for='men'>Men</label><br>";
           advanced_options_form_html += "<input type='checkbox' value='women'><label for='men'>Women</label><br>";
-          advanced_options_form_html += "<input type='checkbox' value='percent_men'><label for='percent_men'> % Men</label><br>";
-          advanced_options_form_html += "<input type='checkbox' value='percent_women'><label for='percent_women'> % Women</label><br>";
+          advanced_options_form_html += "<input type='checkbox' value='percent_men'><label for='percent_men'>Percent Men</label><br>";
+          advanced_options_form_html += "<input type='checkbox' value='percent_women'><label for='percent_women'>Percent Women</label><br>";
         advanced_options_form_html += "</div>";
 
         advanced_options_form_html += "<div class = 'small_column'>";
@@ -185,16 +185,16 @@ function toggleAdvancedOptions() {
           advanced_options_form_html += "<br>"
         advanced_options_form_html += "</div>";
 
-        advanced_options_form_html += "<div class = 'small_column'>";
-          advanced_options_form_html += "<input type='checkbox' value='percent_employed' checked><label for='percent_employed'> % Employed</label><br>";
-          advanced_options_form_html += "<input type='checkbox' value='percent_full_time'><label for='percent_full_time'> % Employed Full-time</label><br>";
-          advanced_options_form_html += "<input type='checkbox' value='percent_part_time'><label for='percent_part_time'> % Employed Part-time</label><br>";
+        advanced_options_form_html += "<div class = 'large_column'>";
+          advanced_options_form_html += "<input type='checkbox' value='percent_employed' checked><label for='percent_employed'>Percent Employed</label><br>";
+          advanced_options_form_html += "<input type='checkbox' value='percent_full_time'><label for='percent_full_time'>Percent Employed Full-time</label><br>";
+          advanced_options_form_html += "<input type='checkbox' value='percent_part_time'><label for='percent_part_time'>Percent Employed Part-time</label><br>";
           advanced_options_form_html += "<input type='checkbox' value='unemployment_rate'><label for='unemployment_rate'>Unemployed Rate</label><br>";
           advanced_options_form_html += "<br>"
           advanced_options_form_html += "<br>"
         advanced_options_form_html += "</div>";
 
-        advanced_options_form_html += "<div class = 'small_column'>";
+        advanced_options_form_html += "<div class = 'large_column'>";
           advanced_options_form_html += "<input type='checkbox' value='median' checked><label for='median'>Median Salary</label><br>";
           advanced_options_form_html += "<input type='checkbox' value='p75th'><label for='p75th'>75th Percentile Salary</label><br>";
           advanced_options_form_html += "<input type='checkbox' value='p25th'><label for='p25th'>25th Percentile Salary</label><br>";
@@ -212,10 +212,10 @@ function toggleAdvancedOptions() {
           advanced_options_form_html += "<br>"
         advanced_options_form_html += "</div>";
 
-        advanced_options_form_html += "<div class = 'small_column'>";
-          advanced_options_form_html += "<input type='checkbox' value='percent_college_jobs'><label for='percent_college_jobs'> % College Jobs</label><br>";
-          advanced_options_form_html += "<input type='checkbox' value='percent_non_college_jobs'><label for='percent_non_college_jobs'> % Non-College Jobs</label><br>";
-          advanced_options_form_html += "<input type='checkbox' value='percent_low_wage_jobs'><label for='percent_low_wage_jobs'> % Low-Wage Jobs</label><br>";
+        advanced_options_form_html += "<div class = 'large_column'>";
+          advanced_options_form_html += "<input type='checkbox' value='percent_college_jobs'><label for='percent_college_jobs'>Percent College Jobs</label><br>";
+          advanced_options_form_html += "<input type='checkbox' value='percent_non_college_jobs'><label for='percent_non_college_jobs'>Percent Non-College Jobs</label><br>";
+          advanced_options_form_html += "<input type='checkbox' value='percent_low_wage_jobs'><label for='percent_low_wage_jobs'>Percent Low-Wage Jobs</label><br>";
           advanced_options_form_html += "<br>"
           advanced_options_form_html += "<br>"
           advanced_options_form_html += "<br>"
