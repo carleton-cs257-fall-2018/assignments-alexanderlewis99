@@ -1,3 +1,10 @@
+/**
+
+@author Alec Wang
+@author Bat-Orgil Batjargal
+*/
+
+
 package pong;
 
 import javafx.application.Platform;
@@ -17,6 +24,9 @@ import java.util.Dictionary;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.awt.Point;
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class Controller implements EventHandler<KeyEvent> {
     final private double FRAMES_PER_SECOND = 20.0;
@@ -45,7 +55,10 @@ public class Controller implements EventHandler<KeyEvent> {
         this.startTimer();
     }
 
-    public void createCellArray(){
+    /**
+     * Creates an ArrayList of all cells
+     */
+    private void createCellArray(){
         for (double i = 0; i < 5; i++){
             ArrayList<Cell> innerCellArray = new ArrayList<Cell>();
             for (double j = 0; j < 5; j++){
@@ -57,59 +70,138 @@ public class Controller implements EventHandler<KeyEvent> {
         ArrayList middle_array = this.cellArray.get(3);
 
         Cell middle_cell = new Cell();
-        middle_cell.updateCellType("stem");
+        middle_cell.setCellType("stem");
         middle_array.set(3, middle_cell);
-        cellArray.set(3, middle_array);
+        this.cellArray.set(3, middle_array);
+        //ArrayList<Point> avalaible_coords = new ArrayList<Point>();
+        //avalaible_coords = this.getAvailableCoordinates(new Point(0, 4), this.cellArray);
+
+
+        /*
+        Foreach cell:
+            tell it live: it returns its behavior for that timestep
+            If it divides, add the neighbor to a list of cells to become stem cells or
+                            add the neighbor to a list of cells to become non-stem cells or
+            If it divides, dictionary the cell and its neighbor  it will become
+         */
+
     }
 
-    public ArrayList<Point> getEmptyNeighbors(Point cell_coords, ArrayList<ArrayList> cellArray){
-        ArrayList<Point> all_eight_neighbors = this.getAllEightPossibleNeighbors(cell_coords);
+    /**
+     * Iterates through the cellArray, receives the behavior of each cell, and acts upon it.
+     */
+    private void updateCells(){
+        for(int y = 0; y < this.cellArray.size(); y++){
+            ArrayList<Cell> row = this.cellArray.get(y);
+            for(int x = 0; x < row.size(); x++) {
+                Cell cell = row.get(x);
+                Point cell_coords = new Point(x, y);
+                if (cell.getCellType() == "stem" || cell.getCellType() == "non-stem"){
+                    Map<String, Boolean> behavior = cell.live();
+                    if(behavior.get("Divide")){
+                        divideCell(cell_coords);
+                    }
+                    if(behavior.get("Migrate")){
+                        migrateCell(cell_coords);
+                    }
+                    if(behavior.get("Die")){
+                        cell.setCellType("dead");
+                    }
+                }
+            }
+        }
+    }
+
+    /** Divides a cell by finding an empty neighbor to become a daughter cell
+     * @param cell_coords - the coordinates of the cell to divide
+     * @return the coordinates of the new daughter cell
+     */
+    private Point divideCell(Point cell_coords){
+        return new Point(0,0);
+    }
+
+    /** Divides a cell by finding an empty neighbor for the cell to become
+     * @param cell_coords - the coordinates of the cell to migrate
+     * @return the new coordinates of the cell
+     */
+    private Point migrateCell(Point cell_coords){
+        return new Point(0,0);
+
+    }
+
+    /** Gets coordinates of available (empty/dead) adjacent squares to a given cell
+     * @param cell_coords the coordinates of the cell to find available squares adjacent to
+     * @param cellArray the ArrayList of all cells
+     * @return coordinates of available adjacent squares
+     */
+    private ArrayList<Point> getAvailableCoordinates(Point cell_coords, ArrayList<ArrayList> cellArray){
+        ArrayList<Point> all_eight_neighbors = this.getPotentialNeighborsCoords(cell_coords);
         int numRows = cellArray.size();
         int numColumns = cellArray.get(0).size();
         ArrayList<Point> neighbors = this.removeNeighborsOutOfBounds(all_eight_neighbors, numRows, numColumns);
-        ArrayList<Point> avaliable_squares = this.removeLivingCells(neighbors, cellArray);
-        return avaliable_squares;
+        ArrayList<Point> available_squares = this.removeLivingCells(neighbors, cellArray);
+        return available_squares;
     }
 
-    public ArrayList<Point> removeLivingCells(ArrayList<Point> neighbors, ArrayList<ArrayList> cellArray){
-        for (int i = 0; i <= neighbors.size(); i++){
-            Point neighbor_coords = neighbors.get(i);
-            ArrayList<Cell> cellArrayRow = cellArray.get((int) neighbor_coords.getY());
-            Cell cell = cellArrayRow.get((int) neighbor_coords.getX());
-            if (!(cell.getCellType().equals("empty") || cell.getCellType().equals("dead"))){
+    /** Removes coordinates of stem or non-stem cell
+     * @param neighbors - ArrayList of neighbor coordinates in bounds of lattice
+     * @param cellArray - ArrayList of all cells
+     * @return neighbors - an ArrayList of coordinates of empty/dead neighbors
+     */
+    private ArrayList<Point> removeLivingCells(ArrayList<Point> neighbors, ArrayList<ArrayList> cellArray){
+        for (Point neighbor_coords: neighbors){
+            int row_number = (int) neighbor_coords.getY();
+            int col_number = (int) neighbor_coords.getX();
+            ArrayList<Cell> cellArrayRow = cellArray.get(row_number);
+            Cell cell = cellArrayRow.get(col_number);
+            if (cell.getCellType().equals("stem") || cell.getCellType().equals("non-stem")){
                 neighbors.remove(neighbor_coords);
             }
         }
         return neighbors;
     }
 
-    public ArrayList<Point> getAllEightPossibleNeighbors(Point cell_coords){
+    /** Generate possible 8 neighbors coordinates
+     * @param cell_coords - coordinates of the dividing/migrating cell
+     * @return an ArrayList of all adjacent, including ones outside the bounds of the lattice
+     */
+
+    private ArrayList<Point> getPotentialNeighborsCoords(Point cell_coords){
         int x = (int) cell_coords.getX();
         int y = (int) cell_coords.getY();
-        ArrayList<Point> all_possible_neighbors = new ArrayList<Point>();
+        ArrayList<Point> all_eight_neighbors = new ArrayList<Point>();
         for (int i = -1; i <= 1; i++){
             for (int j = -1; j <= 1; j++){
-                if (j != i){
-                    all_possible_neighbors.add(new Point(x + i, j + i));
+                if (!(i == 0 && j == 0)){
+                    Point point = new Point(x + i, y + j);
+                    all_eight_neighbors.add(point);
                 }
             }
         }
-        return all_possible_neighbors;
+        return all_eight_neighbors;
     }
 
-    public ArrayList<Point> removeNeighborsOutOfBounds(ArrayList<Point> neighbors, int numRows, int numColumns){
-        for (int i = 0; i <= neighbors.size(); i++) {
-            Point coordinates = neighbors.get(i);
-            if (coordinates.getX() < 0 || coordinates.getX() > numColumns
-                    || coordinates.getY() < 0 || coordinates.getY() > numRows){
-                neighbors.remove(coordinates);
+    /** Removes generated imposible coordinates
+     * @param neighbors - an ArrayList of Points
+     * @param numRows - number of rows in grid of cells
+     * @param numColumns - number of columns in grid of cells
+     * @return an ArrayList of Points
+     */
+    private ArrayList<Point> removeNeighborsOutOfBounds(ArrayList<Point> neighbors, int numRows, int numColumns){
+        System.out.println("i" + String.valueOf(neighbors.size()));
+        ArrayList<Point> neighbors_to_remove = new ArrayList<Point>();
+        for (Point coordinate: neighbors) {
+            int x = (int) coordinate.getX();
+            int y = (int) coordinate.getY();
+            if (x < 0 || x >= numColumns || y < 0 || y >= numRows){
+                neighbors_to_remove.add(coordinate);
             }
+        }
+        for (Point neighbor_out_of_bounds: neighbors_to_remove){
+            neighbors.remove(neighbor_out_of_bounds);
         }
         return neighbors;
     }
-
-
-
 
     private void startTimer() {
         this.timer = new java.util.Timer();
@@ -118,6 +210,7 @@ public class Controller implements EventHandler<KeyEvent> {
                 Platform.runLater(new Runnable() {
                     public void run() {
                         updateAnimation();
+                        //updateCells();
                     }
                 });
             }
@@ -127,6 +220,9 @@ public class Controller implements EventHandler<KeyEvent> {
         this.timer.schedule(timerTask, 0, frameTimeInMilliseconds);
     }
 
+    /**
+     * Old method from Pong
+     */
     private void updateAnimation() {
         double ballCenterX = this.ball.getCenterX() + this.ball.getLayoutX();
         double ballCenterY = this.ball.getCenterY() + this.ball.getLayoutY();
@@ -164,6 +260,10 @@ public class Controller implements EventHandler<KeyEvent> {
         this.ball.step();
     }
 
+    /**
+     * Old method from pong
+     * @param keyEvent
+     */
     @Override
     public void handle(KeyEvent keyEvent) {
         KeyCode code = keyEvent.getCode();
