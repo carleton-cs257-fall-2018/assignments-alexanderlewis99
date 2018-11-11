@@ -11,8 +11,12 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Dictionary;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.awt.Point;
 
 public class Controller implements EventHandler<KeyEvent> {
     final private double FRAMES_PER_SECOND = 20.0;
@@ -22,6 +26,10 @@ public class Controller implements EventHandler<KeyEvent> {
     @FXML private AnchorPane gameBoard;
     @FXML private Rectangle paddle;
     @FXML private Ball ball;
+    private ArrayList<ArrayList> cellArray = new ArrayList<ArrayList>();
+
+
+
 
     private int score;
     private boolean paused;
@@ -33,7 +41,61 @@ public class Controller implements EventHandler<KeyEvent> {
     }
 
     public void initialize() {
+        this.createCellArray();
         this.startTimer();
+    }
+
+    public void createCellArray(){
+        for (double i = 0; i < 5; i++){
+            ArrayList<Cell> innerCellArray = new ArrayList<Cell>();
+            for (double j = 0; j < 5; j++){
+                innerCellArray.add(new Cell());
+            }
+            this.cellArray.add(innerCellArray);
+        }
+
+        ArrayList middle_array = this.cellArray.get(3);
+
+        Cell middle_cell = new Cell();
+        middle_cell.updateCellType("stem");
+        middle_array.set(3, middle_cell);
+        cellArray.set(3, middle_array);
+    }
+
+    public ArrayList<Point> getNeighbors(Point cell_coords){
+        int x = (int) cell_coords.getX();
+        int y = (int) cell_coords.getY();
+        int numRows = cellArray.size();
+        int numColumns = cellArray.get(0).size();
+        ArrayList<Point> possible_neighbors = new ArrayList<Point>();
+        for (int i = -1; i <= 1; i++){
+            for (int j = -1; j <= 1; j++){
+                if (j != i){
+                    possible_neighbors.add(new Point(x + i, j + i));
+                }
+            }
+        }
+        for (int i = 0; i <= possible_neighbors.size(); i++) {
+            Point coordinates = possible_neighbors.get(i);
+            if (coordinates.getX() < 0 || coordinates.getX() > numColumns
+                        || coordinates.getY() < 0 || coordinates.getY() > numRows){
+                possible_neighbors.remove(coordinates);
+            }
+        }
+        return possible_neighbors;
+    }
+
+    public ArrayList<Point> getEmptyNeighbors(Point cell_coords, ArrayList<ArrayList> cellArray){
+        ArrayList<Point> neighbors = this.getNeighbors(cell_coords);
+        for (int i = 0; i <= neighbors.size(); i++){
+            Point neighbor_coords = neighbors.get(i);
+            ArrayList<Cell> cellArrayRow = cellArray.get((int) neighbor_coords.getY());
+            Cell cell = cellArrayRow.get((int) neighbor_coords.getX());
+            if (!(cell.getCellType().equals("empty") || cell.getCellType().equals("dead"))){
+                neighbors.remove(neighbor_coords);
+            }
+        }
+        return neighbors;
     }
 
     private void startTimer() {
