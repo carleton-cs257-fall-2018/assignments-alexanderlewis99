@@ -62,31 +62,16 @@ public class Controller implements EventHandler<KeyEvent> {
         cellArray.set(3, middle_array);
     }
 
-    public ArrayList<Point> getNeighbors(Point cell_coords){
-        int x = (int) cell_coords.getX();
-        int y = (int) cell_coords.getY();
+    public ArrayList<Point> getEmptyNeighbors(Point cell_coords, ArrayList<ArrayList> cellArray){
+        ArrayList<Point> all_eight_neighbors = this.getAllEightPossibleNeighbors(cell_coords);
         int numRows = cellArray.size();
         int numColumns = cellArray.get(0).size();
-        ArrayList<Point> possible_neighbors = new ArrayList<Point>();
-        for (int i = -1; i <= 1; i++){
-            for (int j = -1; j <= 1; j++){
-                if (j != i){
-                    possible_neighbors.add(new Point(x + i, j + i));
-                }
-            }
-        }
-        for (int i = 0; i <= possible_neighbors.size(); i++) {
-            Point coordinates = possible_neighbors.get(i);
-            if (coordinates.getX() < 0 || coordinates.getX() > numColumns
-                        || coordinates.getY() < 0 || coordinates.getY() > numRows){
-                possible_neighbors.remove(coordinates);
-            }
-        }
-        return possible_neighbors;
+        ArrayList<Point> neighbors = this.removeNeighborsOutOfBounds(all_eight_neighbors, numRows, numColumns);
+        ArrayList<Point> avaliable_squares = this.removeLivingCells(neighbors, cellArray);
+        return avaliable_squares;
     }
 
-    public ArrayList<Point> getEmptyNeighbors(Point cell_coords, ArrayList<ArrayList> cellArray){
-        ArrayList<Point> neighbors = this.getNeighbors(cell_coords);
+    public ArrayList<Point> removeLivingCells(ArrayList<Point> neighbors, ArrayList<ArrayList> cellArray){
         for (int i = 0; i <= neighbors.size(); i++){
             Point neighbor_coords = neighbors.get(i);
             ArrayList<Cell> cellArrayRow = cellArray.get((int) neighbor_coords.getY());
@@ -97,6 +82,34 @@ public class Controller implements EventHandler<KeyEvent> {
         }
         return neighbors;
     }
+
+    public ArrayList<Point> getAllEightPossibleNeighbors(Point cell_coords){
+        int x = (int) cell_coords.getX();
+        int y = (int) cell_coords.getY();
+        ArrayList<Point> all_possible_neighbors = new ArrayList<Point>();
+        for (int i = -1; i <= 1; i++){
+            for (int j = -1; j <= 1; j++){
+                if (j != i){
+                    all_possible_neighbors.add(new Point(x + i, j + i));
+                }
+            }
+        }
+        return all_possible_neighbors;
+    }
+
+    public ArrayList<Point> removeNeighborsOutOfBounds(ArrayList<Point> neighbors, int numRows, int numColumns){
+        for (int i = 0; i <= neighbors.size(); i++) {
+            Point coordinates = neighbors.get(i);
+            if (coordinates.getX() < 0 || coordinates.getX() > numColumns
+                    || coordinates.getY() < 0 || coordinates.getY() > numRows){
+                neighbors.remove(coordinates);
+            }
+        }
+        return neighbors;
+    }
+
+
+
 
     private void startTimer() {
         this.timer = new java.util.Timer();
