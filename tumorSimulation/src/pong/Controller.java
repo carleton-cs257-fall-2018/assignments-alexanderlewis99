@@ -83,7 +83,7 @@ public class Controller implements EventHandler<KeyEvent> {
             If it divides, add the neighbor to a list of cells to become stem cells or
                             add the neighbor to a list of cells to become non-stem cells or
             If it divides, dictionary the cell and its neighbor  it will become
-         */
+        */
 
     }
 
@@ -288,6 +288,9 @@ public class Controller implements EventHandler<KeyEvent> {
         }
     }
 
+    /**
+     * Old method from pong that toggles the pause button
+     */
     public void onPauseButton(ActionEvent actionEvent) {
         if (this.paused) {
             this.pauseButton.setText("Pause");

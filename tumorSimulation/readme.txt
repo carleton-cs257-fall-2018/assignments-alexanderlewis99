@@ -1,0 +1,11 @@
+Alec Wang and Bat-Orgil Batjargal
+
+Brief description:
+For our project, we will create a cellular automaton that simulates the growth of tumor cells. Our tumor population is made of up two types of cell: cancer stem cells and non-stem cancer cells. At each simulation timestep, these cells can proliferate, can migrate into vacant adjacent spaces, and can undergo spontaneous death. How and when they do these three things depend on their instance variables, which can differ between the stem and non-stem cells. While they both have the same probability of dividing and migrating, non-stem cells can divide only ten times before dying and produce only more non-stem cells, while stem cells can divide infinitely many times and have a 10% chance of producing another stem cell. The daughter cells appear in spaces adjacent to the parent cell that are free in the grid.
+Our project idea is inspired by the article: Poleszczuk J., Enderling H. A high-performance cellular automaton model of tumor growth with dynamically growing domains. Applied Mathematics. 2014.
+
+A brief argument of why MVC is appropriate:
+An MVC pattern is appropriate for our project because each cell in the simulation will have its own data and as it constantly updates itself, it affects the appearance of the View through a Controller. Our Models will be a square in our grid of a life that can take on characteristics of a stem cancer cell, a non-stem cancer cell, a dead cell, or an unoccupied square. The Model will encode the behavior of the cancer cells. The Controller will make changes to the simulation using inputs from user and as the cell "divides"–meaning it causes adjacent squares to also take on the characteristic of a cell. As each cancer cell makes changes to the adjacent cells, these changes are displayed on the View. To simulate this cancer cell life, MVC is a great design choice.
+
+Core classes that make up our model:
+Cell.java is the only core class that makes up our model at the moment. A Cell can exist in four different states: empty, stem, non-stem, or dead. The controller updates the state of each cell in the lattice as the program runs.

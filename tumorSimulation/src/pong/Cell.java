@@ -81,6 +81,13 @@ public class Cell extends Rectangle {
     }
 
     /**
+     * @return max_proliferation - the number of times a cell can divide before dying
+     */
+    public String getMaxProliferation() {
+        return this.max_proliferation;
+    }
+
+    /**
      * Set the cell's characteristics to those of a stem cell
      */
     private void setCellToStem() {
