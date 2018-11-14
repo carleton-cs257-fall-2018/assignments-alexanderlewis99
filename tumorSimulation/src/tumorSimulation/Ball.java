@@ -5,7 +5,7 @@
  * A sample subclass of Sprite for CS257.
  */
 
-package pong;
+package tumorSimulation;
 import javafx.fxml.FXML;
 import javafx.scene.shape.Circle;
 

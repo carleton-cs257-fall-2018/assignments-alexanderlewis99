@@ -31,7 +31,7 @@ public class Main extends Application {
             }
         });
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("pong.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("tumorSimulation.fxml"));
         Parent root = (Parent)loader.load();
         Controller controller = loader.getController();
 

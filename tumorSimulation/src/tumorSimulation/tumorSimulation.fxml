@@ -2,8 +2,8 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.shape.Rectangle?>
-<?import pong.Ball?>
-<AnchorPane fx:controller="pong.Controller" xmlns:fx="http://javafx.com/fxml">
+<?import tumorSimulation.Ball?>
+<AnchorPane fx:controller="tumorSimulation.Controller" xmlns:fx="http://javafx.com/fxml">
 
     <Button fx:id="pauseButton" text="Pause" AnchorPane.leftAnchor="30" AnchorPane.topAnchor="15" onAction="#onPauseButton"/>
 
