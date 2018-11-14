@@ -37,7 +37,7 @@ public class Controller implements EventHandler<KeyEvent> {
     @FXML private AnchorPane gameBoard;
     @FXML private Rectangle paddle;
     @FXML private Ball ball;
-    private ArrayList<ArrayList> cellArray = new ArrayList<ArrayList>();
+    private Lattice cellLattice;
 
     private int score;
     private boolean paused;
@@ -57,22 +57,10 @@ public class Controller implements EventHandler<KeyEvent> {
      * Creates an ArrayList of all cells
      */
     private void createCellArray(){
-        for (double i = 0; i < 5; i++){
-            ArrayList<Cell> innerCellArray = new ArrayList<Cell>();
-            for (double j = 0; j < 5; j++){
-                innerCellArray.add(new Cell());
-            }
-            this.cellArray.add(innerCellArray);
-        }
-
-        ArrayList middle_array = this.cellArray.get(3);
-
-        Cell middle_cell = new Cell();
-        middle_cell.setGenericCellType("stem");
-        middle_array.set(3, middle_cell);
-        this.cellArray.set(3, middle_array);
-        /*
-        Foreach cell:
+        this.cellLattice = new Lattice(5, 5);
+        Cell stem_cell = new Cell("stem");
+        this.cellLattice.setCell(3, 3, stem_cell);
+        /*Foreach cell:
             tell it live: it returns its behavior for that timestep
             If it divides, add the neighbor to a list of cells to become stem cells or
                             add the neighbor to a list of cells to become non-stem cells or
@@ -81,145 +69,8 @@ public class Controller implements EventHandler<KeyEvent> {
 
     }
 
-    /**
-     * Iterates through the cellArray, receives the behavior of each cell, and acts upon it.
-     */
     private void updateCells(){
-        for(int y = 0; y < this.cellArray.size(); y++){
-            ArrayList<Cell> row = this.cellArray.get(y);
-            for(int x = 0; x < row.size(); x++) {
-                Cell cell = row.get(x);
-                Point cell_coords = new Point(x, y);
-                if (cell.getCellType() == "stem" || cell.getCellType() == "non-stem"){
-                    Map<String, Boolean> behavior = cell.live();
-                    System.out.println(behavior);
-                    if(behavior.get("die")){
-                        cell.setGenericCellType("dead");
-                    }
-//                    else { //migrate and divide are time-step independent
-//                        if(behavior.get("migrate")){
-//                            migrateCell(cell_coords);
-//                        }
-//                        if(behavior.get("divide")){
-//                            divideCell(cell_coords);
-//                        }
-//                    }
-                }
-            }
-        }
-    }
-
-    /** Divides a cell by finding an empty neighbor for the cell to become
-     * @param cell_coords - the coordinates of the cell to migrate
-     * @return the new coordinates of the cell
-     */
-    private Point migrateCell(Point cell_coords){
-        ArrayList<Point> avaliableCoords = getAvailableCoordinates(cell_coords, this.cellArray);
-        Point new_coords = getRandomPointUsingMonteCarloSampling(avaliableCoords);
-        return new_coords;
-    }
-
-    /** Divides a cell by finding an empty neighbor to become a daughter cell
-     * @param cell_coords - the coordinates of the cell to divide
-     * @return the coordinates of the new daughter cell
-     */
-    private Point divideCell(Point cell_coords){
-        return new Point(0,0);
-    }
-
-    /** Gets a random point from a set of points using Monte Carlo sampling
-     * @param coordinates - an arraylist of points to sample from
-     * @return a random coordinate
-     */
-    private Point getRandomPointUsingMonteCarloSampling(ArrayList<Point> coordinates){
-        int numChoices = coordinates.size();
-        Random rand = new Random();
-        double chance = rand.nextDouble();
-        double higher_end = 1;
-        double lower_end = 1 - (double) 1/numChoices;
-        for (int chosenOption = numChoices; chosenOption >= 0; chosenOption = chosenOption - 1){
-            if (chance < higher_end && chance > lower_end){
-                return coordinates.get(chosenOption);
-            } else {
-                higher_end = higher_end - (double) 1/numChoices;
-                lower_end = lower_end - (double) 1/numChoices;
-            }
-        }
-        return coordinates.get(0); //unnecessary because when lower_end reaches 0, the if statement in the for loop will be true
-    }
-
-
-    /** Gets coordinates of available (empty/dead) adjacent squares to a given cell
-     * @param cell_coords the coordinates of the cell to find available squares adjacent to
-     * @param cellArray the ArrayList of all cells
-     * @return coordinates of available adjacent squares
-     */
-    private ArrayList<Point> getAvailableCoordinates(Point cell_coords, ArrayList<ArrayList> cellArray){
-        ArrayList<Point> all_eight_neighbors = this.getPotentialNeighborsCoords(cell_coords);
-        int numRows = cellArray.size();
-        int numColumns = cellArray.get(0).size();
-        ArrayList<Point> neighbors = this.removeNeighborsOutOfBounds(all_eight_neighbors, numRows, numColumns);
-        ArrayList<Point> available_squares = this.removeLivingCells(neighbors, cellArray);
-        return available_squares;
-    }
-
-    /** Removes coordinates of stem or non-stem cell
-     * @param neighbors - ArrayList of neighbor coordinates in bounds of lattice
-     * @param cellArray - ArrayList of all cells
-     * @return neighbors - an ArrayList of coordinates of empty/dead neighbors
-     */
-    private ArrayList<Point> removeLivingCells(ArrayList<Point> neighbors, ArrayList<ArrayList> cellArray){
-        for (Point neighbor_coords: neighbors){
-            int row_number = (int) neighbor_coords.getY();
-            int col_number = (int) neighbor_coords.getX();
-            ArrayList<Cell> cellArrayRow = cellArray.get(row_number);
-            Cell cell = cellArrayRow.get(col_number);
-            if (cell.getCellType().equals("stem") || cell.getCellType().equals("non-stem")){
-                neighbors.remove(neighbor_coords);
-            }
-        }
-        return neighbors;
-    }
-
-    /** Generate possible 8 neighbors coordinates
-     * @param cell_coords - coordinates of the dividing/migrating cell
-     * @return an ArrayList of all adjacent, including ones outside the bounds of the lattice
-     */
-
-    private ArrayList<Point> getPotentialNeighborsCoords(Point cell_coords){
-        int x = (int) cell_coords.getX();
-        int y = (int) cell_coords.getY();
-        ArrayList<Point> all_eight_neighbors = new ArrayList<Point>();
-        for (int i = -1; i <= 1; i++){
-            for (int j = -1; j <= 1; j++){
-                if (!(i == 0 && j == 0)){
-                    Point point = new Point(x + i, y + j);
-                    all_eight_neighbors.add(point);
-                }
-            }
-        }
-        return all_eight_neighbors;
-    }
-
-    /** Removes generated imposible coordinates
-     * @param neighbors - an ArrayList of Points
-     * @param numRows - number of rows in grid of cells
-     * @param numColumns - number of columns in grid of cells
-     * @return an ArrayList of Points
-     */
-    private ArrayList<Point> removeNeighborsOutOfBounds(ArrayList<Point> neighbors, int numRows, int numColumns){
-        ArrayList<Point> neighbors_to_remove = new ArrayList<Point>();
-        for (Point coordinate: neighbors) {
-            int x = (int) coordinate.getX();
-            int y = (int) coordinate.getY();
-            if (x < 0 || x >= numColumns || y < 0 || y >= numRows){
-                neighbors_to_remove.add(coordinate);
-            }
-        }
-        for (Point neighbor_out_of_bounds: neighbors_to_remove){
-            neighbors.remove(neighbor_out_of_bounds);
-        }
-        return neighbors;
+        this.cellLattice.updateCells();
     }
 
     private void startTimer() {
