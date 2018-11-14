@@ -5,7 +5,7 @@
 */
 
 
-package pong;
+package tumorSimulation;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -26,6 +26,7 @@ import java.util.TimerTask;
 import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 
 public class Controller implements EventHandler<KeyEvent> {
@@ -37,9 +38,6 @@ public class Controller implements EventHandler<KeyEvent> {
     @FXML private Rectangle paddle;
     @FXML private Ball ball;
     private ArrayList<ArrayList> cellArray = new ArrayList<ArrayList>();
-
-
-
 
     private int score;
     private boolean paused;
@@ -70,13 +68,9 @@ public class Controller implements EventHandler<KeyEvent> {
         ArrayList middle_array = this.cellArray.get(3);
 
         Cell middle_cell = new Cell();
-        middle_cell.setCellType("stem");
+        middle_cell.setGenericCellType("stem");
         middle_array.set(3, middle_cell);
         this.cellArray.set(3, middle_array);
-        //ArrayList<Point> avalaible_coords = new ArrayList<Point>();
-        //avalaible_coords = this.getAvailableCoordinates(new Point(0, 4), this.cellArray);
-
-
         /*
         Foreach cell:
             tell it live: it returns its behavior for that timestep
@@ -98,18 +92,31 @@ public class Controller implements EventHandler<KeyEvent> {
                 Point cell_coords = new Point(x, y);
                 if (cell.getCellType() == "stem" || cell.getCellType() == "non-stem"){
                     Map<String, Boolean> behavior = cell.live();
-                    if(behavior.get("Divide")){
-                        divideCell(cell_coords);
+                    System.out.println(behavior);
+                    if(behavior.get("die")){
+                        cell.setGenericCellType("dead");
                     }
-                    if(behavior.get("Migrate")){
-                        migrateCell(cell_coords);
-                    }
-                    if(behavior.get("Die")){
-                        cell.setCellType("dead");
-                    }
+//                    else { //migrate and divide are time-step independent
+//                        if(behavior.get("migrate")){
+//                            migrateCell(cell_coords);
+//                        }
+//                        if(behavior.get("divide")){
+//                            divideCell(cell_coords);
+//                        }
+//                    }
                 }
             }
         }
+    }
+
+    /** Divides a cell by finding an empty neighbor for the cell to become
+     * @param cell_coords - the coordinates of the cell to migrate
+     * @return the new coordinates of the cell
+     */
+    private Point migrateCell(Point cell_coords){
+        ArrayList<Point> avaliableCoords = getAvailableCoordinates(cell_coords, this.cellArray);
+        Point new_coords = getRandomPointUsingMonteCarloSampling(avaliableCoords);
+        return new_coords;
     }
 
     /** Divides a cell by finding an empty neighbor to become a daughter cell
@@ -120,14 +127,27 @@ public class Controller implements EventHandler<KeyEvent> {
         return new Point(0,0);
     }
 
-    /** Divides a cell by finding an empty neighbor for the cell to become
-     * @param cell_coords - the coordinates of the cell to migrate
-     * @return the new coordinates of the cell
+    /** Gets a random point from a set of points using Monte Carlo sampling
+     * @param coordinates - an arraylist of points to sample from
+     * @return a random coordinate
      */
-    private Point migrateCell(Point cell_coords){
-        return new Point(0,0);
-
+    private Point getRandomPointUsingMonteCarloSampling(ArrayList<Point> coordinates){
+        int numChoices = coordinates.size();
+        Random rand = new Random();
+        double chance = rand.nextDouble();
+        double higher_end = 1;
+        double lower_end = 1 - (double) 1/numChoices;
+        for (int chosenOption = numChoices; chosenOption >= 0; chosenOption = chosenOption - 1){
+            if (chance < higher_end && chance > lower_end){
+                return coordinates.get(chosenOption);
+            } else {
+                higher_end = higher_end - (double) 1/numChoices;
+                lower_end = lower_end - (double) 1/numChoices;
+            }
+        }
+        return coordinates.get(0); //unnecessary because when lower_end reaches 0, the if statement in the for loop will be true
     }
+
 
     /** Gets coordinates of available (empty/dead) adjacent squares to a given cell
      * @param cell_coords the coordinates of the cell to find available squares adjacent to
@@ -188,7 +208,6 @@ public class Controller implements EventHandler<KeyEvent> {
      * @return an ArrayList of Points
      */
     private ArrayList<Point> removeNeighborsOutOfBounds(ArrayList<Point> neighbors, int numRows, int numColumns){
-        System.out.println("i" + String.valueOf(neighbors.size()));
         ArrayList<Point> neighbors_to_remove = new ArrayList<Point>();
         for (Point coordinate: neighbors) {
             int x = (int) coordinate.getX();
@@ -208,9 +227,13 @@ public class Controller implements EventHandler<KeyEvent> {
         TimerTask timerTask = new TimerTask() {
             public void run() {
                 Platform.runLater(new Runnable() {
+                    int count = 10;
                     public void run() {
                         updateAnimation();
-                        //updateCells();
+                        if (count > 0){
+                            updateCells();
+                            count = count - 1;
+                        }
                     }
                 });
             }

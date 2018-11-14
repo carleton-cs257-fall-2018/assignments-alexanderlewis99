@@ -5,7 +5,7 @@
  * A sample subclass of Sprite for CS257.
  */
 
-package pong;
+package tumorSimulation;
 import javafx.fxml.FXML;
 import javafx.scene.shape.Rectangle;
 
@@ -23,7 +23,7 @@ public class Cell extends Rectangle {
     private int max_proliferation;    //max times the cell can divide before dying
     private double motility_speed; //migration potential (affects the rate at which a cell migrates)
     private double probability_of_dying;    //rate of spontaneous death (probability each timestep it spontaneously dies)
-    private double profilerates_stem; //the probability that a new daughter cell is also a stem cell (for stem cells only)
+    private double probability_of_daughter_stem_cell; //the probability that a new daughter cell is also a stem cell (for stem cells only)
     private double probability_of_dividing;
     private double probability_of_migrating;
 
@@ -35,13 +35,51 @@ public class Cell extends Rectangle {
      * @param assigned_cellType - the celltype: stem, non-stem, empty, or dead
      */
     public Cell(String assigned_cellType) {
-        this.setCellType(assigned_cellType);
+        this.setGenericCellType(assigned_cellType);
+    }
+
+
+    /** get the cell's characteristics: cct, max_proliferation, probability_of_dying, motility_speed, probability_of_daughter_stem_cell
+     * @return a Map<String, Double> with the cell's trait vector
+     */
+//    public Map<String, Double> getTraitVector() {
+//        Map<String, Double> traitVector = new HashMap<String, Double>();
+//        traitVector.put("cct", (double) this.cct);
+//        traitVector.put("max_proliferation", (double) this.max_proliferation);
+//        traitVector.put("probability_of_dying", this.probability_of_dying);
+//        traitVector.put("motility_speed", this.motility_speed);
+//        traitVector.put("probability_of_daughter_stem_cell", this.probability_of_daughter_stem_cell);
+//        return traitVector;
+//    }
+
+    /**
+     * Causes the cell to undergo its normal behavior (dividing, migrating, and/or dying) for the timestep
+     */
+    public Map<String, Boolean> live() {
+        Map<String, Boolean> behavior = new HashMap<String, Boolean>();
+        if (this.cellType == "dead" || this.cellType == "empty") {
+            behavior.put("migrate", false);
+            behavior.put("divide", false);
+            behavior.put("die", false);
+        } else {
+            behavior.put("migrate", this.migrateIfChanceAllows());
+            behavior.put("divide", this.divideIfChanceAllows());
+            behavior.put("die", this.dieIfUnlucky());
+        }
+        return behavior;
+    }
+
+    /**
+     * @return cellType - the cell's cell-type
+     */
+    public String getCellType() {
+        return this.cellType;
     }
 
     /** Updates the cell's characteristics based on the cell-type
      * @param cellType - the new celltype: stem, non-stem, or dead
      */
-    public void setCellType(String cellType) {
+    public void setGenericCellType(String cellType) {
         this.cellType = cellType;
         switch (cellType) {
             case "stem":
@@ -56,28 +94,18 @@ public class Cell extends Rectangle {
         }
     }
 
-    /**
-     * Causes the cell to undergo its normal behavior (dividing, migrating, and/or dying) for the timestep
+    /** Gets the cell cycle time
+     * @return the cell's cell cycle time - affects the probability a cell divides each time-step
      */
-    public Map<String, Boolean> live() {
-        Map<String, Boolean> behavior = new HashMap<String, Boolean>();
-        if (this.cellType == "dead" || this.cellType == "empty") {
-            behavior.put("divide", false);
-            behavior.put("migrate", false);
-            behavior.put("die", false);
-        } else {
-            behavior.put("divide", this.divideIfChanceAllows());
-            behavior.put("migrate", this.migrateIfChanceAllows());
-            behavior.put("die", this.dieIfUnlucky());
-        }
-        return behavior;
+    public int getCct() {
+        return this.cct;
     }
 
-    /**
-     * @return cellType - the cell's cell-type
+    /** Sets the cell cycle time - affects the probability a cell divides each time-step
+     * @param new_cct - the new cell cycle time for the cell
      */
-    public String getCellType() {
-        return this.cellType;
+    public void setCct(int new_cct) {
+        this.cct = new_cct;
     }
 
     /**
@@ -85,6 +113,66 @@ public class Cell extends Rectangle {
      */
     public int getMaxProliferation() {
         return this.max_proliferation;
+    }
+
+    /** Sets the maximum number of times a cell can proliferate before dying
+     */
+    public void setMaxProliferation(int new_max_proliferation) {
+        this.max_proliferation = new_max_proliferation;
+    }
+
+    /** Get the probability of dying
+     * @return probability_of_dying - the probability a cell dies each timestep
+     */
+    public double getProbabilityOfDying() {
+        return this.probability_of_dying;
+    }
+
+    /** Sets the new probability a cell dies each timestep
+     */
+    public void setProbabilityOfDying(double new_probability_of_dying) {
+        this.probability_of_dying = new_probability_of_dying;
+    }
+
+    /** Get the motility speed
+     * @return motility speed - affects the probability each timestep a cell migrates
+     */
+    public double getMotilitySpeed() {
+        return this.motility_speed;
+    }
+
+    /** Sets the new motility speed of a cell
+     */
+    public void setMotilitySpeed(double new_motility_speed) {
+        this.motility_speed = new_motility_speed;
+    }
+
+    /** Get the motility speed
+     * @return motility speed - affects the probability each timestep a cell migrates
+     */
+    public double getProbabilityOfDaughterStemCell() {
+        return this.probability_of_daughter_stem_cell;
+    }
+
+    /** Sets the new motility speed of a cell
+     */
+    public void setProbabilityOfDaughterStemCell(double new_probability_of_daughter_stem_cell) {
+        this.probability_of_daughter_stem_cell = new_probability_of_daughter_stem_cell;
+    }
+
+    /**
+     * Updates the probability of the cell dividing based on its cct (cell cycle time) and the timestep
+     */
+    public void updateProbabilityOfDividing() {
+        this.probability_of_dividing = (double)(24/this.cct) * this.timestep;
+    }
+
+    /**
+     * Updates the probability of the cell migrating based on its cct (cell cycle time), motility speed and the timestep
+     */
+    public void updateProbabilityOfMigrating() {
+        this.updateProbabilityOfDividing();
+        this.probability_of_migrating = (1 - this.probability_of_dividing) * this.motility_speed  * this.timestep;
     }
 
     /**
@@ -95,7 +183,7 @@ public class Cell extends Rectangle {
         this.max_proliferation = -1; //proliferates infinitely
         this.probability_of_dying = 0; //immortal
         this.motility_speed = 5;
-        this.profilerates_stem = 0.1;
+        this.probability_of_daughter_stem_cell = 0.1;
         this.setFill(javafx.scene.paint.Color.DARKRED);
         this.updateProbabilityOfDividing();
         this.updateProbabilityOfMigrating();
@@ -109,7 +197,7 @@ public class Cell extends Rectangle {
         this.max_proliferation = 10;
         this.motility_speed = 5;
         this.probability_of_dying = 0.01;
-        this.profilerates_stem = 0;
+        this.probability_of_daughter_stem_cell = 0;
         this.setFill(javafx.scene.paint.Color.RED);
         this.updateProbabilityOfDividing();
         this.updateProbabilityOfMigrating();
@@ -123,25 +211,10 @@ public class Cell extends Rectangle {
         this.max_proliferation = -1;
         this.motility_speed = -1;
         this.probability_of_dying = 0;
-        this.profilerates_stem = -1;
+        this.probability_of_daughter_stem_cell = -1;
         this.setFill(javafx.scene.paint.Color.BLACK);
         this.probability_of_dividing = 0;
         this.probability_of_migrating = 0;
-    }
-
-    /**
-     * Updates the probability of the cell dividing based on its cct (cell cycle time) and the timestep
-     */
-    private void updateProbabilityOfDividing() {
-        this.probability_of_dividing = (double)(24/this.cct) * this.timestep;
-    }
-
-    /**
-     * Updates the probability of the cell migrating based on its cct (cell cycle time), motility speed and the timestep
-     */
-    private void updateProbabilityOfMigrating() {
-        this.updateProbabilityOfDividing();
-        this.probability_of_migrating = (1 - this.probability_of_dividing) * this.motility_speed  * this.timestep;
     }
 
     /**

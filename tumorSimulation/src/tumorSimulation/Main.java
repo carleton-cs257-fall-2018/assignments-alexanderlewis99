@@ -9,7 +9,7 @@
  * and to keep the paddle tied to the bottom of the gameboard.
  */
 
-package pong;
+package tumorSimulation;
 
 import javafx.application.Application;
 import javafx.application.Platform;
