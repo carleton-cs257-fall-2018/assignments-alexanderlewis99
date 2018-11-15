@@ -81,6 +81,17 @@ public class Cell extends Rectangle {
         }
     }
 
+    public String choose_a_daughter_type(){
+        Random rand = new Random();
+        double chance = rand.nextDouble();
+        if (chance <= this.probability_of_daughter_stem_cell){
+            return ("stem");
+        }
+        else {
+            return("non-stem");
+        }
+    }
+
     /** Gets the cell cycle time
      * @return the cell's cell cycle time - affects the probability a cell divides each time-step
      */

@@ -10,6 +10,7 @@ import javax.lang.model.type.NullType;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.awt.Point;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
@@ -33,10 +34,11 @@ public class Lattice  {
             this.cellLattice.add(lattice_row);
         }
         int center_x = columns/2;
-        int center_y = columns/2;
+
+        int center_y = rows/2;
         Point first_stem_cell_coords = new Point(center_x, center_y);
         Cell first_stem_cell = new Cell("stem");
-        this.setCell(first_stem_cell_coords, first_stem_cell);
+        this.setCell(first_stem_cell_coords, first_stem_cell);//type should be told
         this.active_cells.add(new Point(center_x, center_y));
     }
 
@@ -104,7 +106,9 @@ public class Lattice  {
     public void updateCells(){
         System.out.println(timestep);
         this.timestep++;
-        ArrayList<Point> new_active_cells = new ArrayList<Point>();
+        ArrayList<Point> cells_to_add = new ArrayList<Point>();
+        ArrayList<Point> cells_to_remove = new ArrayList<Point>();
+
         for (Point cell_coords: this.active_cells) {
             Cell cell = this.getCell(cell_coords);
             if (cell.getCellType() == "stem" || cell.getCellType() == "non-stem"){
@@ -115,22 +119,38 @@ public class Lattice  {
                 if (new_coords != null){
                     System.out.println("new stem cell: (" + String.valueOf(new_coords.getX()) + ", " + String.valueOf(new_coords.getY()) + ")");
                     this.setCell(new_coords, new Cell("stem"));
-                    new_active_cells.add(new_coords);
+                    cells_to_add.add(new_coords);
                 }
                 if(behavior.get("die")){
                     cell.setGenericCellType("dead");
                 }
-//                    else { //migrate and divide are time-step independent
+                else { //migrate and divide are time-step independent
 //                        if(behavior.get("migrate")){
 //                            migrateCell(cell_coords);
 //                        }
-//                        if(behavior.get("divide")){
-//                            divideCell(cell_coords);
-//                        }
-//                    }
+                    if(behavior.get("divide")){
+                        Map<Point, String> daugher_Cell_map = divideCell(cell_coords);
+
+                        this.setCell(daugher_Cell_map.get());
+                        String Cell_type = cell.getCellType();
+                        if (Cell_type == "non-stem") {
+                            int current_max_proliferation = cell.getMaxProliferation();
+                            if (current_max_proliferation == 1) {
+                                cell.setGenericCellType("dead");
+                                cells_to_remove.add(cell_coords);
+                            } else {
+                                cell.setMaxProliferation(current_max_proliferation - 1);
+
+                            }
+                        }
+                    }
+                }
             }
         }
-        for (Point new_active_cell: new_active_cells){
+        for (maps: new_daughter_list){
+
+        }
+        for(Point new_active_cell: new_active_cells){
             this.active_cells.add(new_active_cell);
         }
     }
@@ -139,9 +159,18 @@ public class Lattice  {
      * @param cell_coords - the coordinates of the cell to divide
      * @return the coordinates of the new daughter cell
      */
-    private Point divideCell(Point cell_coords){
-        return new Point(0,0);
+    private Map<Point, String> divideCell(Point cell_coords){
+        Cell cellOfInterest = this.getCell(cell_coords);
+        Point daughter_cell_coordinates = getEmptyAdjacentSpot(cell_coords);
+        String choice_type = cellOfInterest.choose_a_daughter_type();
+        Map<Point, String> daugther_cell_map = new HashMap<Point, String>();
+        daugther_cell_map.put(daughter_cell_coordinates, choice_type);
+        return daugther_cell_map;
     }
+
+
+
+
 
     /** Finds an empty adjacent square in the lattice to a cell if one exists
      * @param cell_coords - the coordinates of the cell
@@ -163,7 +192,7 @@ public class Lattice  {
     private Point getRandomPointUsingMonteCarloSampling(ArrayList<Point> coordinates){
         int numChoices = coordinates.size();
         Random rand = new Random();
-        double chance = rand.nextDouble();
+        double chance = rand.nextDouble(); // generates between 0 and 1
         double higher_end = 1;
         double lower_end = 1 - (double) 1/numChoices;
         for (int chosenOption = numChoices - 1; chosenOption >= 0; chosenOption = chosenOption - 1){
@@ -185,7 +214,7 @@ public class Lattice  {
     private ArrayList<Point> getAvailableCoordinates(Point cell_coordinates){
         ArrayList<Point> all_eight_neighbors = this.getPotentialNeighborsCoords(cell_coordinates);
         ArrayList<Point> neighbors = this.removeNeighborsOutOfBounds(all_eight_neighbors);
-        ArrayList<Point> available_squares = this.removeLivingCells(neighbors);
+        ArrayList<Point> available_squares = this.removeLivingNeighbors(neighbors);
         return available_squares;
     }
 
@@ -193,7 +222,7 @@ public class Lattice  {
      * @param neighbors - ArrayList of neighbor coordinates in bounds of lattice
      * @return neighbors - an ArrayList of coordinates of empty/dead neighbors
      */
-    private ArrayList<Point> removeLivingCells(ArrayList<Point> neighbors){
+    private ArrayList<Point> removeLivingNeighbors(ArrayList<Point> neighbors){
         ArrayList<Point> neighbors_to_remove = new ArrayList<Point>();
         for (Point neighbor_coordinate: neighbors){
             Cell cell = this.getCell(neighbor_coordinate);
