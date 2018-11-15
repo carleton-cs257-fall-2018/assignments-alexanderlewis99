@@ -58,15 +58,6 @@ public class Controller implements EventHandler<KeyEvent> {
      */
     private void createCellArray(){
         this.cellLattice = new Lattice(5, 5);
-        Cell stem_cell = new Cell("stem");
-        this.cellLattice.setCell(3, 3, stem_cell);
-        /*Foreach cell:
-            tell it live: it returns its behavior for that timestep
-            If it divides, add the neighbor to a list of cells to become stem cells or
-                            add the neighbor to a list of cells to become non-stem cells or
-            If it divides, dictionary the cell and its neighbor  it will become
-        */
-
     }
 
     private void updateCells(){
