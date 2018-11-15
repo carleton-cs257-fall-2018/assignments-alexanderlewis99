@@ -16,7 +16,7 @@ import java.util.Set;
 import java.util.Random;
 import java.awt.image.BufferedImage;
 
-public class Lattice  { //extends BufferedImage{
+public class Lattice extends BufferedImage{
 
     private ArrayList<ArrayList> cellLattice= new ArrayList<ArrayList>();
     private int numRows;
@@ -25,6 +25,7 @@ public class Lattice  { //extends BufferedImage{
     private ArrayList<Point> cell_watchlist = new ArrayList<Point>();
 
     public Lattice(int height, int width, int imageType){
+        super(width, height, imageType);
         this.numRows = height;
         this.numColumns = width;
         this.timestep = 0;
