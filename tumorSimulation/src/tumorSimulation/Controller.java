@@ -21,13 +21,13 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import java.awt.*;
 import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -57,10 +57,12 @@ public class Controller implements EventHandler<KeyEvent> {
     }
 
     public void initialize() {
-        File file = new File("tumorSimulation/flower.jpg");
-        this.cellLatticeImage = new Image(file.toURI().toString());
-        this.cellLatticeImageView.setImage(this.cellLatticeImage);
+        //File file = new File("tumorSimulation/flower.jpg");
+        //this.cellLatticeImage = new Image(file.toURI().toString());
+        //this.cellLatticeImage = new Image(file.toURI().toString());
         this.createCellArray();
+        this.cellLatticeImage = SwingFXUtils.toFXImage(this.cellLattice, null);
+        this.cellLatticeImageView.setImage(this.cellLatticeImage);
         this.startTimer();
     }
 
@@ -68,8 +70,10 @@ public class Controller implements EventHandler<KeyEvent> {
      * Creates an ArrayList of all cells
      */
     private void createCellArray(){
-        //this.cellLattice = new Lattice(5, 5);
-        this.cellLattice = new Lattice(5, 5, 3);
+        this.cellLattice = new Lattice(400, 400, 3);
+        Graphics2D graphics = cellLattice.createGraphics();
+        graphics.setPaint ( new Color (248, 74, 244) );
+        graphics.fillRect ( 0, 0, cellLattice.getWidth(), cellLattice.getHeight());
     }
 
     private void updateCells(){
