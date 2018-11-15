@@ -1,3 +1,10 @@
+/**
+ * Lattice.java
+ * Alec Wang and Bat-Orgil Batjargal, 11/16/18.
+ *
+ * A java class for a two-dimensional square lattice of cells. It has the ability to update them over time.
+ */
+
 package tumorSimulation;
 import javax.lang.model.type.NullType;
 import java.lang.reflect.Array;
@@ -8,11 +15,11 @@ import java.util.Random;
 
 public class Lattice  {
 
-    private ArrayList<ArrayList> latticeMatrix = new ArrayList<ArrayList>();
+    private ArrayList<ArrayList> cellLattice= new ArrayList<ArrayList>();
     private int numRows;
     private int numColumns;
     private int timestep;
-    private ArrayList<Point> dynamic_cells = new ArrayList<Point>();
+    private ArrayList<Point> active_cells = new ArrayList<Point>();
 
     public Lattice(int rows, int columns){
         this.numRows = rows;
@@ -23,14 +30,14 @@ public class Lattice  {
             for (int j = 0; j < columns; j++){
                 lattice_row.add(new Cell());
             }
-            this.latticeMatrix.add(lattice_row);
+            this.cellLattice.add(lattice_row);
         }
         int center_x = columns/2;
         int center_y = columns/2;
         Point first_stem_cell_coords = new Point(center_x, center_y);
         Cell first_stem_cell = new Cell("stem");
         this.setCell(first_stem_cell_coords, first_stem_cell);
-        this.dynamic_cells.add(new Point(center_x, center_y));
+        this.active_cells.add(new Point(center_x, center_y));
     }
 
     /*** Get the number of rows in the lattice
@@ -52,7 +59,7 @@ public class Lattice  {
      * @return an arraylist of cells in the lattice
      */
     private ArrayList<Cell> getRow(int row_index){
-        return this.latticeMatrix.get(row_index);
+        return this.cellLattice.get(row_index);
     }
 
     /** Set a row of the lattice as a row of cells
@@ -61,7 +68,7 @@ public class Lattice  {
      * @throws IllegalArgumentException
      */
     public void setRow(int row_index, ArrayList<Cell> new_row){
-        latticeMatrix.set(row_index, new_row);
+        cellLattice.set(row_index, new_row);
         if (new_row.size() != this.numColumns) {
             throw new IllegalArgumentException();
         }
@@ -74,7 +81,7 @@ public class Lattice  {
     public Cell getCell(Point cell_coordinates){
         int x = (int) cell_coordinates.getX();
         int y = (int) cell_coordinates.getY();
-        ArrayList<Cell> lattice_row = this.latticeMatrix.get(y);
+        ArrayList<Cell> lattice_row = this.cellLattice.get(y);
         Cell cell = lattice_row.get(x);
         return cell;
     }
@@ -86,9 +93,9 @@ public class Lattice  {
     public void setCell(Point cell_coordinates, Cell new_cell){
         int x = (int) cell_coordinates.getX();
         int y = (int) cell_coordinates.getY();
-        ArrayList<Cell> lattice_row = this.latticeMatrix.get(y);
+        ArrayList<Cell> lattice_row = this.cellLattice.get(y);
         lattice_row.set(x, new_cell);
-        this.latticeMatrix.set(y, lattice_row);
+        this.cellLattice.set(y, lattice_row);
     }
 
     /**
@@ -97,13 +104,19 @@ public class Lattice  {
     public void updateCells(){
         System.out.println(timestep);
         this.timestep++;
-        ArrayList<Point> new_cell_to_keep_track_of = new ArrayList<Point>();
-        for (Point cell_coords: this.dynamic_cells) {
+        ArrayList<Point> new_active_cells = new ArrayList<Point>();
+        for (Point cell_coords: this.active_cells) {
             Cell cell = this.getCell(cell_coords);
             if (cell.getCellType() == "stem" || cell.getCellType() == "non-stem"){
                 Map<String, Boolean> behavior = cell.live();
                 System.out.println(cell_coords);
                 System.out.println(behavior);
+                Point new_coords = this.getEmptyAdjacentSpot(cell_coords);
+                if (new_coords != null){
+                    System.out.println("new stem cell: (" + String.valueOf(new_coords.getX()) + ", " + String.valueOf(new_coords.getY()) + ")");
+                    this.setCell(new_coords, new Cell("stem"));
+                    new_active_cells.add(new_coords);
+                }
                 if(behavior.get("die")){
                     cell.setGenericCellType("dead");
                 }
@@ -117,6 +130,51 @@ public class Lattice  {
 //                    }
             }
         }
+        for (Point new_active_cell: new_active_cells){
+            this.active_cells.add(new_active_cell);
+        }
+    }
+
+    /** Divides a cell by finding an empty neighbor to become a daughter cell
+     * @param cell_coords - the coordinates of the cell to divide
+     * @return the coordinates of the new daughter cell
+     */
+    private Point divideCell(Point cell_coords){
+        return new Point(0,0);
+    }
+
+    /** Finds an empty adjacent square in the lattice to a cell if one exists
+     * @param cell_coords - the coordinates of the cell
+     * @return the coordinates of the empty adjacent square
+     */
+    private Point getEmptyAdjacentSpot(Point cell_coords){
+        ArrayList<Point> avaliableCoords = getAvailableCoordinates(cell_coords);
+        if (avaliableCoords.size() == 0){
+            return null;
+        }
+        Point new_coords = getRandomPointUsingMonteCarloSampling(avaliableCoords);
+        return new_coords;
+    }
+
+    /** Gets a random point from a set of points using Monte Carlo sampling
+     * @param coordinates - an arraylist of points to sample from
+     * @return a random coordinate
+     */
+    private Point getRandomPointUsingMonteCarloSampling(ArrayList<Point> coordinates){
+        int numChoices = coordinates.size();
+        Random rand = new Random();
+        double chance = rand.nextDouble();
+        double higher_end = 1;
+        double lower_end = 1 - (double) 1/numChoices;
+        for (int chosenOption = numChoices - 1; chosenOption >= 0; chosenOption = chosenOption - 1){
+            if (chance < higher_end && chance > lower_end){
+                return coordinates.get(chosenOption);
+            } else {
+                higher_end = higher_end - (double) 1/numChoices;
+                lower_end = lower_end - (double) 1/numChoices;
+            }
+        }
+        return coordinates.get(0); //unnecessary because when lower_end reaches 0, the if statement in the for loop will be true
     }
 
 
@@ -136,11 +194,15 @@ public class Lattice  {
      * @return neighbors - an ArrayList of coordinates of empty/dead neighbors
      */
     private ArrayList<Point> removeLivingCells(ArrayList<Point> neighbors){
+        ArrayList<Point> neighbors_to_remove = new ArrayList<Point>();
         for (Point neighbor_coordinate: neighbors){
             Cell cell = this.getCell(neighbor_coordinate);
             if (cell.getCellType().equals("stem") || cell.getCellType().equals("non-stem")){
-                neighbors.remove(neighbor_coordinate);
+                neighbors_to_remove.add(neighbor_coordinate);
             }
+        }
+        for (Point living_neighbor: neighbors_to_remove){
+            neighbors.remove(living_neighbor);
         }
         return neighbors;
     }
@@ -182,48 +244,4 @@ public class Lattice  {
         }
         return neighbors;
     }
-
-    /** Gets a random point from a set of points using Monte Carlo sampling
-     * @param coordinates - an arraylist of points to sample from
-     * @return a random coordinate
-     */
-    private Point getRandomPointUsingMonteCarloSampling(ArrayList<Point> coordinates){
-        int numChoices = coordinates.size();
-        Random rand = new Random();
-        double chance = rand.nextDouble();
-        double higher_end = 1;
-        double lower_end = 1 - (double) 1/numChoices;
-        for (int chosenOption = numChoices; chosenOption >= 0; chosenOption = chosenOption - 1){
-            if (chance < higher_end && chance > lower_end){
-                return coordinates.get(chosenOption);
-            } else {
-                higher_end = higher_end - (double) 1/numChoices;
-                lower_end = lower_end - (double) 1/numChoices;
-            }
-        }
-        return coordinates.get(0); //unnecessary because when lower_end reaches 0, the if statement in the for loop will be true
-    }
-
-    /** Finds an empty adjacent square in the lattice to a cell if one exists
-     * @param cell_coords - the coordinates of the cell
-     * @return the coordinates of the empty adjacent square
-     */
-    private Point getEmptyAdjacentSpot(Point cell_coords){
-        ArrayList<Point> avaliableCoords = getAvailableCoordinates(cell_coords);
-        if (avaliableCoords.size() > 0){
-            return null;
-        }
-        Point new_coords = getRandomPointUsingMonteCarloSampling(avaliableCoords);
-        return new_coords;
-    }
-
-    /** Divides a cell by finding an empty neighbor to become a daughter cell
-     * @param cell_coords - the coordinates of the cell to divide
-     * @return the coordinates of the new daughter cell
-     */
-    private Point divideCell(Point cell_coords){
-        return new Point(0,0);
-    }
-
-
 }

@@ -1,8 +1,9 @@
 /**
-
-@author Alec Wang
-@author Bat-Orgil Batjargal
-*/
+ * Controller.java
+ * Alec Wang and Bat-Orgil Batjargal, 11/16/18.
+ *
+ * A java class for a controller that creates a lattice.
+ */
 
 
 package tumorSimulation;

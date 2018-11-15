@@ -1,8 +1,8 @@
 /**
- * Ball.java
- * Jeff Ondich, 10/29/14.
+ * Cell.java
+ * Alec Wang and Bat-Orgil Batjargal, 11/16/18.
  *
- * A sample subclass of Sprite for CS257.
+ * A java class for a cell, which can take the form of an empty, dead, stem or non-stem cell.
  */
 
 package tumorSimulation;
@@ -13,6 +13,7 @@ import java.util.Dictionary;
 import java.util.Random;
 import java.util.HashMap;
 import java.util.Map;
+import java.awt.Point;
 
 import javax.lang.model.type.NullType;
 
@@ -37,20 +38,6 @@ public class Cell extends Rectangle {
     public Cell(String assigned_cellType) {
         this.setGenericCellType(assigned_cellType);
     }
-
-
-    /** get the cell's characteristics: cct, max_proliferation, probability_of_dying, motility_speed, probability_of_daughter_stem_cell
-     * @return a Map<String, Double> with the cell's trait vector
-     */
-//    public Map<String, Double> getTraitVector() {
-//        Map<String, Double> traitVector = new HashMap<String, Double>();
-//        traitVector.put("cct", (double) this.cct);
-//        traitVector.put("max_proliferation", (double) this.max_proliferation);
-//        traitVector.put("probability_of_dying", this.probability_of_dying);
-//        traitVector.put("motility_speed", this.motility_speed);
-//        traitVector.put("probability_of_daughter_stem_cell", this.probability_of_daughter_stem_cell);
-//        return traitVector;
-//    }
 
     /**
      * Causes the cell to undergo its normal behavior (dividing, migrating, and/or dying) for the timestep
