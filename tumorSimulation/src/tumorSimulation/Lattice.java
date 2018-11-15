@@ -14,8 +14,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.Random;
+import java.awt.image.BufferedImage;
 
-public class Lattice  {
+public class Lattice  { //extends BufferedImage{
 
     private ArrayList<ArrayList> cellLattice= new ArrayList<ArrayList>();
     private int numRows;
@@ -23,20 +24,19 @@ public class Lattice  {
     private int timestep;
     private ArrayList<Point> cell_watchlist = new ArrayList<Point>();
 
-    public Lattice(int rows, int columns){
-        this.numRows = rows;
-        this.numColumns = columns;
+    public Lattice(int height, int width, int imageType){
+        this.numRows = height;
+        this.numColumns = width;
         this.timestep = 0;
-        for (int i = 0; i < rows; i++){
+        for (int i = 0; i < this.numRows; i++){
             ArrayList<Cell> lattice_row = new ArrayList<Cell>();
-            for (int j = 0; j < columns; j++){
+            for (int j = 0; j < this.numColumns; j++){
                 lattice_row.add(new Cell());
             }
             this.cellLattice.add(lattice_row);
         }
-        int center_x = columns/2;
-
-        int center_y = rows/2;
+        int center_x = this.numColumns/2;
+        int center_y = this.numRows/2;
         Point first_stem_cell_coords = new Point(center_x, center_y);
         Cell first_stem_cell = new Cell("stem");
         this.setCell(first_stem_cell_coords, first_stem_cell);//type should be told

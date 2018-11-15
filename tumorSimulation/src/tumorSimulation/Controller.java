@@ -18,7 +18,10 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
+import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Dictionary;
@@ -28,6 +31,7 @@ import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import javafx.embed.swing.SwingFXUtils;
 
 
 public class Controller implements EventHandler<KeyEvent> {
@@ -39,6 +43,9 @@ public class Controller implements EventHandler<KeyEvent> {
     @FXML private Rectangle paddle;
     @FXML private Ball ball;
     private Lattice cellLattice;
+    private Image cellLatticeImage;
+    //@FXML private ImageView cellLatticeImageView;
+    @FXML private ImageView cellLatticeImageView;// = new ImageView();
 
     private int score;
     private boolean paused;
@@ -50,6 +57,9 @@ public class Controller implements EventHandler<KeyEvent> {
     }
 
     public void initialize() {
+        File file = new File("tumorSimulation/flower.jpg");
+        this.cellLatticeImage = new Image(file.toURI().toString());
+        this.cellLatticeImageView.setImage(this.cellLatticeImage);
         this.createCellArray();
         this.startTimer();
     }
@@ -58,11 +68,14 @@ public class Controller implements EventHandler<KeyEvent> {
      * Creates an ArrayList of all cells
      */
     private void createCellArray(){
-        this.cellLattice = new Lattice(5, 5);
+        //this.cellLattice = new Lattice(5, 5);
+        this.cellLattice = new Lattice(5, 5, 3);
     }
 
     private void updateCells(){
         this.cellLattice.updateCells();
+        //this.cellLatticeImage = SwingFXUtils.toFXImage(this.cellLattice, null);
+        //this.cellLatticeImageView.setImage(this.cellLatticeImage);
     }
 
     private void startTimer() {
