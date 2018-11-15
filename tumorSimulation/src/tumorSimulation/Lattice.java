@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.Random;
 
 public class Lattice  {
@@ -20,7 +21,7 @@ public class Lattice  {
     private int numRows;
     private int numColumns;
     private int timestep;
-    private ArrayList<Point> active_cells = new ArrayList<Point>();
+    private ArrayList<Point> cell_watchlist = new ArrayList<Point>();
 
     public Lattice(int rows, int columns){
         this.numRows = rows;
@@ -39,7 +40,7 @@ public class Lattice  {
         Point first_stem_cell_coords = new Point(center_x, center_y);
         Cell first_stem_cell = new Cell("stem");
         this.setCell(first_stem_cell_coords, first_stem_cell);//type should be told
-        this.active_cells.add(new Point(center_x, center_y));
+        this.cell_watchlist.add(new Point(center_x, center_y));
     }
 
     /*** Get the number of rows in the lattice
@@ -109,66 +110,59 @@ public class Lattice  {
         ArrayList<Point> cells_to_add = new ArrayList<Point>();
         ArrayList<Point> cells_to_remove = new ArrayList<Point>();
 
-        for (Point cell_coords: this.active_cells) {
+        for (Point cell_coords: this.cell_watchlist) {
             Cell cell = this.getCell(cell_coords);
-            if (cell.getCellType() == "stem" || cell.getCellType() == "non-stem"){
+            String cell_type = cell.getCellType();
+            if (cell_type == "stem" || cell_type == "non-stem"){
                 Map<String, Boolean> behavior = cell.live();
                 System.out.println(cell_coords);
                 System.out.println(behavior);
-                Point new_coords = this.getEmptyAdjacentSpot(cell_coords);
-                if (new_coords != null){
-                    System.out.println("new stem cell: (" + String.valueOf(new_coords.getX()) + ", " + String.valueOf(new_coords.getY()) + ")");
-                    this.setCell(new_coords, new Cell("stem"));
-                    cells_to_add.add(new_coords);
-                }
                 if(behavior.get("die")){
                     cell.setGenericCellType("dead");
                 }
                 else { //migrate and divide are time-step independent
-//                        if(behavior.get("migrate")){
-//                            migrateCell(cell_coords);
-//                        }
+                    if(behavior.get("migrate")){
+                        Point new_cell_coords = getEmptyAdjacentSpot(cell_coords);
+                        if (new_cell_coords != null){
+                            this.setCell(cell_coords, new Cell());
+                            this.setCell(new_cell_coords, cell);
+                            cells_to_add.add(new_cell_coords);
+                            cells_to_remove.add(cell_coords);
+                            System.out.println("migration: (" + String.valueOf(cell_coords.getX()) + ", " + String.valueOf(cell_coords.getY()) + ")"
+                                    + "-->" + "(" + String.valueOf(new_cell_coords.getX()) + ", " + String.valueOf(new_cell_coords.getY()) + ")");
+                        }
+                    }
                     if(behavior.get("divide")){
-                        Map<Point, String> daugher_Cell_map = divideCell(cell_coords);
+                        Point daughter_cell_coordinates = getEmptyAdjacentSpot(cell_coords);
+                        if (daughter_cell_coordinates != null){
+                            System.out.println("new daughter cell: (" + String.valueOf(daughter_cell_coordinates.getX()) + ", " + String.valueOf(daughter_cell_coordinates.getY()) + ")");
+                            String daughter_cell_type = cell.choose_a_daughter_type();
+                            this.setCell(daughter_cell_coordinates, new Cell(daughter_cell_type));
+                            cells_to_add.add(daughter_cell_coordinates);
+                            if (cell_type == "non-stem") {
+                                int current_max_proliferation = cell.getMaxProliferation();
+                                if (current_max_proliferation == 1) {
+                                    cell.setGenericCellType("dead");
+                                    cells_to_remove.add(cell_coords);
+                                } else {
+                                    cell.setMaxProliferation(current_max_proliferation - 1);
 
-                        this.setCell(daugher_Cell_map.get());
-                        String Cell_type = cell.getCellType();
-                        if (Cell_type == "non-stem") {
-                            int current_max_proliferation = cell.getMaxProliferation();
-                            if (current_max_proliferation == 1) {
-                                cell.setGenericCellType("dead");
-                                cells_to_remove.add(cell_coords);
-                            } else {
-                                cell.setMaxProliferation(current_max_proliferation - 1);
-
+                                }
                             }
                         }
                     }
                 }
             }
         }
-        for (maps: new_daughter_list){
-
+        for(Point new_active_cell: cells_to_add){
+            this.cell_watchlist.add(new_active_cell);
         }
-        for(Point new_active_cell: new_active_cells){
-            this.active_cells.add(new_active_cell);
+        for(Point dead_or_empty_cell: cells_to_remove){
+            if(this.cell_watchlist.contains(dead_or_empty_cell)){
+                this.cell_watchlist.remove(dead_or_empty_cell);
+            }
         }
     }
-
-    /** Divides a cell by finding an empty neighbor to become a daughter cell
-     * @param cell_coords - the coordinates of the cell to divide
-     * @return the coordinates of the new daughter cell
-     */
-    private Map<Point, String> divideCell(Point cell_coords){
-        Cell cellOfInterest = this.getCell(cell_coords);
-        Point daughter_cell_coordinates = getEmptyAdjacentSpot(cell_coords);
-        String choice_type = cellOfInterest.choose_a_daughter_type();
-        Map<Point, String> daugther_cell_map = new HashMap<Point, String>();
-        daugther_cell_map.put(daughter_cell_coordinates, choice_type);
-        return daugther_cell_map;
-    }
-
-
 
 
 
