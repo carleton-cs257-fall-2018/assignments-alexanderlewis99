@@ -63,7 +63,7 @@ public class Controller {
      * Creates an ArrayList of all cells
      */
     private void createCellLattice(){
-        this.cellLattice = new Lattice(150, 300, 3);
+        this.cellLattice = new Lattice(300, 300, 3);
     }
 
     /**
@@ -76,6 +76,8 @@ public class Controller {
         else{
             this.cellLattice.updateCells();
         }
+        this.cellLatticeImage = SwingFXUtils.toFXImage(this.cellLattice, null);
+        this.cellLatticeImageView.setImage(this.cellLatticeImage);
     }
 
     /**
@@ -93,16 +95,22 @@ public class Controller {
      */
     private void updateWindowSizes(){
         this.window.setTopAnchor(this.settings,(double) this.current_stage_height-60);
-        this.cellLatticeImage = SwingFXUtils.toFXImage(this.cellLattice, null);
         if(this.current_stage_height != (int) this.simulationView.getHeight()){
             this.current_stage_height = (int) this.simulationView.getHeight();
             cellLatticeImageView.setFitHeight(this.current_stage_height-60);
         }
+        System.out.print("ImageView Width: ");
+        System.out.println(cellLatticeImageView.getFitWidth());
+        System.out.print("ImageView Height: ");
+        System.out.println(cellLatticeImageView.getFitHeight());
+        System.out.print("Anchorpane Window Height: ");
+        System.out.println(this.simulationView.getHeight());
+        System.out.print("Anchorpane Window Width: ");
+        System.out.println(this.simulationView.getWidth());
         if(this.current_stage_width != (int) this.simulationView.getWidth()){
             this.current_stage_width = (int) this.simulationView.getWidth();
             cellLatticeImageView.setFitWidth(this.current_stage_width);
         }
-        this.cellLatticeImageView.setImage(this.cellLatticeImage);
     }
 
     private void startTimer() {
