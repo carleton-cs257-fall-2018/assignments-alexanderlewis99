@@ -17,7 +17,7 @@ import java.awt.Point;
 
 import javax.lang.model.type.NullType;
 
-public class Cell extends Rectangle {
+public class Cell {
     private final double timestep = (double) 1/24;
     private String cellType;
     private int cct; //cell cycle time (affects the rate which a cell divides)
@@ -192,7 +192,6 @@ public class Cell extends Rectangle {
         this.probability_of_dying = 0; //immortal
         this.motility_speed = 5;
         this.probability_of_daughter_stem_cell = 0.1;
-        this.setFill(javafx.scene.paint.Color.DARKRED);
         this.updateProbabilityOfDividing();
         this.updateProbabilityOfMigrating();
     }
@@ -206,7 +205,6 @@ public class Cell extends Rectangle {
         this.motility_speed = 5;
         this.probability_of_dying = 0.01;
         this.probability_of_daughter_stem_cell = 0;
-        this.setFill(javafx.scene.paint.Color.RED);
         this.updateProbabilityOfDividing();
         this.updateProbabilityOfMigrating();
     }
@@ -220,7 +218,6 @@ public class Cell extends Rectangle {
         this.motility_speed = -1;
         this.probability_of_dying = 0;
         this.probability_of_daughter_stem_cell = -1;
-        this.setFill(javafx.scene.paint.Color.BLACK);
         this.probability_of_dividing = 0;
         this.probability_of_migrating = 0;
     }

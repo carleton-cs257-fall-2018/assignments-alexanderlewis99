@@ -44,8 +44,7 @@ public class Controller implements EventHandler<KeyEvent> {
     @FXML private Ball ball;
     private Lattice cellLattice;
     private Image cellLatticeImage;
-    //@FXML private ImageView cellLatticeImageView;
-    @FXML private ImageView cellLatticeImageView;// = new ImageView();
+    @FXML private ImageView cellLatticeImageView;
 
     private int score;
     private boolean paused;
@@ -57,10 +56,7 @@ public class Controller implements EventHandler<KeyEvent> {
     }
 
     public void initialize() {
-        //File file = new File("tumorSimulation/flower.jpg");
-        //this.cellLatticeImage = new Image(file.toURI().toString());
-        //this.cellLatticeImage = new Image(file.toURI().toString());
-        this.createCellArray();
+        this.createCellLattice();
         this.cellLatticeImage = SwingFXUtils.toFXImage(this.cellLattice, null);
         this.cellLatticeImageView.setImage(this.cellLatticeImage);
         this.startTimer();
@@ -69,17 +65,17 @@ public class Controller implements EventHandler<KeyEvent> {
     /**
      * Creates an ArrayList of all cells
      */
-    private void createCellArray(){
+    private void createCellLattice(){
         this.cellLattice = new Lattice(400, 400, 3);
         Graphics2D graphics = cellLattice.createGraphics();
-        graphics.setPaint ( new Color (248, 74, 244) );
+        graphics.setPaint ( new Color (255, 255, 255) );
         graphics.fillRect ( 0, 0, cellLattice.getWidth(), cellLattice.getHeight());
     }
 
     private void updateCells(){
         this.cellLattice.updateCells();
-        //this.cellLatticeImage = SwingFXUtils.toFXImage(this.cellLattice, null);
-        //this.cellLatticeImageView.setImage(this.cellLatticeImage);
+        this.cellLatticeImage = SwingFXUtils.toFXImage(this.cellLattice, null);
+        this.cellLatticeImageView.setImage(this.cellLatticeImage);
     }
 
     private void startTimer() {
@@ -87,13 +83,9 @@ public class Controller implements EventHandler<KeyEvent> {
         TimerTask timerTask = new TimerTask() {
             public void run() {
                 Platform.runLater(new Runnable() {
-                    int count = 10;
                     public void run() {
-                        updateAnimation();
-                        if (count > 0){
-                            updateCells();
-                            count = count - 1;
-                        }
+                        //updateAnimation();
+                        updateCells();
                     }
                 });
             }
