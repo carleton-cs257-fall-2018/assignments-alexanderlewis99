@@ -32,7 +32,8 @@ public class Cell extends Rectangle {
         this("empty");
     }
 
-    /** Creates a new cell with an assigned celltype
+    /**
+     * Creates a new cell with an assigned celltype
      * @param assigned_cellType - the celltype: stem, non-stem, empty, or dead
      */
     public Cell(String assigned_cellType) {
@@ -63,7 +64,8 @@ public class Cell extends Rectangle {
         return this.cellType;
     }
 
-    /** Updates the cell's characteristics based on the cell-type
+    /**
+     * Updates the cell's characteristics based on the cell-type
      * @param cellType - the new celltype: stem, non-stem, or dead
      */
     public void setGenericCellType(String cellType) {
@@ -81,7 +83,7 @@ public class Cell extends Rectangle {
         }
     }
 
-    public String choose_a_daughter_type(){
+    public String get_celltype_of_new_daughter(){
         Random rand = new Random();
         double chance = rand.nextDouble();
         if (chance <= this.probability_of_daughter_stem_cell){
@@ -92,14 +94,16 @@ public class Cell extends Rectangle {
         }
     }
 
-    /** Gets the cell cycle time
+    /**
+     * Gets the cell cycle time
      * @return the cell's cell cycle time - affects the probability a cell divides each time-step
      */
     public int getCct() {
         return this.cct;
     }
 
-    /** Sets the cell cycle time - affects the probability a cell divides each time-step
+    /**
+     * Sets the cell cycle time - affects the probability a cell divides each time-step
      * @param new_cct - the new cell cycle time for the cell
      */
     public void setCct(int new_cct) {
@@ -113,13 +117,15 @@ public class Cell extends Rectangle {
         return this.max_proliferation;
     }
 
-    /** Sets the maximum number of times a cell can proliferate before dying
+    /**
+     * Sets the maximum number of times a cell can proliferate before dying
      */
     public void setMaxProliferation(int new_max_proliferation) {
         this.max_proliferation = new_max_proliferation;
     }
 
-    /** Get the probability of dying
+    /**
+     * Get the probability of dying
      * @return probability_of_dying - the probability a cell dies each timestep
      */
     public double getProbabilityOfDying() {
@@ -132,27 +138,31 @@ public class Cell extends Rectangle {
         this.probability_of_dying = new_probability_of_dying;
     }
 
-    /** Get the motility speed
+    /**
+     * Get the motility speed
      * @return motility speed - affects the probability each timestep a cell migrates
      */
     public double getMotilitySpeed() {
         return this.motility_speed;
     }
 
-    /** Sets the new motility speed of a cell
+    /**
+     * Sets the new motility speed of a cell
      */
     public void setMotilitySpeed(double new_motility_speed) {
         this.motility_speed = new_motility_speed;
     }
 
-    /** Get the motility speed
+    /**
+     * Get the motility speed
      * @return motility speed - affects the probability each timestep a cell migrates
      */
     public double getProbabilityOfDaughterStemCell() {
         return this.probability_of_daughter_stem_cell;
     }
 
-    /** Sets the new motility speed of a cell
+    /**
+     * Sets the new motility speed of a cell
      */
     public void setProbabilityOfDaughterStemCell(double new_probability_of_daughter_stem_cell) {
         this.probability_of_daughter_stem_cell = new_probability_of_daughter_stem_cell;

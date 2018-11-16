@@ -19,11 +19,17 @@ import java.awt.image.BufferedImage;
 public class Lattice extends BufferedImage{
 
     private ArrayList<ArrayList> cellLattice= new ArrayList<ArrayList>();
+    private ArrayList<Point> cell_watchlist = new ArrayList<Point>();
     private int numRows;
     private int numColumns;
     private int timestep;
-    private ArrayList<Point> cell_watchlist = new ArrayList<Point>();
 
+    /**
+     * Constructor for a lattice of cells
+     * @param height - number of rows in the lattice
+     * @param width - number of columns in the lattice
+     * @param imageType - type of bufferedImage for the lattice
+     */
     public Lattice(int height, int width, int imageType){
         super(width, height, imageType);
         this.numRows = height;
@@ -44,21 +50,24 @@ public class Lattice extends BufferedImage{
         this.cell_watchlist.add(new Point(center_x, center_y));
     }
 
-    /*** Get the number of rows in the lattice
+    /**
+     * Get the number of rows in the lattice
      * @return number of rows
      */
     public int getNumRows(){
         return this.numRows;
     }
 
-    /** Get the number of columns in the lattice
+    /**
+     * Get the number of columns in the lattice
      * @return number of columns
      */
     public int getNumCols(){
         return this.numColumns;
     }
 
-    /** Get a row of cells of the lattice
+    /**
+     * Get a row of cells of the lattice
      * @param row_index - the index of the row which you wish to get
      * @return an arraylist of cells in the lattice
      */
@@ -66,7 +75,8 @@ public class Lattice extends BufferedImage{
         return this.cellLattice.get(row_index);
     }
 
-    /** Set a row of the lattice as a row of cells
+    /**
+     * Set a row of the lattice as a row of cells
      * @param row_index - the index of the row which you wish to replace
      * @param new_row - a list of cells to be the new row
      * @throws IllegalArgumentException
@@ -78,7 +88,8 @@ public class Lattice extends BufferedImage{
         }
     }
 
-    /** Get a cell from the lattice
+    /**
+     * Get a cell from the lattice
      * @param cell_coordinates - the coordinates of the cell to get
      * @return the cell from the lattice
      */
@@ -90,7 +101,8 @@ public class Lattice extends BufferedImage{
         return cell;
     }
 
-    /** Replace a cell in the lattice with a new cell
+    /**
+     * Replace a cell in the lattice with a new cell
      * @param cell_coordinates - the coordinates of the cell to replace
      * @param new_cell - the new cell that will replace the old cell
      */
@@ -137,7 +149,7 @@ public class Lattice extends BufferedImage{
                         Point daughter_cell_coordinates = getEmptyAdjacentSpot(cell_coords);
                         if (daughter_cell_coordinates != null){
                             System.out.println("new daughter cell: (" + String.valueOf(daughter_cell_coordinates.getX()) + ", " + String.valueOf(daughter_cell_coordinates.getY()) + ")");
-                            String daughter_cell_type = cell.choose_a_daughter_type();
+                            String daughter_cell_type = cell.get_celltype_of_new_daughter();
                             this.setCell(daughter_cell_coordinates, new Cell(daughter_cell_type));
                             cells_to_add.add(daughter_cell_coordinates);
                             if (cell_type == "non-stem") {
@@ -165,9 +177,20 @@ public class Lattice extends BufferedImage{
         }
     }
 
+    /**
+     * Changes the color of a point in the bufferedImage
+     * @param cell_coords
+     * @param color
+     */
+    private void updateCellColorInLattice(Point cell_coords, String color){
+        int x = (int) cell_coords.getX();
+        int y = (int) cell_coords.getY();
+        int rgb = 000000;
+        this.setRGB(x, y, rgb);
+    }
 
-
-    /** Finds an empty adjacent square in the lattice to a cell if one exists
+    /**
+     * Finds an empty adjacent square in the lattice to a cell if one exists
      * @param cell_coords - the coordinates of the cell
      * @return the coordinates of the empty adjacent square
      */
@@ -180,7 +203,8 @@ public class Lattice extends BufferedImage{
         return new_coords;
     }
 
-    /** Gets a random point from a set of points using Monte Carlo sampling
+    /**
+     * Gets a random point from a set of points using Monte Carlo sampling
      * @param coordinates - an arraylist of points to sample from
      * @return a random coordinate
      */
@@ -202,7 +226,8 @@ public class Lattice extends BufferedImage{
     }
 
 
-    /** Gets coordinates of available (empty/dead) adjacent squares to a given cell
+    /**
+     * Gets coordinates of available (empty/dead) adjacent squares to a given cell
      * @param cell_coordinates the coordinates of the cell to find available squares adjacent to
      * @return coordinates of available adjacent squares
      */
@@ -213,7 +238,8 @@ public class Lattice extends BufferedImage{
         return available_squares;
     }
 
-    /** Removes coordinates of stem or non-stem cell
+    /**
+     * Removes coordinates of stem or non-stem cell
      * @param neighbors - ArrayList of neighbor coordinates in bounds of lattice
      * @return neighbors - an ArrayList of coordinates of empty/dead neighbors
      */
@@ -231,7 +257,8 @@ public class Lattice extends BufferedImage{
         return neighbors;
     }
 
-    /** Generate possible 8 neighbors coordinates
+    /**
+     * Generate possible 8 neighbors coordinates
      * @param cell_coords - coordinates of the dividing/migrating cell
      * @return an ArrayList of all adjacent, including ones outside the bounds of the lattice
      */
@@ -250,7 +277,8 @@ public class Lattice extends BufferedImage{
         return all_eight_neighbors;
     }
 
-    /** Removes generated imposible coordinates
+    /**
+     * Removes generated impossible coordinates
      * @param neighbors - an ArrayList of Points
      * @return an ArrayList of Points
      */
