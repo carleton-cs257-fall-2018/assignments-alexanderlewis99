@@ -74,7 +74,12 @@ public class Controller implements EventHandler<KeyEvent> {
         if (score%24==0){
             this.scoreLabel.setText(String.format("Day: %d", this.score/24));
         }
-        this.cellLattice.updateCells();
+        if (cellLattice.isFull()){
+            this.timer.cancel();
+        }
+        else{
+            this.cellLattice.updateCells();
+        }
         this.cellLatticeImage = SwingFXUtils.toFXImage(this.cellLattice, null);
         this.cellLatticeImageView.setImage(this.cellLatticeImage);
     }

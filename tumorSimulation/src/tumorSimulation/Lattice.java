@@ -186,7 +186,6 @@ public class Lattice extends BufferedImage{
         }
     }
 
-
     /**
      * @return
      */

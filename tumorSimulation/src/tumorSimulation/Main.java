@@ -20,7 +20,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-public class Main extends Application {
+public class  Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
