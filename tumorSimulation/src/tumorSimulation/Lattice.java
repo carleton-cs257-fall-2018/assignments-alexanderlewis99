@@ -20,6 +20,8 @@ public class Lattice extends BufferedImage{
 
     private ArrayList<ArrayList> cellLattice= new ArrayList<ArrayList>();
     private ArrayList<Point> cellWatchlist = new ArrayList<Point>();
+    private ArrayList<Point> cells_to_add_to_watchlist = new ArrayList<Point>();
+    private ArrayList<Point> cells_to_remove_from_watchlist = new ArrayList<Point>();
     private int numRows;
     private int numColumns;
     private int timestep;
@@ -120,60 +122,29 @@ public class Lattice extends BufferedImage{
     public void updateCells(){
         System.out.println(timestep);
         this.timestep++;
-        ArrayList<Point> cells_to_add_to_watchlist = new ArrayList<Point>();
-        ArrayList<Point> cells_to_remove_from_watchlist = new ArrayList<Point>();
-
         for (Point cell_coords: this.cellWatchlist) {
             Cell cell = this.getCell(cell_coords);
             String cell_type = cell.getCellType();
             if (cell_type == "stem" || cell_type == "non-stem"){
-                Map<String, Boolean> behavior = cell.live();
+                Map<String, Boolean> behavior = cell.getBehaviorForTimestep();
                 System.out.println(cell_coords);
                 System.out.println(behavior);
                 if(behavior.get("die")){
-                    cell.setGenericCellType("dead");
-                    cells_to_remove_from_watchlist.add(cell_coords);
-                    this.updateCellColorInLattice(cell_coords, "dead");
-                    System.out.println("Cell died: (" + String.valueOf(cell_coords.getX()) + ", " + String.valueOf(cell_coords.getY()) + ")");
+                    this.kill_cell(cell_coords, cell);
                 }
                 else { //migrate and divide are time-step independent
                     if(behavior.get("divide")){
-                        Point daughter_cell_coordinates = getEmptyAdjacentSpot(cell_coords);
-                        if (daughter_cell_coordinates != null){
-                            System.out.println("new daughter cell: (" + String.valueOf(daughter_cell_coordinates.getX()) + ", " + String.valueOf(daughter_cell_coordinates.getY()) + ")");
-                            String daughter_cell_type = cell.get_celltype_of_new_daughter();
-                            this.setCell(daughter_cell_coordinates, new Cell(daughter_cell_type));
-                            this.updateCellColorInLattice(daughter_cell_coordinates, daughter_cell_type);
-                            cells_to_add_to_watchlist.add(daughter_cell_coordinates);
-                            if (cell_type == "non-stem") {
-                                int current_max_proliferation = cell.getMaxProliferation();
-                                if (current_max_proliferation == 1) {
-                                    cell.setGenericCellType("dead");
-                                    cells_to_remove_from_watchlist.add(cell_coords);
-                                    this.updateCellColorInLattice(cell_coords, "dead");
-                                } else {
-                                    cell.setMaxProliferation(current_max_proliferation - 1);
-
-                                }
-                            }
-                        }
+                        this.divide_cell(cell_coords, cell);
                     }
                     if(behavior.get("migrate")){
                         Point new_cell_coords = this.getEmptyAdjacentSpot(cell_coords);
                         if (new_cell_coords != null){
-                            this.setCell(cell_coords, new Cell());
-                            this.updateCellColorInLattice(cell_coords, "empty");
-                            this.setCell(new_cell_coords, cell);
-                            this.updateCellColorInLattice(new_cell_coords, cell_type);
-                            cells_to_add_to_watchlist.add(new_cell_coords);
-                            cells_to_remove_from_watchlist.add(cell_coords);
-                            System.out.println("migration: (" + String.valueOf(cell_coords.getX()) + ", " + String.valueOf(cell_coords.getY()) + ")"
-                                    + "-->" + "(" + String.valueOf(new_cell_coords.getX()) + ", " + String.valueOf(new_cell_coords.getY()) + ")");
+                            this.move_cell(cell_coords, new_cell_coords, cell);
                         }
                     }
                     //imperfect logic but test to see if runs faster
                     if(getEmptyAdjacentSpot(cell_coords)==null){
-                        cells_to_remove_from_watchlist.add(cell_coords);
+                        this.cells_to_remove_from_watchlist.add(cell_coords);
                     }
                 }
             }
@@ -184,6 +155,63 @@ public class Lattice extends BufferedImage{
         for(Point dead_or_empty_cell: cells_to_remove_from_watchlist){
             this.cellWatchlist.remove(dead_or_empty_cell);
         }
+        this.cells_to_add_to_watchlist.clear();
+        this.cells_to_remove_from_watchlist.clear();
+    }
+
+    /**
+     * Divides a cell by creating a daughter a cell
+     * @param cell_coords the coordinates of the cell that is dividing
+     * @param parent - the cell that is dividing
+     */
+    public void divide_cell(Point cell_coords, Cell parent){
+        Point daughter_cell_coordinates = getEmptyAdjacentSpot(cell_coords);
+        if (daughter_cell_coordinates != null){
+            System.out.println("new daughter cell: (" + String.valueOf(daughter_cell_coordinates.getX()) + ", " + String.valueOf(daughter_cell_coordinates.getY()) + ")");
+            String daughter_cell_type = parent.get_celltype_of_new_daughter();
+            this.setCell(daughter_cell_coordinates, new Cell(daughter_cell_type));
+            this.updateCellColorInLattice(daughter_cell_coordinates, daughter_cell_type);
+            this.cells_to_add_to_watchlist.add(daughter_cell_coordinates);
+            if (parent.getCellType() == "non-stem") {
+                int current_max_proliferation = parent.getMaxProliferation();
+                if (current_max_proliferation == 1) {
+                    this.kill_cell(cell_coords, parent);
+                } else {
+                    parent.setMaxProliferation(current_max_proliferation - 1);
+
+                }
+            }
+        }
+    }
+
+    /**
+     * Set the cell's cell-type to dead and updates its pixel counterpart in the bufferedImage
+     * @param cell_coords
+     * @param cell
+     */
+    public void kill_cell(Point cell_coords, Cell cell){
+        cell.setGenericCellType("dead");
+        this.setCell(cell_coords, cell);
+        this.updateCellColorInLattice(cell_coords, "dead");
+        this.cells_to_remove_from_watchlist.add(cell_coords);
+        System.out.println("Cell died: (" + String.valueOf(cell_coords.getX()) + ", " + String.valueOf(cell_coords.getY()) + ")");
+    }
+
+    /**
+     * Moves a cell from one point to another point in the lattice and updates the pixel counterparts in the bufferedImage
+     * @param cell_coords
+     * @param new_cell_coords
+     * @param cell_to_move
+     */
+    public void move_cell(Point cell_coords, Point new_cell_coords, Cell cell_to_move){
+        this.setCell(cell_coords, new Cell());
+        this.updateCellColorInLattice(cell_coords, "empty");
+        this.setCell(new_cell_coords, cell_to_move);
+        this.updateCellColorInLattice(new_cell_coords, cell_to_move.getCellType());
+        this.cells_to_add_to_watchlist.add(new_cell_coords);
+        this.cells_to_remove_from_watchlist.add(cell_coords);
+        System.out.println("migration: (" + String.valueOf(cell_coords.getX()) + ", " + String.valueOf(cell_coords.getY()) + ")"
+                + "-->" + "(" + String.valueOf(new_cell_coords.getX()) + ", " + String.valueOf(new_cell_coords.getY()) + ")");
     }
 
     /**
@@ -207,7 +235,7 @@ public class Lattice extends BufferedImage{
         if (cell_type.equals("non-stem")){
             rgb = new Color(255, 0, 0).getRGB();; //red
         } else if (cell_type.equals("stem")){
-            rgb = new Color(255, 212, 0).getRGB();; //yellow
+            rgb = new Color(40, 82, 0).getRGB();; //yellow
         } else if (cell_type.equals("dead")){
             rgb = new Color(2, 2, 2).getRGB(); //black
         }

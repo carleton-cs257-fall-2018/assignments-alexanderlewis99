@@ -22,37 +22,34 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.awt.*;
-import java.io.File;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
 import javafx.embed.swing.SwingFXUtils;
 
 
-public class Controller implements EventHandler<KeyEvent> {
+public class Controller {
     final private double FRAMES_PER_SECOND = 20.0;
 
     @FXML private Button pauseButton;
-    @FXML private Label scoreLabel;
-    @FXML private AnchorPane gameBoard;
+    @FXML private Label timeLabel;
+    @FXML private AnchorPane simulationView;
+    @FXML private AnchorPane window;
+    @FXML private AnchorPane settings;
     @FXML private Rectangle paddle;
     @FXML private Ball ball;
     private Lattice cellLattice;
     private Image cellLatticeImage;
     @FXML private ImageView cellLatticeImageView;
+    private int current_stage_height;
+    private int current_stage_width;
 
-    private int score;
+    private int timeCount;
     private boolean paused;
     private Timer timer;
 
     public Controller() {
         this.paused = false;
-        this.score = 0;
+        this.timeCount = 0;
     }
 
     public void initialize() {
@@ -66,21 +63,45 @@ public class Controller implements EventHandler<KeyEvent> {
      * Creates an ArrayList of all cells
      */
     private void createCellLattice(){
-        this.cellLattice = new Lattice(200, 400, 3);
+        this.cellLattice = new Lattice(150, 300, 3);
     }
 
+    /**
+     * Updates the cells if the cell lattice is not full
+     */
     private void updateCells(){
-        this.score++;
-        if (score%24==0){
-            this.scoreLabel.setText(String.format("Day: %d", this.score/24));
-        }
         if (cellLattice.isFull()){
             this.timer.cancel();
         }
         else{
             this.cellLattice.updateCells();
         }
+    }
+
+    /**
+     * Updates the time label based on the current timestep (measured in 1/24 days)
+     */
+    private void updateTimeLabel(){
+        this.timeCount++;
+        if (timeCount%24==0){
+            this.timeLabel.setText(String.format("Day: %d", this.timeCount/24));
+        }
+    }
+
+    /**
+     * Updates the size of the simulation window, the settings box, and the simulation image based on the size of the window.
+     */
+    private void updateWindowSizes(){
+        this.window.setTopAnchor(this.settings,(double) this.current_stage_height-60);
         this.cellLatticeImage = SwingFXUtils.toFXImage(this.cellLattice, null);
+        if(this.current_stage_height != (int) this.simulationView.getHeight()){
+            this.current_stage_height = (int) this.simulationView.getHeight();
+            cellLatticeImageView.setFitHeight(this.current_stage_height-60);
+        }
+        if(this.current_stage_width != (int) this.simulationView.getWidth()){
+            this.current_stage_width = (int) this.simulationView.getWidth();
+            cellLatticeImageView.setFitWidth(this.current_stage_width);
+        }
         this.cellLatticeImageView.setImage(this.cellLatticeImage);
     }
 
@@ -91,6 +112,8 @@ public class Controller implements EventHandler<KeyEvent> {
                 Platform.runLater(new Runnable() {
                     public void run() {
                         updateCells();
+                        updateWindowSizes();
+                        updateTimeLabel();
                     }
                 });
             }
@@ -98,35 +121,6 @@ public class Controller implements EventHandler<KeyEvent> {
 
         long frameTimeInMilliseconds = (long)(1000.0 / FRAMES_PER_SECOND);
         this.timer.schedule(timerTask, 0, frameTimeInMilliseconds);
-    }
-
-
-    /**
-     * Old method from pong
-     * @param keyEvent
-     */
-    @Override
-    public void handle(KeyEvent keyEvent) {
-        KeyCode code = keyEvent.getCode();
-        double paddlePosition = this.paddle.getLayoutX();
-        double stepSize = 15.0;
-        if (code == KeyCode.LEFT || code == KeyCode.A) {
-            // move paddle left
-            if (paddlePosition > stepSize) {
-                this.paddle.setLayoutX(this.paddle.getLayoutX() - stepSize);
-            } else {
-                this.paddle.setLayoutX(0);
-            }
-            keyEvent.consume();
-        } else if (code == KeyCode.RIGHT || code == KeyCode.D) {
-            // move paddle right
-            if (paddlePosition + this.paddle.getWidth() + stepSize < this.gameBoard.getWidth()) {
-                this.paddle.setLayoutX(this.paddle.getLayoutX() + stepSize);
-            } else {
-                this.paddle.setLayoutX(this.gameBoard.getWidth() - this.paddle.getWidth());
-            }
-            keyEvent.consume();
-        }
     }
 
     /**

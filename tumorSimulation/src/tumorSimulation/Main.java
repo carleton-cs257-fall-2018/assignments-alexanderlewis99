@@ -82,10 +82,10 @@ public class  Main extends Application {
         // Want to play around with these ideas? Try commenting the Button object in pong.fxml in and out
         // while commenting the Solution below in and out as well.
 
-        primaryStage.setTitle("Kinda Pong");
+        primaryStage.setTitle("Tumor Simulation");
         Scene scene = new Scene(root, 700, 500);
         primaryStage.setScene(scene);
-        scene.setOnKeyPressed(controller);
+        //scene.setOnKeyPressed(controller);
         primaryStage.show();
 
         // Solution: once the Stage is displayed, explicitly put the focus on the root node.

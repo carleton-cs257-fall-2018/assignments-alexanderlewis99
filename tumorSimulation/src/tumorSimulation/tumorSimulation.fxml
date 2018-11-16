@@ -1,24 +1,27 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.shape.Rectangle?>
-<?import tumorSimulation.Ball?>
 <?import javafx.scene.image.ImageView?>
 
-<?import tumorSimulation.Lattice?>
-<AnchorPane fx:controller="tumorSimulation.Controller" xmlns:fx="http://javafx.com/fxml">
+<?import javafx.scene.control.Slider?>
+<AnchorPane fx:controller="tumorSimulation.Controller" id="window" xmlns:fx="http://javafx.com/fxml">
 
     <Button fx:id="pauseButton" text="Pause" AnchorPane.leftAnchor="30" AnchorPane.topAnchor="15" onAction="#onPauseButton"/>
 
-    <Label fx:id="scoreLabel" AnchorPane.leftAnchor="120" AnchorPane.topAnchor="15" />
+    <Label fx:id="timeLabel" AnchorPane.leftAnchor="120" AnchorPane.topAnchor="15" />
 
-    <AnchorPane fx:id="gameBoard"
+    <AnchorPane fx:id="simulationView"
           AnchorPane.topAnchor="60" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="20"
           style="-fx-background-color:white; -fx-border-color:black; -fx-border-width:1px 0px 1px 0px;">
-        <ImageView fx:id="cellLatticeImageView" fitHeight="400.0" fitWidth="800.0" layoutX="0.0" layoutY="0.0" pickOnBounds="true" preserveRatio="true" />
+        <ImageView fx:id="cellLatticeImageView" pickOnBounds="true" preserveRatio="true" />
     </AnchorPane>
 
-    <Label AnchorPane.leftAnchor="20" AnchorPane.bottomAnchor="0" style="-fx-font-size: 100%"
-           text="Left: A or left-arrow; Right: D or right-arrow" />
+    <AnchorPane fx:id="settings"
+                AnchorPane.topAnchor="400" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="20"
+                style="-fx-background-color:lightCoral; -fx-border-color:black; -fx-border-width:1px 0px 1px 0px;">
+        <Label AnchorPane.leftAnchor="20" AnchorPane.bottomAnchor="20" style="-fx-font-size: 100%" text="Stem Cell Cycle Time" />
+        <Slider fx:id="cctSlider" majorTickUnit="1" max="24" min="1" showTickMarks="true" snapToTicks="true"
+                AnchorPane.leftAnchor="20" AnchorPane.bottomAnchor="0"/>
+    </AnchorPane>
 
 </AnchorPane>

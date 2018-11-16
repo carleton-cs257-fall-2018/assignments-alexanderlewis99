@@ -36,7 +36,7 @@ public class Cell {
     /**
      * Causes the cell to undergo its normal behavior (dividing, migrating, and/or dying) for the timestep
      */
-    public Map<String, Boolean> live() {
+    public Map<String, Boolean> getBehaviorForTimestep() {
         Map<String, Boolean> behavior = new HashMap<String, Boolean>();
         if (this.cellType == "dead" || this.cellType == "empty") {
             behavior.put("migrate", false);
