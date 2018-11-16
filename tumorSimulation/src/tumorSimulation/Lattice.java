@@ -187,7 +187,12 @@ public class Lattice extends BufferedImage{
     }
 
 
-
+    /**
+     * @return
+     */
+    public boolean isFull(){
+        return (this.cellWatchlist.size()==0);
+    }
     /**
      * Changes the color of a point in the bufferedImage
      * @param cell_coords
@@ -198,7 +203,7 @@ public class Lattice extends BufferedImage{
         int y = (int) cell_coords.getY();
         int rgb  = 0;
         if (cell_type.equals("empty")) {
-            rgb = new Color(96, 255, 0).getRGB(); //white
+            rgb = new Color(255, 255, 255).getRGB(); //white
         }
         if (cell_type.equals("non-stem")){
             rgb = new Color(255, 0, 0).getRGB();; //red

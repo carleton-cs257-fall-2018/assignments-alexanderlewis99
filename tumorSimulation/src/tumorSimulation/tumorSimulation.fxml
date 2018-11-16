@@ -14,10 +14,8 @@
 
     <AnchorPane fx:id="gameBoard"
           AnchorPane.topAnchor="60" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="20"
-          style="-fx-background-color: #bbb; -fx-border-color:black; -fx-border-width:1px 0px 1px 0px;">
-        <Ball fx:id="ball" layoutX="100" layoutY="20" radius="20" fill="green" velocityX="-7" velocityY="10" />
-        <Rectangle fx:id="paddle" AnchorPane.bottomAnchor="15" layoutX="100" width="100" height="10" fill="black" />
-        <ImageView fx:id="cellLatticeImageView" fitHeight="400.0" fitWidth="400.0" layoutX="400.0" layoutY="0.0" pickOnBounds="true" preserveRatio="true" />
+          style="-fx-background-color:white; -fx-border-color:black; -fx-border-width:1px 0px 1px 0px;">
+        <ImageView fx:id="cellLatticeImageView" fitHeight="400.0" fitWidth="800.0" layoutX="0.0" layoutY="0.0" pickOnBounds="true" preserveRatio="true" />
     </AnchorPane>
 
     <Label AnchorPane.leftAnchor="20" AnchorPane.bottomAnchor="0" style="-fx-font-size: 100%"

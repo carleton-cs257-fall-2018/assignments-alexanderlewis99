@@ -66,13 +66,14 @@ public class Controller implements EventHandler<KeyEvent> {
      * Creates an ArrayList of all cells
      */
     private void createCellLattice(){
-        this.cellLattice = new Lattice(400, 400, 3);
-        Graphics2D graphics = cellLattice.createGraphics();
-        graphics.setPaint ( new Color (255, 255, 255) );
-        graphics.fillRect ( 0, 0, cellLattice.getWidth(), cellLattice.getHeight());
+        this.cellLattice = new Lattice(200, 400, 3);
     }
 
     private void updateCells(){
+        this.score++;
+        if (score%24==0){
+            this.scoreLabel.setText(String.format("Day: %d", this.score/24));
+        }
         this.cellLattice.updateCells();
         this.cellLatticeImage = SwingFXUtils.toFXImage(this.cellLattice, null);
         this.cellLatticeImageView.setImage(this.cellLatticeImage);
@@ -84,7 +85,6 @@ public class Controller implements EventHandler<KeyEvent> {
             public void run() {
                 Platform.runLater(new Runnable() {
                     public void run() {
-                        //updateAnimation();
                         updateCells();
                     }
                 });
@@ -95,45 +95,6 @@ public class Controller implements EventHandler<KeyEvent> {
         this.timer.schedule(timerTask, 0, frameTimeInMilliseconds);
     }
 
-    /**
-     * Old method from Pong
-     */
-    private void updateAnimation() {
-        double ballCenterX = this.ball.getCenterX() + this.ball.getLayoutX();
-        double ballCenterY = this.ball.getCenterY() + this.ball.getLayoutY();
-        double ballRadius = this.ball.getRadius();
-        double paddleTop = this.paddle.getY() + this.paddle.getLayoutY();
-        double paddleLeft = this.paddle.getX() + this.paddle.getLayoutX();
-        double paddleRight = paddleLeft + this.paddle.getWidth();
-
-        // Bounce off paddle. NOTE: THIS IS A BAD BOUNCING ALGORITHM. The ball can badly
-        // overshoot the paddle and still "bounce" off it. See if you can come up with
-        // something better.
-        if (ballCenterX >= paddleLeft && ballCenterX < paddleRight && this.ball.getVelocityY() > 0) {
-            double ballBottom = ballCenterY + ballRadius;
-            if (ballBottom >= paddleTop) {
-                this.ball.setVelocityY(-this.ball.getVelocityY());
-                this.score++;
-                this.scoreLabel.setText(String.format("Bounces: %d", this.score));
-            }
-        }
-
-        // Bounce off walls
-        double ballVelocityX = this.ball.getVelocityX();
-        double ballVelocityY = this.ball.getVelocityY();
-        if (ballCenterX + ballRadius >= this.gameBoard.getWidth() && ballVelocityX > 0) {
-            this.ball.setVelocityX(-ballVelocityX);
-        } else if (ballCenterX - ballRadius < 0 && ballVelocityX < 0) {
-            this.ball.setVelocityX(-ballVelocityX);
-        } else if (ballCenterY + ballRadius >= this.gameBoard.getHeight() && ballVelocityY > 0) {
-            this.ball.setVelocityY(-ballVelocityY);
-        } else if (ballCenterY - ballRadius < 0 && ballVelocityY < 0) {
-            this.ball.setVelocityY(-ballVelocityY);
-        }
-
-        // Move the sprite.
-        this.ball.step();
-    }
 
     /**
      * Old method from pong
