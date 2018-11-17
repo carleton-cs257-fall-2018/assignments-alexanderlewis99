@@ -63,6 +63,7 @@ public class Controller {
      * Creates an ArrayList of all cells
      */
     private void createNewCellLattice(){
+        //imageType:3 to save memory and speed up computations
         this.cellLattice = new Lattice(300, 300, 3);
 //        Graphics2D graphics = cellLattice.createGraphics();
 //        graphics.setPaint ( new Color (0, 248, 0) );
@@ -141,7 +142,8 @@ public class Controller {
     }
 
     /**
-     * Old method from pong that toggles the pause button
+     * Pauses the simulation when the pause button is clicked.
+     * Will reset the simulation if the simulation has finished.
      */
     public void onPauseButton(ActionEvent actionEvent) {
         if (cellLattice.isFull()){
@@ -152,7 +154,7 @@ public class Controller {
     }
 
     /**
-     * Old method from pong that toggles the pause button
+     * Resets the simulation when the reset button is clicked
      */
     public void onResetButton(ActionEvent actionEvent) {
         this.resetSimulation();
