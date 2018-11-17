@@ -53,7 +53,7 @@ public class Controller {
     }
 
     public void initialize() {
-        this.createCellLattice();
+        this.createNewCellLattice();
         this.cellLatticeImage = SwingFXUtils.toFXImage(this.cellLattice, null);
         this.cellLatticeImageView.setImage(this.cellLatticeImage);
         this.startTimer();
@@ -62,7 +62,7 @@ public class Controller {
     /**
      * Creates an ArrayList of all cells
      */
-    private void createCellLattice(){
+    private void createNewCellLattice(){
         this.cellLattice = new Lattice(300, 300, 3);
 //        Graphics2D graphics = cellLattice.createGraphics();
 //        graphics.setPaint ( new Color (0, 248, 0) );
@@ -75,6 +75,8 @@ public class Controller {
     private void updateCells(){
         if (cellLattice.isFull()){
             this.timer.cancel();
+            this.pauseButton.setText("Continue");
+            this.paused = true;
         }
         else{
             this.cellLattice.updateCells();
@@ -117,6 +119,9 @@ public class Controller {
         }
     }
 
+    /**
+     * Creates a timer to run the simulation
+     */
     private void startTimer() {
         this.timer = new java.util.Timer();
         TimerTask timerTask = new TimerTask() {
@@ -139,23 +144,57 @@ public class Controller {
      * Old method from pong that toggles the pause button
      */
     public void onPauseButton(ActionEvent actionEvent) {
-        if (this.paused) {
-            this.pauseButton.setText("Pause");
-            this.startTimer();
+        if (cellLattice.isFull()){
+            this.resetSimulation();
         } else {
-            this.pauseButton.setText("Continue");
-            this.timer.cancel();
+            this.togglePauseButtonAndTimer();
         }
-        this.paused = !this.paused;
     }
 
     /**
      * Old method from pong that toggles the pause button
      */
     public void onResetButton(ActionEvent actionEvent) {
-        this.timer.cancel();
+        this.resetSimulation();
+
+    }
+
+    /**
+     * Sets the timeCount to 0 and generates a new cell lattice
+     */
+    public void resetSimulation(){
+        this.pauseSimulation();
         this.timeCount = 0;
-        this.createCellLattice();
+        this.createNewCellLattice();
+        this.resumeSimulation();
+    }
+
+    /**
+     * Pauses the the simulation if running or resumes it if paused
+     */
+    public void togglePauseButtonAndTimer(){
+        if (this.paused) {
+            this.resumeSimulation();
+        } else {
+            this.pauseSimulation();
+        }
+    }
+
+    /**
+     * Pauses the simulation and updates the text of pause button
+     */
+    public void pauseSimulation(){
+        this.paused = true;
+        this.pauseButton.setText("Continue");
+        this.timer.cancel();
+    }
+
+    /**
+     * Resumes the simulation and updates the text of pause button
+     */
+    public void resumeSimulation(){
+        this.paused = false;
+        this.pauseButton.setText("Pause");
         this.startTimer();
     }
 }

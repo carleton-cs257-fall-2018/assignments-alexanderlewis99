@@ -189,8 +189,7 @@ public class Lattice extends BufferedImage{
      * @param cell
      */
     public void kill_cell(Point cell_coords, Cell cell){
-        cell.setGenericCellType("dead");
-        this.setCell(cell_coords, cell);
+        this.setCell(cell_coords, new Cell("dead"));
         this.updateCellColorInLattice(cell_coords, "dead");
         this.cells_to_remove_from_watchlist.add(cell_coords);
     }

@@ -76,6 +76,10 @@ public class Cell {
         }
     }
 
+    /** Gets the daughter's cell-type. Stem cells have a {10%} chance of creating another stem cell.
+     * Non-stem cells have a {0%} chance of creating a non-stem cell
+     * @return the cell-type of the daughter (either stem or non-stem)
+     */
     public String get_celltype_of_new_daughter(){
         Random rand = new Random();
         double chance = rand.nextDouble();
