@@ -12,6 +12,5 @@ import java.util.Map;
 
 public class DeadCell extends Cell {
     /*cell.getCellType()
-            getBehaviorForTimestep()
-            */
-}
+     */
+//}

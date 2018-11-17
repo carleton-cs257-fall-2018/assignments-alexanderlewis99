@@ -14,10 +14,10 @@ public class DeadCell extends Cell {
     /*cell.getCellType()
             getBehaviorForTimestep()
             */
-}
+//}
 
 /*
 get_celltype_of_new_daughter();
 getMaxProliferation()
 .setMaxProliferation
-
+*/
