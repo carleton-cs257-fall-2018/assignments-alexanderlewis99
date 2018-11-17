@@ -8,20 +8,25 @@
 
     <Button fx:id="pauseButton" text="Pause" AnchorPane.leftAnchor="30" AnchorPane.topAnchor="15" onAction="#onPauseButton"/>
 
-    <Label fx:id="timeLabel" AnchorPane.leftAnchor="120" AnchorPane.topAnchor="15" />
+    <Button fx:id="resetButton" text="Reset" AnchorPane.leftAnchor="120" AnchorPane.topAnchor="15" onAction="#onResetButton"/>
+
+    <Label fx:id="timeLabel" AnchorPane.rightAnchor="60" AnchorPane.topAnchor="30" />
 
     <AnchorPane fx:id="simulationView"
           AnchorPane.topAnchor="60" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="20"
           style="-fx-background-color:white; -fx-border-color:black; -fx-border-width:1px 0px 1px 0px;">
         <ImageView fx:id="cellLatticeImageView" pickOnBounds="true" preserveRatio="true" />
+
+        <AnchorPane fx:id="settings"
+                    AnchorPane.topAnchor="400" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="20"
+                    style="-fx-background-color:lightCoral; -fx-border-color:black; -fx-border-width:1px 0px 1px 0px;">
+            <Label AnchorPane.leftAnchor="20" AnchorPane.bottomAnchor="20" style="-fx-font-size: 100%" text="Stem Cell Cycle Time" />
+            <Slider fx:id="cctSlider" majorTickUnit="1" max="24" min="1" showTickMarks="true" snapToTicks="true"
+                    AnchorPane.leftAnchor="20" AnchorPane.bottomAnchor="0"/>
+        </AnchorPane>
+
     </AnchorPane>
 
-    <AnchorPane fx:id="settings"
-                AnchorPane.topAnchor="400" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="20"
-                style="-fx-background-color:lightCoral; -fx-border-color:black; -fx-border-width:1px 0px 1px 0px;">
-        <Label AnchorPane.leftAnchor="20" AnchorPane.bottomAnchor="20" style="-fx-font-size: 100%" text="Stem Cell Cycle Time" />
-        <Slider fx:id="cctSlider" majorTickUnit="1" max="24" min="1" showTickMarks="true" snapToTicks="true"
-                AnchorPane.leftAnchor="20" AnchorPane.bottomAnchor="0"/>
-    </AnchorPane>
+
 
 </AnchorPane>

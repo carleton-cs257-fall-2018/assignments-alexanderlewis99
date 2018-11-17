@@ -40,8 +40,8 @@ public class Controller {
     private Lattice cellLattice;
     private Image cellLatticeImage;
     @FXML private ImageView cellLatticeImageView;
-    private int current_stage_height;
-    private int current_stage_width;
+    private int last_simulation_view_height;
+    private int last_simulation_view_width;
 
     private int timeCount;
     private boolean paused;
@@ -64,6 +64,9 @@ public class Controller {
      */
     private void createCellLattice(){
         this.cellLattice = new Lattice(300, 300, 3);
+//        Graphics2D graphics = cellLattice.createGraphics();
+//        graphics.setPaint ( new Color (0, 248, 0) );
+//        graphics.fillRect ( 0, 0, cellLattice.getWidth(), cellLattice.getHeight() );
     }
 
     /**
@@ -94,22 +97,23 @@ public class Controller {
      * Updates the size of the simulation window, the settings box, and the simulation image based on the size of the window.
      */
     private void updateWindowSizes(){
-        this.window.setTopAnchor(this.settings,(double) this.current_stage_height-60);
-        if(this.current_stage_height != (int) this.simulationView.getHeight()){
-            this.current_stage_height = (int) this.simulationView.getHeight();
-            cellLatticeImageView.setFitHeight(this.current_stage_height-60);
-        }
-        System.out.print("ImageView Width: ");
-        System.out.println(cellLatticeImageView.getFitWidth());
-        System.out.print("ImageView Height: ");
-        System.out.println(cellLatticeImageView.getFitHeight());
-        System.out.print("Anchorpane Window Height: ");
-        System.out.println(this.simulationView.getHeight());
-        System.out.print("Anchorpane Window Width: ");
-        System.out.println(this.simulationView.getWidth());
-        if(this.current_stage_width != (int) this.simulationView.getWidth()){
-            this.current_stage_width = (int) this.simulationView.getWidth();
-            cellLatticeImageView.setFitWidth(this.current_stage_width);
+        int current_simulation_view_height = (int) this.simulationView.getHeight();
+        int current_simulation_view_width = (int) this.simulationView.getWidth();
+        if(this.last_simulation_view_height != current_simulation_view_height || this.last_simulation_view_width != current_simulation_view_width){
+            cellLatticeImageView.setFitHeight((0.8)*current_simulation_view_height);
+            this.last_simulation_view_height = current_simulation_view_height;
+            //width
+            this.last_simulation_view_width = current_simulation_view_width;
+            cellLatticeImageView.setFitWidth((0.8)*current_simulation_view_width);
+            if(cellLatticeImageView.getFitHeight() > cellLatticeImageView.getFitWidth()){
+                cellLatticeImageView.setFitHeight(cellLatticeImageView.getFitWidth());
+            } else {
+                cellLatticeImageView.setFitWidth(cellLatticeImageView.getFitHeight());
+            }
+            double whitespaceWidth = current_simulation_view_width - cellLatticeImageView.getFitWidth();
+            this.window.setLeftAnchor(this.cellLatticeImageView, whitespaceWidth/2);
+            this.window.setRightAnchor(this.cellLatticeImageView, whitespaceWidth/2);
+            this.simulationView.setTopAnchor(this.settings, cellLatticeImageView.getFitHeight());
         }
     }
 
@@ -143,5 +147,15 @@ public class Controller {
             this.timer.cancel();
         }
         this.paused = !this.paused;
+    }
+
+    /**
+     * Old method from pong that toggles the pause button
+     */
+    public void onResetButton(ActionEvent actionEvent) {
+        this.timer.cancel();
+        this.timeCount = 0;
+        this.createCellLattice();
+        this.startTimer();
     }
 }
