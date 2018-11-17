@@ -5,12 +5,10 @@
  * A java class for a dead cell
  */
 
-/*package tumorSimulation;
-import java.util.Random;
-import java.util.HashMap;
-import java.util.Map;
+package tumorSimulation;
 
 public class DeadCell extends Cell {
-    /*cell.getCellType()
-     */
-//}
+    public DeadCell(){
+        this.setCellType("dead");
+    }
+}
