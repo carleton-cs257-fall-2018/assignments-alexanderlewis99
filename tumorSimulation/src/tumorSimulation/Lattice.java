@@ -1,27 +1,24 @@
 /**
  * Lattice.java
- * Alec Wang and Bat-Orgil Batjargal, 11/16/18.
+ * Alec Wang and Bat-Orgil Batjargal, 11/19/18.
  *
  * A java class for a two-dimensional square lattice of cells. It has the ability to update them over time.
  */
 
 package tumorSimulation;
-import javax.lang.model.type.NullType;
 import java.awt.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.Random;
 import java.awt.image.BufferedImage;
 
 public class Lattice extends BufferedImage{
 
-    private ArrayList<ArrayList> cellLattice= new ArrayList<ArrayList>();
-    private ArrayList<Point> cellWatchlist = new ArrayList<Point>();
-    private ArrayList<Point> cells_to_add_to_watchlist = new ArrayList<Point>();
-    private ArrayList<Point> cells_to_remove_from_watchlist = new ArrayList<Point>();
+    private ArrayList<ArrayList> cellLattice= new ArrayList<>();
+    private ArrayList<Point> cellWatchlist = new ArrayList<>();
+    private ArrayList<Point> cells_to_add_to_watchlist = new ArrayList<>();
+    private ArrayList<Point> cells_to_remove_from_watchlist = new ArrayList<>();
     private int numRows;
     private int numColumns;
     private int timestep;
@@ -32,7 +29,7 @@ public class Lattice extends BufferedImage{
      * @param width - number of columns in the lattice
      * @param imageType - type of bufferedImage for the lattice
      */
-    public Lattice(int height, int width, int imageType){
+    Lattice(int height, int width, int imageType){
         super(width, height, imageType);
         this.numRows = height;
         this.numColumns = width;
@@ -44,15 +41,13 @@ public class Lattice extends BufferedImage{
             }
             this.cellLattice.add(lattice_row);
         }
-
         Random rand = new Random();
-        int y_random_shot = rand.nextInt(height-1);
-        int x_random_shot = rand.nextInt(width-1);
-
-        Point first_stem_cell_coords = new Point(x_random_shot, y_random_shot);
-        Cell first_stem_cell = new AliveCell("stem");
+        int y_random = rand.nextInt(height-1);
+        int x_random = rand.nextInt(width-1);
+        Point first_stem_cell_coords = new Point(x_random, y_random);
+        Cell first_stem_cell = new StemCell();
         this.setCell(first_stem_cell_coords, first_stem_cell);
-        this.cellWatchlist.add(new Point(x_random_shot, y_random_shot));
+        this.cellWatchlist.add(first_stem_cell_coords);
     }
 
     /**
@@ -125,56 +120,61 @@ public class Lattice extends BufferedImage{
     public void updateCells(){
         this.timestep++;
         for (Point cell_coords: this.cellWatchlist) {
-            AliveCell cell = (AliveCell) this.getCell(cell_coords);
-            String cell_type = cell.getCellType();
-            if (cell_type == "stem" || cell_type == "non-stem"){
-                Map<String, Boolean> behavior = cell.getBehaviorForTimestep();
-                if(behavior.get("die")){
-                    this.kill_cell(cell_coords, cell);
+            String cell_type = this.getCell(cell_coords).getCellType();
+            AliveCell cell;
+            if (cell_type == "non-stem"){
+                cell = (NonStemCell) this.getCell(cell_coords);
+            } else {
+                cell = (StemCell) this.getCell(cell_coords);
+            }
+            Map<String, Boolean> behavior = cell.getBehaviorForTimestep();
+            if(behavior.get("die")){
+                this.kill_cell(cell_coords);
+            }
+            else { //migrate and divide are time-step independent
+                if(behavior.get("divide")){
+                    this.divide_cell(cell_coords, cell);
                 }
-                else { //migrate and divide are time-step independent
-                    if(behavior.get("divide")){
-                        this.divide_cell(cell_coords, cell);
+                if(behavior.get("migrate")){
+                    Point new_cell_coords = this.getEmptyAdjacentSpot(cell_coords);
+                    if (new_cell_coords != null){
+                        this.move_cell(cell_coords, new_cell_coords, cell);
                     }
-                    if(behavior.get("migrate")){
-                        Point new_cell_coords = this.getEmptyAdjacentSpot(cell_coords);
-                        if (new_cell_coords != null){
-                            this.move_cell(cell_coords, new_cell_coords, cell);
-                        }
-                    }
-                    //imperfect logic but runs much faster
-                    if(getEmptyAdjacentSpot(cell_coords)==null){
-                        this.cells_to_remove_from_watchlist.add(cell_coords);
-                    }
+                }
+                //imperfect logic but runs much faster
+                if(getEmptyAdjacentSpot(cell_coords)==null){
+                    this.cells_to_remove_from_watchlist.add(cell_coords);
                 }
             }
         }
-        for(Point new_active_cell: cells_to_add_to_watchlist){
-            this.cellWatchlist.add(new_active_cell);
-        }
-        for(Point dead_or_empty_cell: cells_to_remove_from_watchlist){
-            this.cellWatchlist.remove(dead_or_empty_cell);
-        }
+        this.cellWatchlist.addAll(cells_to_add_to_watchlist);
+        this.cellWatchlist.removeAll(cells_to_remove_from_watchlist);
         this.cells_to_add_to_watchlist.clear();
         this.cells_to_remove_from_watchlist.clear();
     }
 
     /**
      * Divides a cell by creating a daughter a cell
-     * @param cell_coords the coordinates of the cell that is dividing
+     * @param parent_cell_coords the coordinates of the cell that is dividing
      * @param parent - the cell that is dividing
      */
-    public void divide_cell(Point cell_coords, AliveCell parent){
-        Point daughter_cell_coordinates = getEmptyAdjacentSpot(cell_coords);
+    private void divide_cell(Point parent_cell_coords, AliveCell parent){
+        Point daughter_cell_coordinates = getEmptyAdjacentSpot(parent_cell_coords);
         if (daughter_cell_coordinates != null){
-            String daughter_cell_type = parent.get_celltype_of_new_daughter();
-            this.setCell(daughter_cell_coordinates, new AliveCell(daughter_cell_type));
+            String daughter_cell_type = parent.getCellTypeOfNewDaughter();
+            AliveCell daughter_cell;
+            if(daughter_cell_type == "non-stem"){
+                daughter_cell = new NonStemCell();
+            } else {
+                daughter_cell = new StemCell();
+            }
+            this.setCell(daughter_cell_coordinates, daughter_cell);
             this.updateCellColorInLattice(daughter_cell_coordinates, daughter_cell_type);
             this.cells_to_add_to_watchlist.add(daughter_cell_coordinates);
             if (parent.getCellType() == "non-stem") {
                 int current_max_proliferation = parent.getMaxProliferation();
                 if (current_max_proliferation == 1) {
-                    this.kill_cell(cell_coords, parent);
+                    this.kill_cell(parent_cell_coords);
                 } else {
                     parent.setMaxProliferation(current_max_proliferation - 1);
 
@@ -185,10 +185,9 @@ public class Lattice extends BufferedImage{
 
     /**
      * Set the cell's cell-type to dead and updates its pixel counterpart in the bufferedImage
-     * @param cell_coords
-     * @param cell
+     * @param cell_coords - the coordinates of the cell to kill
      */
-    public void kill_cell(Point cell_coords, Cell cell){
+    private void kill_cell(Point cell_coords){
         this.setCell(cell_coords, new DeadCell());
         this.updateCellColorInLattice(cell_coords, "dead");
         this.cells_to_remove_from_watchlist.add(cell_coords);
@@ -196,11 +195,11 @@ public class Lattice extends BufferedImage{
 
     /**
      * Moves a cell from one point to another point in the lattice and updates the pixel counterparts in the bufferedImage
-     * @param cell_coords
-     * @param new_cell_coords
-     * @param cell_to_move
+     * @param cell_coords - the current coordinates of the cell to move
+     * @param new_cell_coords - the new coordinates for the cell
+     * @param cell_to_move - the cell to move
      */
-    public void move_cell(Point cell_coords, Point new_cell_coords, Cell cell_to_move){
+    private void move_cell(Point cell_coords, Point new_cell_coords, Cell cell_to_move){
         this.setCell(cell_coords, new EmptyCell());
         this.updateCellColorInLattice(cell_coords, "empty");
         this.setCell(new_cell_coords, cell_to_move);
@@ -210,15 +209,15 @@ public class Lattice extends BufferedImage{
     }
 
     /**
-     * @return
+     * @return boolean - whether the lattice is full or not
      */
     public boolean isFull(){
         return (this.cellWatchlist.size()==0);
     }
     /**
      * Changes the color of a point in the bufferedImage
-     * @param cell_coords
-     * @param cell_type
+     * @param cell_coords - the coordinates of the cell
+     * @param cell_type - the type of cell
      */
     private void updateCellColorInLattice(Point cell_coords, String cell_type){
         int x = (int) cell_coords.getX();
@@ -247,8 +246,7 @@ public class Lattice extends BufferedImage{
         if (avaliableCoords.size() == 0){
             return null;
         }
-        Point new_coords = getRandomPointUsingMonteCarloSampling(avaliableCoords);
-        return new_coords;
+        return getRandomPointUsingMonteCarloSampling(avaliableCoords);
     }
 
     /**
@@ -292,7 +290,7 @@ public class Lattice extends BufferedImage{
      * @return neighbors - an ArrayList of coordinates of empty/dead neighbors
      */
     private ArrayList<Point> removeLivingNeighbors(ArrayList<Point> neighbors){
-        ArrayList<Point> neighbors_to_remove = new ArrayList<Point>();
+        ArrayList<Point> neighbors_to_remove = new ArrayList<>();
         for (Point neighbor_coordinate: neighbors){
             Cell cell = this.getCell(neighbor_coordinate);
             if (cell.getCellType().equals("stem") || cell.getCellType().equals("non-stem")){
@@ -311,7 +309,7 @@ public class Lattice extends BufferedImage{
      * @return an ArrayList of Points
      */
     private ArrayList<Point> removeNeighborsOutOfBounds(ArrayList<Point> neighbors){
-        ArrayList<Point> neighbors_to_remove = new ArrayList<Point>();
+        ArrayList<Point> neighbors_to_remove = new ArrayList<>();
         for (Point coordinate: neighbors) {
             int x = (int) coordinate.getX();
             int y = (int) coordinate.getY();
@@ -333,7 +331,7 @@ public class Lattice extends BufferedImage{
     private ArrayList<Point> getPotentialNeighborsCoords(Point cell_coords){
         int x = (int) cell_coords.getX();
         int y = (int) cell_coords.getY();
-        ArrayList<Point> all_eight_neighbors = new ArrayList<Point>();
+        ArrayList<Point> all_eight_neighbors = new ArrayList<>();
         for (int i = -1; i <= 1; i++){
             for (int j = -1; j <= 1; j++){
                 if (!(i == 0 && j == 0)){

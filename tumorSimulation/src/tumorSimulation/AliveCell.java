@@ -1,8 +1,8 @@
 /**
- * DeadCell.java
- * Alec Wang and Bat-Orgil Batjargal, 11/16/18.
+ * AliveCell.java
+ * Alec Wang and Bat-Orgil Batjargal, 11/19/18.
  *
- * A java class for a dead cell
+ * A java class for a living cell
  */
 
 package tumorSimulation;
@@ -20,8 +20,8 @@ public class AliveCell extends Cell {
     private double probability_of_dividing;
     private double probability_of_migrating;
 
-    public AliveCell(String assigned_cellType){
-        this.setGenericCellType(assigned_cellType);
+    public AliveCell(){
+
     }
 
     /**
@@ -35,27 +35,11 @@ public class AliveCell extends Cell {
         return behavior;
     }
 
-    /**
-     * Updates the cell's characteristics based on the cell-type
-     * @param cellType - the new celltype: stem, non-stem, or dead
-     */
-    public void setGenericCellType(String cellType) {
-        this.setCellType(cellType);
-        switch (cellType) {
-            case "stem":
-                this.setCellToStem();
-                break;
-            case "non-stem":
-                this.setCellToNonStem();
-                break;
-        }
-    }
-
     /** Gets the daughter's cell-type. Stem cells have a {10%} chance of creating another stem cell.
      * Non-stem cells have a {0%} chance of creating a non-stem cell
      * @return the cell-type of the daughter (either stem or non-stem)
      */
-    public String get_celltype_of_new_daughter(){
+    public String getCellTypeOfNewDaughter(){
         Random rand = new Random();
         double chance = rand.nextDouble();
         if (chance <= this.probability_of_daughter_stem_cell){
@@ -66,6 +50,21 @@ public class AliveCell extends Cell {
         }
     }
 
+    /**
+     * Gets the cell cycle time
+     * @return the cell's cell cycle time - affects the probability a cell divides each time-step
+     */
+    public int getCct() {
+        return this.cct;
+    }
+
+    /**
+     * Sets the cell cycle time - affects the probability a cell divides each time-step
+     * @param new_cct - the new cell cycle time for the cell
+     */
+    public void setCct(int new_cct) {
+        this.cct = new_cct;
+    }
 
     /**
      * @return max_proliferation - the number of times a cell can divide before dying
@@ -82,6 +81,50 @@ public class AliveCell extends Cell {
     }
 
     /**
+     * Get the probability of dying
+     * @return probability_of_dying - the probability a cell dies each timestep
+     */
+    public double getProbabilityOfDying() {
+        return this.probability_of_dying;
+    }
+
+    /** Sets the new probability a cell dies each timestep
+     */
+    public void setProbabilityOfDying(double new_probability_of_dying) {
+        this.probability_of_dying = new_probability_of_dying;
+    }
+
+    /**
+     * Get the motility speed
+     * @return motility speed - affects the probability each timestep a cell migrates
+     */
+    public double getMotilitySpeed() {
+        return this.motility_speed;
+    }
+
+    /**
+     * Sets the new motility speed of a cell
+     */
+    public void setMotilitySpeed(double new_motility_speed) {
+        this.motility_speed = new_motility_speed;
+    }
+
+    /**
+     * Get the motility speed
+     * @return motility speed - affects the probability each timestep a cell migrates
+     */
+    public double getProbabilityOfDaughterStemCell() {
+        return this.probability_of_daughter_stem_cell;
+    }
+
+    /**
+     * Sets the new motility speed of a cell
+     */
+    public void setProbabilityOfDaughterStemCell(double new_probability_of_daughter_stem_cell) {
+        this.probability_of_daughter_stem_cell = new_probability_of_daughter_stem_cell;
+    }
+
+    /**
      * Updates the probability of the cell dividing based on its cct (cell cycle time) and the timestep
      */
     public void updateProbabilityOfDividing() {
@@ -94,32 +137,6 @@ public class AliveCell extends Cell {
     public void updateProbabilityOfMigrating() {
         this.updateProbabilityOfDividing();
         this.probability_of_migrating = (1 - this.probability_of_dividing) * this.motility_speed  * this.timestep;
-    }
-
-    /**
-     * Set the cell's characteristics to those of a stem cell
-     */
-    private void setCellToStem() {
-        this.cct = 24;
-        this.max_proliferation = -1; //proliferates infinitely
-        this.probability_of_dying = 0; //immortal
-        this.motility_speed = 5;
-        this.probability_of_daughter_stem_cell = 0.1;
-        this.updateProbabilityOfDividing();
-        this.updateProbabilityOfMigrating();
-    }
-
-    /**
-     * Set the cell's characteristics to those of a non-stem cell
-     */
-    private void setCellToNonStem() {
-        this.cct = 24; //hours
-        this.max_proliferation = 10;
-        this.motility_speed = 5;
-        this.probability_of_dying = 0.01;
-        this.probability_of_daughter_stem_cell = 0;
-        this.updateProbabilityOfDividing();
-        this.updateProbabilityOfMigrating();
     }
 
     /**

@@ -1,6 +1,6 @@
 /**
  * Controller.java
- * Alec Wang and Bat-Orgil Batjargal, 11/16/18.
+ * Alec Wang and Bat-Orgil Batjargal, 11/19/18.
  *
  * A java class for a controller that creates a lattice.
  */
