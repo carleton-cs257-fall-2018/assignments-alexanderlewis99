@@ -170,6 +170,9 @@ public class Lattice extends BufferedImage{
             this.updateTraitVectorsOfCellsInWatchList();
             this.traitVectorJustUpdated = false;
         }
+        if(this.cellWatchlist.size()==0){
+            this.addNoLongerSurroundedLivingCellsToWatchList();
+        }
     }
 
     /**
@@ -179,7 +182,6 @@ public class Lattice extends BufferedImage{
     public void addNoLongerSurroundedLivingCellsToWatchList() {
         ArrayList<Point> cells_returned_to_watchlist = new ArrayList<>();
         for(Point cell_coordinates: this.retired_cells){
-//            String cell_type = this.getCell(cell_coordinates).getCellType();
             if (this.getEmptyAdjacentSpot(cell_coordinates) != null){
                 this.cellWatchlist.add(cell_coordinates);
                 cells_returned_to_watchlist.add(cell_coordinates);
@@ -213,7 +215,9 @@ public class Lattice extends BufferedImage{
                 }
             } //imperfect logic but runs much faster
             else {
+                //cell will not be dead and has no empty adjacent spots
                 this.cells_to_remove_from_watchlist.add(cell_coords);
+                this.retired_cells.add(cell_coords);
             }
         }
     }
