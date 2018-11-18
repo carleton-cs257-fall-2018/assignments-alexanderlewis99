@@ -10,23 +10,14 @@ package tumorSimulation;
 public class Cell {
     private String cellType;
 
-    /**
-     * Creates a new cell
-     */
     public Cell() {
 
     }
 
-    /** Gets the current cell-type
-     * @return cellType - the cell's cell-type
-     */
     public String getCellType() {
         return this.cellType;
     }
 
-    /** Sets a cell-type
-     * @param newCellType - the new cell-type for the cell
-     */
     public void setCellType(String newCellType) {
         this.cellType = newCellType;
     }

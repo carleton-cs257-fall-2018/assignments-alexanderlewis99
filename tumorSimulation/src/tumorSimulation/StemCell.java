@@ -25,9 +25,6 @@ public class StemCell extends AliveCell {
         this.updateProbabilityOfMigrating();
     }
 
-
-
-
     /**
      * Stem cells have a 0% chance of dying
      * @return boolean - whether the cell should die
