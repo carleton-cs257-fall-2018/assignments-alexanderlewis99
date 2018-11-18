@@ -237,7 +237,8 @@ public class Lattice extends BufferedImage{
      */
     private void divide_cell(Point parent_cell_coords, AliveCell parent){
         Point daughter_cell_coordinates = getEmptyAdjacentSpot(parent_cell_coords);
-        if (daughter_cell_coordinates != null){
+        //unnecessary check because of where the method is called but keep just in case
+//        if (daughter_cell_coordinates != null){
             String daughter_cell_type = parent.getCellTypeOfNewDaughter();
             AliveCell daughter_cell;
             if(daughter_cell_type == "non-stem"){
@@ -257,7 +258,7 @@ public class Lattice extends BufferedImage{
 
                 }
             }
-        }
+//        }
     }
 
     /**
