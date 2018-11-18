@@ -141,7 +141,6 @@ public class Controller {
                         updateWindowSizes();
                         updateTimeLabel();
                         updateTraitVector();
-                        System.out.println(cctSlider.getValue());
                     }
                 });
             }
