@@ -151,12 +151,12 @@ public class Controller {
     }
 
     public void updateTraitVector(){
-        int cct = (int) this.cctSlider.getValue();
-        int motilitySpeed = (int) this.MotilitySpeedSlider.getValue();
-        double probabilityOfDaughter = (double) this.ProbabilityOfDaughterSlider.getValue();
-        int maxProliferation = (int) this.MaxProliferationSlider.getValue();
-        double probabilityOfDying = (double) this.ProbabilityOfDyingSlider.getValue();
-        cellLattice.updateTraitVector(cct, motilitySpeed, probabilityOfDaughter, maxProliferation, probabilityOfDying);
+        int generalCct = (int) this.cctSlider.getValue();
+        int generalMotilitySpeed = (int) this.MotilitySpeedSlider.getValue();
+        double stemProbabilityOfDaughterIsStem = (double) this.ProbabilityOfDaughterSlider.getValue();
+        int nonstemMaxProliferation = (int) this.MaxProliferationSlider.getValue();
+        double nonstemProbabilityOfDying = (double) this.ProbabilityOfDyingSlider.getValue();
+        cellLattice.updateTraitVector(generalCct, generalMotilitySpeed, stemProbabilityOfDaughterIsStem, nonstemMaxProliferation, nonstemProbabilityOfDying);
     }
 
 

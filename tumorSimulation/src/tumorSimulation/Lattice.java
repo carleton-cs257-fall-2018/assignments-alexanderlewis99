@@ -30,6 +30,7 @@ public class Lattice extends BufferedImage{
     private int generalMotilitySpeed;
     private double nonStemProbabilityOfDying;
     private double stemProbabilityOfDaughter;
+    private boolean traitVectorJustUpdated = false;
 
 //
 
@@ -124,12 +125,69 @@ public class Lattice extends BufferedImage{
         this.cellLattice.set(y, lattice_row);
     }
 
-    public void updateTraitVector(int new_cct, int new_motility, double new_prob_daughter, int new_proflifration,  double new_prob_dying){
-        this.generalCct = new_cct;
-        this.generalMotilitySpeed = new_motility;
-        this.stemProbabilityOfDaughter = new_prob_daughter;
-        this.nonStemMaxProliferation = new_proflifration;
-        this.nonStemProbabilityOfDying = new_prob_dying;
+    /** Gets a stem or non-stem cell as an AliveCell object from the CellLattice
+     * @param cell_coordinates - the coordinates of the living cell
+     * @return a living cell
+     */
+    public AliveCell getLivingCell(Point cell_coordinates){
+        String cell_type = this.getCell(cell_coordinates).getCellType();
+        AliveCell cell;
+        if (cell_type == "non-stem"){
+            cell = (NonStemCell) this.getCell(cell_coordinates);
+        } else {
+            cell = (StemCell) this.getCell(cell_coordinates);
+        }
+        return cell;
+    }
+
+    /** Changes the trait vectors for new cells
+     * @param newGeneralCct - the new cell cycle time for all cells
+     * @param newGeneralMotilitySpeed - the new motility speed for all cells
+     * @param newStemProbabilityOfDaughterIsStem - the new probability for stem cells that their daughter cell is a stem cell
+     * @param newNonStemMaxProliferation - the new max proliferation limit for non stem cells
+     * @param newNonStemProbabilityOfDying - the new probability of dying for non stem cells
+     */
+    public void updateTraitVector(int newGeneralCct, int newGeneralMotilitySpeed, double newStemProbabilityOfDaughterIsStem, int newNonStemMaxProliferation,  double newNonStemProbabilityOfDying){
+        if (this.generalCct != newGeneralCct){
+            this.generalCct = newGeneralCct;
+            this.traitVectorJustUpdated = true;
+        }
+        if (this.generalMotilitySpeed != newGeneralMotilitySpeed){
+            this.generalMotilitySpeed = newGeneralMotilitySpeed;
+            this.traitVectorJustUpdated = true;
+        }
+        if (this.stemProbabilityOfDaughter != newStemProbabilityOfDaughterIsStem){
+            this.stemProbabilityOfDaughter = newStemProbabilityOfDaughterIsStem;
+            this.traitVectorJustUpdated = true;
+        }
+        if (this.nonStemMaxProliferation != newNonStemMaxProliferation){
+            this.nonStemMaxProliferation = newNonStemMaxProliferation;
+            this.traitVectorJustUpdated = true;
+        }
+        if (this.nonStemProbabilityOfDying != newNonStemProbabilityOfDying){
+            this.nonStemProbabilityOfDying = newNonStemProbabilityOfDying;
+            this.traitVectorJustUpdated = true;
+        }
+    }
+
+    /**
+     * Updates the trait vector of currently actively cells in the cellWatchList
+     */
+    private void updateTraitVectorsOfCellsInWatchList(){
+        for (Point cell_coordinates: this.cellWatchlist) {
+            AliveCell cell = this.getLivingCell(cell_coordinates);
+            cell.setCct(this.generalCct);
+            cell.setMotilitySpeed(this.generalMotilitySpeed);
+            if(cell.getCellType() == "stem"){
+                cell.setProbabilityOfDaughterStemCell(this.stemProbabilityOfDaughter );
+
+            } else {
+                cell.setMaxProliferation(this.nonStemMaxProliferation );
+                cell.setProbabilityOfDying(this.nonStemProbabilityOfDying);
+            }
+            cell.updateProbabilityOfDividing();
+            cell.updateProbabilityOfMigrating();
+        }
     }
 
     /**
@@ -138,13 +196,7 @@ public class Lattice extends BufferedImage{
     public void updateCells(){
         this.timestep++;
         for (Point cell_coords: this.cellWatchlist) {
-            String cell_type = this.getCell(cell_coords).getCellType();
-            AliveCell cell;
-            if (cell_type == "non-stem"){
-                cell = (NonStemCell) this.getCell(cell_coords);
-            } else {
-                cell = (StemCell) this.getCell(cell_coords);
-            }
+            AliveCell cell = getLivingCell(cell_coords);
             Map<String, Boolean> behavior = cell.getBehaviorForTimestep();
             if(behavior.get("die")){
                 this.kill_cell(cell_coords);
@@ -169,6 +221,10 @@ public class Lattice extends BufferedImage{
         this.cellWatchlist.removeAll(cells_to_remove_from_watchlist);
         this.cells_to_add_to_watchlist.clear();
         this.cells_to_remove_from_watchlist.clear();
+        if(this.traitVectorJustUpdated){
+            this.updateTraitVectorsOfCellsInWatchList();
+            this.traitVectorJustUpdated = false;
+        }
     }
 
     /**
