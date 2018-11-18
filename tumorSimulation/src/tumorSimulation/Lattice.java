@@ -22,6 +22,7 @@ public class Lattice extends BufferedImage{
     private ArrayList<Point> cellWatchlist = new ArrayList<>();
     private ArrayList<Point> cells_to_add_to_watchlist = new ArrayList<>();
     private ArrayList<Point> cells_to_remove_from_watchlist = new ArrayList<>();
+    private ArrayList<Point> retired_cells = new ArrayList<>();
     private int numRows;
     private int numColumns;
     private int timestep;
@@ -169,6 +170,22 @@ public class Lattice extends BufferedImage{
             this.updateTraitVectorsOfCellsInWatchList();
             this.traitVectorJustUpdated = false;
         }
+    }
+
+    /**
+     * Takes alive cells that were removed from cellWatchList because they were surrounded
+     * and returns them to cellWatchList if they are no longer surrounded
+     */
+    public void addNoLongerSurroundedLivingCellsToWatchList() {
+        ArrayList<Point> cells_returned_to_watchlist = new ArrayList<>();
+        for(Point cell_coordinates: this.retired_cells){
+//            String cell_type = this.getCell(cell_coordinates).getCellType();
+            if (this.getEmptyAdjacentSpot(cell_coordinates) != null){
+                this.cellWatchlist.add(cell_coordinates);
+                cells_returned_to_watchlist.add(cell_coordinates);
+            }
+        }
+        this.retired_cells.removeAll(cells_returned_to_watchlist);
     }
 
     /**
