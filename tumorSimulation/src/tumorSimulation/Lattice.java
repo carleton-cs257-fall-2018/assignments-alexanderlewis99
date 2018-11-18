@@ -201,18 +201,21 @@ public class Lattice extends BufferedImage{
             if(behavior.get("die")){
                 this.kill_cell(cell_coords);
             }
-            else { //migrate and divide are time-step independent
-                if(behavior.get("divide")){
-                    this.divide_cell(cell_coords, cell);
-                }
-                if(behavior.get("migrate")){
-                    Point new_cell_coords = this.getEmptyAdjacentSpot(cell_coords);
-                    if (new_cell_coords != null){
-                        this.move_cell(cell_coords, new_cell_coords, cell);
+            else {
+                //migrate and divide are time-step independent
+                if(this.getEmptyAdjacentSpot(cell_coords)!=null){
+                    if(behavior.get("divide")){
+                        this.divide_cell(cell_coords, cell);
                     }
-                }
-                //imperfect logic but runs much faster
-                if(getEmptyAdjacentSpot(cell_coords)==null){
+                    if(behavior.get("migrate")){
+                        Point new_cell_coords = this.getEmptyAdjacentSpot(cell_coords);
+                        //need to check twice because divide may eliminate last avaliable spot
+                        if (new_cell_coords != null){
+                            this.move_cell(cell_coords, new_cell_coords, cell);
+                        }
+                    }
+                } //imperfect logic but runs much faster
+                else {
                     this.cells_to_remove_from_watchlist.add(cell_coords);
                 }
             }
