@@ -20,9 +20,32 @@
         <AnchorPane fx:id="settings"
                     AnchorPane.topAnchor="400" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="20"
                     style="-fx-background-color:lightCoral; -fx-border-color:black; -fx-border-width:1px 0px 1px 0px;">
-            <Label AnchorPane.leftAnchor="20" AnchorPane.bottomAnchor="20" style="-fx-font-size: 100%" text="Stem Cell Cycle Time" />
-            <Slider fx:id="cctSlider" majorTickUnit="1" max="24" min="1" showTickMarks="true" snapToTicks="true"
-                    AnchorPane.leftAnchor="20" AnchorPane.bottomAnchor="0"/>
+
+            <Label AnchorPane.leftAnchor="20" AnchorPane.bottomAnchor="45" style="-fx-font-size: 100%" text="General Cell Cycle Time" />
+            <Slider fx:id="cctSlider" AnchorPane.leftAnchor="20" AnchorPane.bottomAnchor="25"
+                    showTickMarks="true" snapToTicks="true" majorTickUnit="6" min="1" max="60" value="24"/>
+
+            <Label AnchorPane.leftAnchor="300" AnchorPane.bottomAnchor="45" style="-fx-font-size: 100%" text="General Motility speed" />
+            <Slider fx:id="MotilitySpeedSlider" AnchorPane.leftAnchor="300" AnchorPane.bottomAnchor="25"
+                    showTickMarks="true" snapToTicks="true" majorTickUnit="2" min="1" max="24" value="5"/>
+
+
+            <Label AnchorPane.leftAnchor="480" AnchorPane.bottomAnchor="45" style="-fx-font-size: 100%" text="Stem cell % Daughter Is Stem Cell" />
+            <Slider fx:id="ProbabilityOfDaughterSlider" AnchorPane.leftAnchor="480" AnchorPane.bottomAnchor="25"
+                    showTickMarks="true" snapToTicks="true" majorTickUnit=".2" min="0.1" max="1" value="0.1"/>
+
+
+            <Label AnchorPane.leftAnchor="20" AnchorPane.bottomAnchor="20" style="-fx-font-size: 100%" text="Non-stem cell max prolif." />
+            <Slider fx:id="MaxProliferationSlider" AnchorPane.leftAnchor="20" AnchorPane.bottomAnchor="0"
+                    showTickMarks="true" snapToTicks="true" majorTickUnit="2" min="1" max="10" value="10"/>
+
+            <Label AnchorPane.leftAnchor="300" AnchorPane.bottomAnchor="20" style="-fx-font-size: 100%" text="Non-stem cell % Of Dying" />
+            <Slider fx:id="ProbabilityOfDyingSlider" AnchorPane.leftAnchor="300" AnchorPane.bottomAnchor="0"
+                    showTickMarks="true" majorTickUnit=".2" min="0.01" max="1" value="0.01"/>
+
+
+
+
         </AnchorPane>
 
     </AnchorPane>

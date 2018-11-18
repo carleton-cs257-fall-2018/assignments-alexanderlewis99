@@ -6,6 +6,9 @@
  */
 
 package tumorSimulation;
+import javafx.fxml.FXML;
+import javafx.scene.control.Slider;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +25,13 @@ public class Lattice extends BufferedImage{
     private int numRows;
     private int numColumns;
     private int timestep;
+    private int generalCct;
+    private int nonStemMaxProliferation;
+    private int generalMotilitySpeed;
+    private double nonStemProbabilityOfDying;
+    private double stemProbabilityOfDaughter;
+
+//
 
     /**
      * Constructor for a lattice of cells
@@ -114,6 +124,14 @@ public class Lattice extends BufferedImage{
         this.cellLattice.set(y, lattice_row);
     }
 
+    public void updateTraitVector(int new_cct, int new_motility, double new_prob_daughter, int new_proflifration,  double new_prob_dying){
+        this.generalCct = new_cct;
+        this.generalMotilitySpeed = new_motility;
+        this.stemProbabilityOfDaughter = new_prob_daughter;
+        this.nonStemMaxProliferation = new_proflifration;
+        this.nonStemProbabilityOfDying = new_prob_dying;
+    }
+
     /**
      * Iterates through the cellArray, receives the behavior of each cell, and acts upon it.
      */
@@ -164,9 +182,9 @@ public class Lattice extends BufferedImage{
             String daughter_cell_type = parent.getCellTypeOfNewDaughter();
             AliveCell daughter_cell;
             if(daughter_cell_type == "non-stem"){
-                daughter_cell = new NonStemCell();
+                daughter_cell = new NonStemCell(this.generalCct, this.nonStemMaxProliferation , this.generalMotilitySpeed, this.nonStemProbabilityOfDying);
             } else {
-                daughter_cell = new StemCell();
+                daughter_cell = new StemCell(this.generalCct, this.generalMotilitySpeed, this.stemProbabilityOfDaughter);
             }
             this.setCell(daughter_cell_coordinates, daughter_cell);
             this.updateCellColorInLattice(daughter_cell_coordinates, daughter_cell_type);

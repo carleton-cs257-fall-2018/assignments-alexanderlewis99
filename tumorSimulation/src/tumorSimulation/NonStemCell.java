@@ -9,12 +9,17 @@ package tumorSimulation;
 
 public class NonStemCell extends AliveCell {
 
+
     public NonStemCell(){
+        this (24, 10, 5, 0.01);
+    }
+
+    public NonStemCell(int cct, int MaxProliferation, int MotilitySpeed, double ProbabilityOfDying){
         this.setCellType("non-stem");
-        this.setCct(24);
-        this.setMaxProliferation(10); //proliferates infinitely
-        this.setMotilitySpeed(5);
-        this.setProbabilityOfDying(0.01); //immortal
+        this.setCct(cct);
+        this.setMaxProliferation(MaxProliferation);
+        this.setMotilitySpeed(MotilitySpeed);
+        this.setProbabilityOfDying(ProbabilityOfDying);
         this.setProbabilityOfDaughterStemCell(0);
         this.updateProbabilityOfDividing();
         this.updateProbabilityOfMigrating();

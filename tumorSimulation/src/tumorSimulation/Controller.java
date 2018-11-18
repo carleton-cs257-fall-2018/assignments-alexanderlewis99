@@ -14,6 +14,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
@@ -46,6 +47,13 @@ public class Controller {
     private int timeCount;
     private boolean paused;
     private Timer timer;
+    @FXML private Slider cctSlider;
+    @FXML private Slider MaxProliferationSlider;
+    @FXML private Slider MotilitySpeedSlider;
+    @FXML private Slider ProbabilityOfDyingSlider;
+    @FXML private Slider ProbabilityOfDaughterSlider;
+
+
 
     public Controller() {
         this.paused = false;
@@ -132,6 +140,8 @@ public class Controller {
                         updateCells();
                         updateWindowSizes();
                         updateTimeLabel();
+                        updateTraitVector();
+                        System.out.println(cctSlider.getValue());
                     }
                 });
             }
@@ -140,6 +150,17 @@ public class Controller {
         long frameTimeInMilliseconds = (long)(1000.0 / FRAMES_PER_SECOND);
         this.timer.schedule(timerTask, 0, frameTimeInMilliseconds);
     }
+
+    public void updateTraitVector(){
+        int cct = (int) this.cctSlider.getValue();
+        int motilitySpeed = (int) this.MotilitySpeedSlider.getValue();
+        double probabilityOfDaughter = (double) this.ProbabilityOfDaughterSlider.getValue();
+        int maxProliferation = (int) this.MaxProliferationSlider.getValue();
+        double probabilityOfDying = (double) this.ProbabilityOfDyingSlider.getValue();
+        cellLattice.updateTraitVector(cct, motilitySpeed, probabilityOfDaughter, maxProliferation, probabilityOfDying);
+    }
+
+
 
     /**
      * Pauses the simulation when the pause button is clicked.

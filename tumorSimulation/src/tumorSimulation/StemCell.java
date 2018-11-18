@@ -10,15 +10,23 @@ package tumorSimulation;
 public class StemCell extends AliveCell {
 
     public StemCell(){
+        this(24, 5, 0.1);
+    }
+
+
+    public StemCell(int cct, int MotilitySpeed, double ProbabilityOfDaugter){
         this.setCellType("stem");
-        this.setCct(24);
+        this.setCct(cct);
         this.setMaxProliferation(-1); //proliferates infinitely
         this.setProbabilityOfDying(0); //immortal
-        this.setMotilitySpeed(5);
-        this.setProbabilityOfDaughterStemCell(0.1);
+        this.setMotilitySpeed(MotilitySpeed);
+        this.setProbabilityOfDaughterStemCell(ProbabilityOfDaugter);
         this.updateProbabilityOfDividing();
         this.updateProbabilityOfMigrating();
     }
+
+
+
 
     /**
      * Stem cells have a 0% chance of dying
