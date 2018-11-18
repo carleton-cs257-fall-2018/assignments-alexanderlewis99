@@ -30,9 +30,7 @@ public class Lattice extends BufferedImage{
     private int generalMotilitySpeed;
     private double nonStemProbabilityOfDying;
     private double stemProbabilityOfDaughter;
-    private boolean traitVectorJustUpdated = false;
-
-//
+    private boolean traitVectorJustUpdated;
 
     /**
      * Constructor for a lattice of cells
@@ -40,11 +38,24 @@ public class Lattice extends BufferedImage{
      * @param width - number of columns in the lattice
      * @param imageType - type of bufferedImage for the lattice
      */
-    Lattice(int height, int width, int imageType){
+    public Lattice(int height, int width, int imageType){
         super(width, height, imageType);
         this.numRows = height;
         this.numColumns = width;
+        this.generalCct = 24;
+        this.nonStemMaxProliferation = 10;
+        this.generalMotilitySpeed = 5;
+        this.nonStemProbabilityOfDying = 0.01;
+        this.stemProbabilityOfDaughter = 0.1;
+        this.traitVectorJustUpdated = false;
         this.timestep = 0;
+        this.constructLattice();
+    }
+
+    /**
+     * Constructs the two dimensional ArrayList so that it contains all the cells in the lattice
+     */
+    public void constructLattice(){
         for (int i = 0; i < this.numRows; i++){
             ArrayList<Cell> lattice_row = new ArrayList<Cell>();
             for (int j = 0; j < this.numColumns; j++){
@@ -53,8 +64,8 @@ public class Lattice extends BufferedImage{
             this.cellLattice.add(lattice_row);
         }
         Random rand = new Random();
-        int y_random = rand.nextInt(height-1);
-        int x_random = rand.nextInt(width-1);
+        int y_random = rand.nextInt(this.numRows-1);
+        int x_random = rand.nextInt(this.numColumns-1);
         Point first_stem_cell_coords = new Point(x_random, y_random);
         Cell first_stem_cell = new StemCell();
         this.setCell(first_stem_cell_coords, first_stem_cell);
@@ -140,6 +151,131 @@ public class Lattice extends BufferedImage{
         return cell;
     }
 
+    /**
+     * Iterates through the cellArray, receives the behavior of each cell, and acts upon it.
+     */
+    public void updateCells(){
+        this.timestep++;
+        for (Point cell_coords: this.cellWatchlist) {
+            AliveCell cell = getLivingCell(cell_coords);
+            Map<String, Boolean> behavior = cell.getBehaviorForTimestep();
+            this.updateCellBasedOnBehavior(cell, cell_coords, behavior);
+        }
+        this.cellWatchlist.addAll(cells_to_add_to_watchlist);
+        this.cellWatchlist.removeAll(cells_to_remove_from_watchlist);
+        this.cells_to_add_to_watchlist.clear();
+        this.cells_to_remove_from_watchlist.clear();
+        if(this.traitVectorJustUpdated){
+            this.updateTraitVectorsOfCellsInWatchList();
+            this.traitVectorJustUpdated = false;
+        }
+    }
+
+    /**
+     * Updates the cell and the cellLattice based on the cell's behavior
+     * @param cell - the cell to update
+     * @param cell_coords - the coordinates of the cell
+     * @param behavior - the dictionary detailing whether the cell dies, divides, and/or migrates
+     */
+    private void updateCellBasedOnBehavior(AliveCell cell, Point cell_coords, Map<String, Boolean> behavior){
+        if(behavior.get("die")){
+            this.kill_cell(cell_coords);
+        }
+        else {
+            //migrate and divide are time-step independent
+            if(this.getEmptyAdjacentSpot(cell_coords)!=null){
+                if(behavior.get("divide")){
+                    this.divide_cell(cell_coords, cell);
+                }
+                if(behavior.get("migrate")){
+                    Point new_cell_coords = this.getEmptyAdjacentSpot(cell_coords);
+                    //need to check twice because divide may fill the only available spot
+                    if (new_cell_coords != null){
+                        this.move_cell(cell_coords, new_cell_coords, cell);
+                    }
+                }
+            } //imperfect logic but runs much faster
+            else {
+                this.cells_to_remove_from_watchlist.add(cell_coords);
+            }
+        }
+    }
+
+    /**
+     * Divides a cell by creating a daughter a cell
+     * @param parent_cell_coords the coordinates of the cell that is dividing
+     * @param parent - the cell that is dividing
+     */
+    private void divide_cell(Point parent_cell_coords, AliveCell parent){
+        Point daughter_cell_coordinates = getEmptyAdjacentSpot(parent_cell_coords);
+        //unnecessary check because of where the method is called but keep just in case
+//        if (daughter_cell_coordinates != null){
+            String daughter_cell_type = parent.getCellTypeOfNewDaughter();
+            AliveCell daughter_cell = this.getNewDaughterCell(daughter_cell_type);
+            this.setCell(daughter_cell_coordinates, daughter_cell);
+            this.updateCellColorInLattice(daughter_cell_coordinates, daughter_cell_type);
+            this.cells_to_add_to_watchlist.add(daughter_cell_coordinates);
+            this.checkMaxProliferationAfterDivision(parent, parent_cell_coords);
+//        }
+    }
+
+    /**
+     * Gets a new StemCell or NonStemCell
+     * @param daughter_cell_type - the cell type of the daughter
+     * @return a StemCell or NonStemCell depending on the daughter cell-type
+     */
+    private AliveCell getNewDaughterCell(String daughter_cell_type){
+        AliveCell daughter_cell;
+        if(daughter_cell_type == "non-stem"){
+            daughter_cell = new NonStemCell(this.generalCct, this.nonStemMaxProliferation , this.generalMotilitySpeed, this.nonStemProbabilityOfDying);
+        } else {
+            daughter_cell = new StemCell(this.generalCct, this.generalMotilitySpeed, this.stemProbabilityOfDaughter);
+        }
+        return daughter_cell;
+    }
+
+    /**
+     * Set the cell's cell-type to dead and updates its pixel counterpart in the bufferedImage
+     * @param cell_coords - the coordinates of the cell to kill
+     */
+    private void kill_cell(Point cell_coords){
+        this.setCell(cell_coords, new DeadCell());
+        this.updateCellColorInLattice(cell_coords, "dead");
+        this.cells_to_remove_from_watchlist.add(cell_coords);
+    }
+
+    /**
+     * Checks the MaxProliferation of the cell and, if it is a non-stem cell, kills it if it hits 0
+     * @param parent - the parent cell
+     * @param parent_coordinates - the coordinates of the parent cell
+     */
+    private void checkMaxProliferationAfterDivision(AliveCell parent, Point parent_coordinates){
+        if (parent.getCellType() == "non-stem") {
+            int current_max_proliferation = parent.getMaxProliferation();
+            if (current_max_proliferation == 1) {
+                this.kill_cell(parent_coordinates);
+            } else {
+                parent.setMaxProliferation(current_max_proliferation - 1);
+
+            }
+        }
+    }
+
+    /**
+     * Moves a cell from one point to another point in the lattice and updates the pixel counterparts in the bufferedImage
+     * @param cell_coords - the current coordinates of the cell to move
+     * @param new_cell_coords - the new coordinates for the cell
+     * @param cell_to_move - the cell to move
+     */
+    private void move_cell(Point cell_coords, Point new_cell_coords, Cell cell_to_move){
+        this.setCell(cell_coords, new EmptyCell());
+        this.updateCellColorInLattice(cell_coords, "empty");
+        this.setCell(new_cell_coords, cell_to_move);
+        this.updateCellColorInLattice(new_cell_coords, cell_to_move.getCellType());
+        this.cells_to_add_to_watchlist.add(new_cell_coords);
+        this.cells_to_remove_from_watchlist.add(cell_coords);
+    }
+
     /** Changes the trait vectors for new cells
      * @param newGeneralCct - the new cell cycle time for all cells
      * @param newGeneralMotilitySpeed - the new motility speed for all cells
@@ -188,121 +324,6 @@ public class Lattice extends BufferedImage{
             cell.updateProbabilityOfDividing();
             cell.updateProbabilityOfMigrating();
         }
-    }
-
-    /**
-     * Iterates through the cellArray, receives the behavior of each cell, and acts upon it.
-     */
-    public void updateCells(){
-        this.timestep++;
-        for (Point cell_coords: this.cellWatchlist) {
-            AliveCell cell = getLivingCell(cell_coords);
-            Map<String, Boolean> behavior = cell.getBehaviorForTimestep();
-            this.updateCellBasedOnBehavior(cell, cell_coords, behavior);
-        }
-        this.cellWatchlist.addAll(cells_to_add_to_watchlist);
-        this.cellWatchlist.removeAll(cells_to_remove_from_watchlist);
-        this.cells_to_add_to_watchlist.clear();
-        this.cells_to_remove_from_watchlist.clear();
-        if(this.traitVectorJustUpdated){
-            this.updateTraitVectorsOfCellsInWatchList();
-            this.traitVectorJustUpdated = false;
-        }
-    }
-
-    /**
-     * Updates the cell and the cellLattice based on the cell's behavior
-     * @param cell - the cell to update
-     * @param cell_coords - the coordinates of the cell
-     * @param behavior - the dictionary detailing whether the cell dies, divides, and/or migrates
-     */
-    private void updateCellBasedOnBehavior(AliveCell cell, Point cell_coords, Map<String, Boolean> behavior){
-        if(behavior.get("die")){
-            this.kill_cell(cell_coords);
-        }
-        else {
-            //migrate and divide are time-step independent
-            if(this.getEmptyAdjacentSpot(cell_coords)!=null){
-                if(behavior.get("divide")){
-                    this.divide_cell(cell_coords, cell);
-                }
-                if(behavior.get("migrate")){
-                    Point new_cell_coords = this.getEmptyAdjacentSpot(cell_coords);
-                    //need to check twice because divide may eliminate last avaliable spot
-                    if (new_cell_coords != null){
-                        this.move_cell(cell_coords, new_cell_coords, cell);
-                    }
-                }
-            } //imperfect logic but runs much faster
-            else {
-                this.cells_to_remove_from_watchlist.add(cell_coords);
-            }
-        }
-    }
-
-    /**
-     * Divides a cell by creating a daughter a cell
-     * @param parent_cell_coords the coordinates of the cell that is dividing
-     * @param parent - the cell that is dividing
-     */
-    private void divide_cell(Point parent_cell_coords, AliveCell parent){
-        Point daughter_cell_coordinates = getEmptyAdjacentSpot(parent_cell_coords);
-        //unnecessary check because of where the method is called but keep just in case
-//        if (daughter_cell_coordinates != null){
-            String daughter_cell_type = parent.getCellTypeOfNewDaughter();
-            AliveCell daughter_cell;
-            if(daughter_cell_type == "non-stem"){
-                daughter_cell = new NonStemCell(this.generalCct, this.nonStemMaxProliferation , this.generalMotilitySpeed, this.nonStemProbabilityOfDying);
-            } else {
-                daughter_cell = new StemCell(this.generalCct, this.generalMotilitySpeed, this.stemProbabilityOfDaughter);
-            }
-            this.setCell(daughter_cell_coordinates, daughter_cell);
-            this.updateCellColorInLattice(daughter_cell_coordinates, daughter_cell_type);
-            this.cells_to_add_to_watchlist.add(daughter_cell_coordinates);
-            this.checkMaxProliferationAfterDivision(parent, parent_cell_coords);
-//        }
-    }
-
-    /**
-     * Set the cell's cell-type to dead and updates its pixel counterpart in the bufferedImage
-     * @param cell_coords - the coordinates of the cell to kill
-     */
-    private void kill_cell(Point cell_coords){
-        this.setCell(cell_coords, new DeadCell());
-        this.updateCellColorInLattice(cell_coords, "dead");
-        this.cells_to_remove_from_watchlist.add(cell_coords);
-    }
-
-    /**
-     * Checks the MaxProliferation of the cell and, if it is a non-stem cell, kills it if it hits 0
-     * @param parent - the parent cell
-     * @param parent_coordinates - the coordinates of the parent cell
-     */
-    private void checkMaxProliferationAfterDivision(AliveCell parent, Point parent_coordinates){
-        if (parent.getCellType() == "non-stem") {
-            int current_max_proliferation = parent.getMaxProliferation();
-            if (current_max_proliferation == 1) {
-                this.kill_cell(parent_coordinates);
-            } else {
-                parent.setMaxProliferation(current_max_proliferation - 1);
-
-            }
-        }
-    }
-
-    /**
-     * Moves a cell from one point to another point in the lattice and updates the pixel counterparts in the bufferedImage
-     * @param cell_coords - the current coordinates of the cell to move
-     * @param new_cell_coords - the new coordinates for the cell
-     * @param cell_to_move - the cell to move
-     */
-    private void move_cell(Point cell_coords, Point new_cell_coords, Cell cell_to_move){
-        this.setCell(cell_coords, new EmptyCell());
-        this.updateCellColorInLattice(cell_coords, "empty");
-        this.setCell(new_cell_coords, cell_to_move);
-        this.updateCellColorInLattice(new_cell_coords, cell_to_move.getCellType());
-        this.cells_to_add_to_watchlist.add(new_cell_coords);
-        this.cells_to_remove_from_watchlist.add(cell_coords);
     }
 
     /**
