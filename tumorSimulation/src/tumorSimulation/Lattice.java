@@ -289,7 +289,7 @@ public class Lattice extends BufferedImage{
     /**
      * @return boolean - whether the lattice is full or not
      */
-    public boolean isFull(){
+    public boolean isDone(){
         return (this.cellWatchlist.size()==0);
     }
     /**

@@ -82,7 +82,7 @@ public class Controller {
      * Updates the cells if the cell lattice is not full
      */
     private void updateCells(){
-        if (cellLattice.isFull()){
+        if (cellLattice.isDone()){
             this.timer.cancel();
             this.pauseButton.setText("Continue");
             this.paused = true;
@@ -166,7 +166,7 @@ public class Controller {
      * Will reset the simulation if the simulation has finished.
      */
     public void onPauseButton(ActionEvent actionEvent) {
-        if (cellLattice.isFull()){
+        if (cellLattice.isDone()){
             this.resetSimulation();
         } else {
             this.togglePauseButtonAndTimer();
