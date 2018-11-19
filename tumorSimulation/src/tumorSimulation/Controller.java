@@ -36,11 +36,11 @@ public class Controller implements EventHandler<MouseEvent>{
     @FXML private AnchorPane programWindow;
     @FXML private AnchorPane settings;
     @FXML private ImageView cellLatticeImageView;
-    @FXML private Slider cctSlider;
-    @FXML private Slider MaxProliferationSlider;
-    @FXML private Slider MotilitySpeedSlider;
-    @FXML private Slider ProbabilityOfDyingSlider;
-    @FXML private Slider ProbabilityOfDaughterSlider;
+    @FXML private Slider cellDivisionSpeedSlider;
+    @FXML private Slider nonstemDeathFromDivisionSlider;
+    @FXML private Slider cellMovementSpeedSlider;
+    @FXML private Slider nonstemRegularDeathRateSlider;
+    @FXML private Slider symmetricStemCellDivisionSlider;
 
     @FXML private AnchorPane instructionsView;
 
@@ -148,11 +148,11 @@ public class Controller implements EventHandler<MouseEvent>{
      *         probability of each non-stem cell dying each time-step
      */
     public void updateTraitVector(){
-        int generalCct = 24 - (int) this.cctSlider.getValue() + 1;
-        int generalMotilitySpeed = (int) this.MotilitySpeedSlider.getValue();
-        double stemProbabilityOfDaughterIsStem = this.ProbabilityOfDaughterSlider.getValue();
-        int nonStemMaxProliferation = (int) this.MaxProliferationSlider.getValue();
-        double nonStemProbabilityOfDying = this.ProbabilityOfDyingSlider.getValue();
+        int generalCct = 24 - (int) this.cellDivisionSpeedSlider.getValue() + 1;
+        int generalMotilitySpeed = (int) this.cellMovementSpeedSlider.getValue();
+        double stemProbabilityOfDaughterIsStem = this.symmetricStemCellDivisionSlider.getValue();
+        int nonStemMaxProliferation = 10 - (int) this.nonstemDeathFromDivisionSlider.getValue() + 1;
+        double nonStemProbabilityOfDying = this.nonstemRegularDeathRateSlider.getValue();
         this.cellLattice.updateCellTraits(generalCct, generalMotilitySpeed, stemProbabilityOfDaughterIsStem,
                 nonStemMaxProliferation, nonStemProbabilityOfDying);
     }
@@ -166,11 +166,11 @@ public class Controller implements EventHandler<MouseEvent>{
     }
 
     public void onResetSlidersButton(ActionEvent actionEvent) {
-        this.cctSlider.setValue(1);
-        this.MotilitySpeedSlider.setValue(5);
-        this.ProbabilityOfDaughterSlider.setValue(0.1);
-        this.MaxProliferationSlider.setValue(10);
-        this.ProbabilityOfDyingSlider.setValue(0.01);
+        this.cellDivisionSpeedSlider.setValue(1);
+        this.cellMovementSpeedSlider.setValue(5);
+        this.symmetricStemCellDivisionSlider.setValue(0.1);
+        this.nonstemDeathFromDivisionSlider.setValue(1);
+        this.nonstemRegularDeathRateSlider.setValue(0.01);
     }
 
     public void onResetButton(ActionEvent actionEvent) {
@@ -178,12 +178,14 @@ public class Controller implements EventHandler<MouseEvent>{
     }
 
     public void onInstructionsButton(ActionEvent actionEvent) {
-        if (this.paused) {
-            this.resumeSimulation();
-            this.instructionsButton.setText("Instructions");
-        } else {
+        if (this.instructionsButton.getText().equals("Instructions")) {
             this.pauseSimulation();
+            this.paused = true;
             this.instructionsButton.setText("Return to simulation");
+        } else {
+            this.resumeSimulation();
+            this.paused = false;
+            this.instructionsButton.setText("Instructions");
         }
         this.simulationView.setVisible(!(this.simulationView.isVisible()));
         this.instructionsView.setVisible(!(this.instructionsView.isVisible()));

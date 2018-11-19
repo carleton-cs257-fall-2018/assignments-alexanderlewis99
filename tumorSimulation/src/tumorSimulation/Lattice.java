@@ -6,9 +6,6 @@
  */
 
 package tumorSimulation;
-import javafx.fxml.FXML;
-import javafx.scene.control.Slider;
-
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,7 +22,6 @@ public class Lattice extends BufferedImage{
     private ArrayList<Point> surrounded_living_cells = new ArrayList<>();
     private int numRows;
     private int numColumns;
-    private int timestep;
     private int generalCct;
     private int nonStemMaxProliferation;
     private int generalMotilitySpeed;
@@ -49,7 +45,6 @@ public class Lattice extends BufferedImage{
         this.nonStemProbabilityOfDying = 0.01;
         this.stemProbabilityOfDaughter = 0.1;
         this.cellTraitsJustUpdated = false;
-        this.timestep = 0;
         this.constructLattice();
     }
 
@@ -134,7 +129,6 @@ public class Lattice extends BufferedImage{
         if(this.cellWatchlist.size()==0){
             this.addUnsurroundedAliveCellsIfExistToWatchList();
         }
-        this.timestep++;
     }
 
     /**
@@ -338,6 +332,10 @@ public class Lattice extends BufferedImage{
         this.setRGB(x, y, rgb);
     }
 
+    /**
+     * @param cell_coords - the coordinates of the cell
+     * @return true or false depending on whether the cell has an adjacent spot
+     */
     private boolean hasEmptyAdjacentSpot(Point cell_coords){
         Point adjacent_spot = this.getEmptyAdjacentSpot(cell_coords);
         if (adjacent_spot != null){
