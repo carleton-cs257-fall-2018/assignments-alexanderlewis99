@@ -5,7 +5,16 @@ For our project, we will create a cellular automaton that simulates the growth o
 Our project idea is inspired by the article: Poleszczuk J., Enderling H. A high-performance cellular automaton model of tumor growth with dynamically growing domains. Applied Mathematics. 2014.
 
 A brief argument of why MVC is appropriate:
-An MVC pattern is appropriate for our project because each cell in the simulation will have its own data and as it constantly updates itself, it affects the appearance of the View through a Controller. Our Models will be a square in our grid of a life that can take on characteristics of a stem cancer cell, a non-stem cancer cell, a dead cell, or an unoccupied square. The Model will encode the behavior of the cancer cells. The Controller will make changes to the simulation using inputs from user and as the cell "divides"–meaning it causes adjacent squares to also take on the characteristic of a cell. As each cancer cell makes changes to the adjacent cells, these changes are displayed on the View. To simulate this cancer cell life, MVC is a great design choice.
+An MVC pattern is appropriate for our project because each cell in the simulation will have its own data and that data will change as it is constantly updated. When updated, the controller registers that change and updates the pixel counterpart of the cell in the View. Our Models include be different types of cells, each with a different behavior: cancer stem cells, non-stem cancer cells, dead cells, and  empty cells (unoccupied squares). We also have a model called a Lattice that keeps track of all the cells and communicates with the Controller as the cells in the lattice divide, migrate, and die. The Controller will updates the view as it receives information about changes to the data from the lattice changes. The View receives inputs from user about changes to the settings of the simulation and communicates that data to the Controller, which then passes it along to the Lattice Model. To simulate cancer cell life using cellular automatom, MVC is a great design choice.
 
 Core classes that make up our model:
-Cell.java is the only core class that makes up our model at the moment. A Cell can exist in four different states: empty, stem, non-stem, or dead. The controller updates the state of each cell in the lattice as the program runs.
+Cell.java - the parent class for all the other cells
+EmptyCell.java - used to represent empty squares in the lattice. It's represented by white pixels in the view.
+DeadCell.java - the class for dead cells which are represented by a black pixel in the view.
+AliveCell.java - the parent class for alive cells (stem cells and non-stem cells).
+StemCell.java - the initial cells that give rise to non-stem cells. They're represented by blue pixels in the view.
+NonStemCell.java - the class for the majority of cells. They are daughters of stem cells and die after dividing many times. They are represented by blue pixels in the view.
+Lattice.java - contains all of the cells in the simulation and keeps track of the changes they undergo as well as their pixel counterparts.
+
+Brief status about the current state of the program: 11/19/18
+Everything appears to work as there are no bugs or crashes occurring. I made adjustments to the names of the sliders to improve clarity as you recommended to me Jeff. I hope you have a good winter break! :)
