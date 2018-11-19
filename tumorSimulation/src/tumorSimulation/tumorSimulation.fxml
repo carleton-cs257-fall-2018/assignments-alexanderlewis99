@@ -13,17 +13,17 @@
 
     <Button fx:id="resetButton" text="Reset" AnchorPane.leftAnchor="100" AnchorPane.topAnchor="15" onAction="#onResetButton"/>
 
-    <Label fx:id="stemCellColorLabel" AnchorPane.leftAnchor="170" AnchorPane.topAnchor="20" textFill="blue" text = "Stem Cell"/>
+    <Label id="stemCellColorLabel" AnchorPane.leftAnchor="170" AnchorPane.topAnchor="20" textFill="blue" text = "Stem Cell"/>
 
-    <Circle fx:id="stemCellColor" AnchorPane.leftAnchor="235" AnchorPane.topAnchor="20" radius="10" fill="blue"/>
+    <Circle id="stemCellColor" AnchorPane.leftAnchor="235" AnchorPane.topAnchor="20" radius="10" fill="blue"/>
 
-    <Label fx:id="nonStemCellColorLabel" AnchorPane.leftAnchor="265" AnchorPane.topAnchor="20" textFill="red" text = "Non-Stem Cell"/>
+    <Label id="nonStemCellColorLabel" AnchorPane.leftAnchor="265" AnchorPane.topAnchor="20" textFill="red" text = "Non-Stem Cell"/>
 
-    <Circle fx:id="nonStemCellColor" AnchorPane.leftAnchor="360" AnchorPane.topAnchor="20" radius="10"  fill="red"  />
+    <Circle id="nonStemCellColor" AnchorPane.leftAnchor="360" AnchorPane.topAnchor="20" radius="10"  fill="red"  />
 
-    <Label fx:id="deadCellColorLabel" AnchorPane.leftAnchor="390" AnchorPane.topAnchor="20" textFill="black" text = "Dead Cell"/>
+    <Label id="deadCellColorLabel" AnchorPane.leftAnchor="390" AnchorPane.topAnchor="20" textFill="black" text = "Dead Cell"/>
 
-    <Circle fx:id="deadCellColor" AnchorPane.leftAnchor="453" AnchorPane.topAnchor="20" radius="10"  fill="black"  />
+    <Circle id="deadCellColor" AnchorPane.leftAnchor="453" AnchorPane.topAnchor="20" radius="10"  fill="black"  />
 
     <Button fx:id="instructionsButton" text="Instructions" AnchorPane.leftAnchor="500" AnchorPane.topAnchor="15" onAction="#onInstructionsButton"/>
 
@@ -49,7 +49,7 @@
                     <Slider fx:id="nonstemDeathFromDivisionSlider" AnchorPane.leftAnchor="220" AnchorPane.bottomAnchor="35"
                             showTickMarks="true" snapToTicks="true" majorTickUnit="2" min="1" max="10" value="1"/>
 
-                    <Label AnchorPane.leftAnchor="480" AnchorPane.bottomAnchor="57" style="-fx-font-size: 100%" text="Symmetric stem cell division rate" />
+                    <Label AnchorPane.leftAnchor="480" AnchorPane.bottomAnchor="57" style="-fx-font-size: 100%" text="Symmetric Stem Cell Division Rate" />
                     <Slider fx:id="symmetricStemCellDivisionSlider" AnchorPane.leftAnchor="480" AnchorPane.bottomAnchor="35"
                             showTickMarks="true" snapToTicks="true" majorTickUnit=".2" min="0" max="1" value="0.1"/>
             </AnchorPane>
@@ -59,7 +59,7 @@
                 <Slider fx:id="cellMovementSpeedSlider" AnchorPane.leftAnchor="20" AnchorPane.bottomAnchor="0"
                         showTickMarks="true" snapToTicks="true" majorTickUnit="2" min="1" max="24" value="5"/>
 
-                <Label AnchorPane.leftAnchor="220" AnchorPane.bottomAnchor="23" style="-fx-font-size: 100%" text="Spontaneous Non-Stem Cell Death" />
+                <Label AnchorPane.leftAnchor="220" AnchorPane.bottomAnchor="23" style="-fx-font-size: 100%" text="Rate of Regular Non-Stem Death" />
                 <Slider fx:id="nonstemRegularDeathRateSlider" AnchorPane.leftAnchor="220" AnchorPane.bottomAnchor="0"
                         showTickMarks="true" majorTickUnit=".2" min="0" max="1" value="0.01"/>
 
@@ -72,45 +72,65 @@
 
     <AnchorPane fx:id="instructionsView"
                 AnchorPane.topAnchor="60" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="20"
-                style="-fx-background-color:black; -fx-border-color:black; -fx-border-width:1px 0px 1px 0px;"
+                style="-fx-background-color:beige; -fx-border-color:black; -fx-border-width:1px 0px 1px 0px;"
                 visible="false">
 
-            <Label fx:id="instructionsZero" AnchorPane.leftAnchor="30" AnchorPane.topAnchor="50"
-                   text = "This simulation simulates the growth of a tumor from a single stem cell"
-                   textFill= "white"/>
+        <Label AnchorPane.leftAnchor="40" AnchorPane.topAnchor="10"
+               text = "Instructions" style="-fx-font: 20 times;"/>
 
-            <Label fx:id="instructionsOne" AnchorPane.leftAnchor="30" AnchorPane.topAnchor="60"
-                   text = "Click within the center box to add a new stem cell"
-                   textFill= "white"/>
+        <Rectangle AnchorPane.leftAnchor="20" AnchorPane.topAnchor="30" width="605" height="90" fill="lightcoral"/>
 
-            <Label fx:id="instructionsTwo" AnchorPane.leftAnchor="30" AnchorPane.topAnchor="70"
-                   text = "Adjust the settings using the sliders below"
-                   textFill= "white"/>
+        <Rectangle AnchorPane.leftAnchor="30" AnchorPane.topAnchor="40" width="585" height="70" fill="beige"/>
 
-            <Label fx:id="instructionsThree" AnchorPane.leftAnchor="30" AnchorPane.topAnchor="100"
-                   text = "Cell Types:"
-                   style = "-fx-font-weight: bold"
-                   textFill= "white"/>
+        <Label AnchorPane.leftAnchor="40" AnchorPane.topAnchor="50"
+               text = "This simulation simulates the growth of a tumor from a single stem cell."/>
 
-            <Label fx:id="instructionsFour" AnchorPane.leftAnchor="30" AnchorPane.topAnchor="140"
-                   text = "Stem Cell - Indefinitely produces cells of the same type (stem) or different type (non-stem)"
-                   textFill= "white"/>
+        <Label AnchorPane.leftAnchor="40" AnchorPane.topAnchor="65"
+               text = "Click within the center box to add a new stem cell."/>
 
-            <Label fx:id="instructionsFourFive" AnchorPane.leftAnchor="30" AnchorPane.topAnchor="170"
-                   text="Cell Movement Speed - The rate at which cells move about"
-                   textFill= "white"/>
+        <Label AnchorPane.leftAnchor="40" AnchorPane.topAnchor="80"
+               text = "Adjust the settings using the sliders in the bottom panel."/>
 
-            <Label fx:id="instructionsFive" AnchorPane.leftAnchor="30" AnchorPane.topAnchor="200"
-                   text="Symmetric stem cell division rate - the probability that a stem cell produces another stem cell when it divides"
-                   textFill= "white"/>
 
-            <Label fx:id="instructionsSix" AnchorPane.leftAnchor="30" AnchorPane.topAnchor="230"
-                   text="Non-Stem Cell Death From Division - the maximum times a non-stem cell can divide before dying"
-                   textFill= "white"/>
+        <Label AnchorPane.leftAnchor="40" AnchorPane.topAnchor="140"
+               text = "Cell Types"  style="-fx-font: 20 times;"/>
 
-            <Label fx:id="instructionsSeven" AnchorPane.leftAnchor="30" AnchorPane.topAnchor="260"
-                   text="Rate Of Non-Stem Death - the chance that each non-stem cell dies each time-step"
-                   textFill= "white"/>
+        <Rectangle AnchorPane.leftAnchor="20" AnchorPane.topAnchor="160" width="605" height="90" fill="lightcoral"/>
+
+        <Rectangle AnchorPane.leftAnchor="30" AnchorPane.topAnchor="170" width="585" height="70" fill="beige"/>
+
+        <Label AnchorPane.leftAnchor="40" AnchorPane.topAnchor="180"
+               text = "Stem Cell         - Indefinitely produces stem cells and non-stem cells"/>
+
+        <Label AnchorPane.leftAnchor="40" AnchorPane.topAnchor="195"
+               text= "Non-Stem Cell - Divides only a limited number of times before dying"/>
+
+        <Label AnchorPane.leftAnchor="40" AnchorPane.topAnchor="210"
+               text= "Dead Cell         - Does not divide and can be consumed by living cells"/>
+
+
+        <Label AnchorPane.leftAnchor="40" AnchorPane.topAnchor="270"
+               text = "Settings"  style="-fx-font: 20 times;"/>
+
+        <Rectangle AnchorPane.leftAnchor="20" AnchorPane.topAnchor="290" width="605" height="120" fill="lightcoral"/>
+
+        <Rectangle AnchorPane.leftAnchor="30" AnchorPane.topAnchor="300" width="585" height="100" fill="beige"/>
+
+        <Label AnchorPane.leftAnchor="40" AnchorPane.topAnchor="310"
+               text = "Cell Division Speed                           - The rate at which cells divide"/>
+
+        <Label AnchorPane.leftAnchor="40" AnchorPane.topAnchor="325"
+               text = "Cell Movement Speed                       - The rate at which cells move about"/>
+
+        <Label AnchorPane.leftAnchor="40" AnchorPane.topAnchor="340"
+               text = "Symmetric Stem Cell Division Rate   - The chance a stem cell divides into two stem cells"/>
+
+        <Label AnchorPane.leftAnchor="40" AnchorPane.topAnchor="355"
+               text = "Non-Stem Cell Death From Division - The rate at which non-stem cells die by dividing"/>
+
+        <Label AnchorPane.leftAnchor="40" AnchorPane.topAnchor="370"
+               text = "Rate of Regular Non-Stem Death    - The chance that each non-stem cell dies each time-step"/>
+
     </AnchorPane>
 
 </AnchorPane>

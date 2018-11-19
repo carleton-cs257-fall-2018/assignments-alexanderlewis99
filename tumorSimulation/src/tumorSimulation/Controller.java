@@ -2,16 +2,16 @@
  * Controller.java
  * Alec Wang and Bat-Orgil Batjargal, 11/19/18.
  *
- * A java class for a controller that creates a lattice.
+ * A java class for a controller that creates a cell lattice
+ * that stores data about cancer cells and their pixel counterparts,
+ * and then updates a view based on the data in the lattice.
  */
-
 
 package tumorSimulation;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Group;
 import javafx.scene.input.MouseEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -21,12 +21,11 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
+import javafx.embed.swing.SwingFXUtils;
 
 import java.awt.*;
 import java.util.Timer;
 import java.util.TimerTask;
-import javafx.embed.swing.SwingFXUtils;
-
 
 public class Controller implements EventHandler<MouseEvent>{
     final private double FRAMES_PER_SECOND = 20.0;
@@ -73,8 +72,8 @@ public class Controller implements EventHandler<MouseEvent>{
     private void createNewCellLattice(){
         this.cellLattice = new Lattice(300, 300, 3);
         Graphics2D background = cellLattice.createGraphics();
-        background.setPaint ( new Color ( 255, 255, 255) );
-        background.fillRect (0, 0, cellLattice.getWidth(), cellLattice.getHeight() );
+        background.setPaint (new Color ( 255, 255, 255));
+        background.fillRect (0, 0, cellLattice.getWidth(), cellLattice.getHeight());
     }
 
     private void startSimulationTimer() {
@@ -138,13 +137,51 @@ public class Controller implements EventHandler<MouseEvent>{
         int current_simulation_view_height = (int) this.simulationView.getHeight();
         int current_simulation_view_width = (int) this.simulationView.getWidth();
         if(this.simulation_view_height_last_timestep != current_simulation_view_height || this.simulation_view_width_last_timestep != current_simulation_view_width){
-            this.updateImageViewHeightAndWidth(current_simulation_view_height, current_simulation_view_width);
-            this.updateImageViewPosition(current_simulation_view_width);
-            this.updateSettingsPosition();
-            this.updateBorderRectangleHeightAndWidth();
-            this.updateBorderRectanglePosition();
-            this.checkSlidersAndLabelsOutOfBounds();
+            this.updateImageView(current_simulation_view_height, current_simulation_view_width);
+            this.updateBorderRectangle();
+            this.updateSettings();
         }
+    }
+
+    /**
+     * @param current_simulation_view_height - the current height of the AnchorPane simulationView
+     * @param current_simulation_view_width  - the current width of the AnchorPane simulationView
+     */
+    private void updateImageView(int current_simulation_view_height, int current_simulation_view_width){
+        this.updateImageViewHeightAndWidth(current_simulation_view_height, current_simulation_view_width);
+        this.updateImageViewPosition(current_simulation_view_width);
+    }
+
+    /**
+     * @param current_simulation_view_height - the current height of the AnchorPane simulationView
+     * @param current_simulation_view_width  - the current width of the AnchorPane simulationView
+     */
+    private void updateImageViewHeightAndWidth(int current_simulation_view_height, int current_simulation_view_width){
+        this.simulation_view_height_last_timestep = current_simulation_view_height;
+        this.simulation_view_width_last_timestep = current_simulation_view_width;
+        this.cellLatticeImageView.setFitHeight((0.72)*current_simulation_view_height);
+        this.cellLatticeImageView.setFitWidth((0.72)*current_simulation_view_width);
+        if(cellLatticeImageView.getFitHeight() > cellLatticeImageView.getFitWidth()){
+            this.cellLatticeImageView.setFitHeight(cellLatticeImageView.getFitWidth());
+        } else {
+            this.cellLatticeImageView.setFitWidth(cellLatticeImageView.getFitHeight());
+        }
+    }
+
+    /**
+     * @param current_simulation_view_width  - the current width of the AnchorPane simulationView
+     */
+    private void updateImageViewPosition(int current_simulation_view_width){
+        double whitespaceWidth = current_simulation_view_width - cellLatticeImageView.getFitWidth();
+        this.simulationView.setLeftAnchor(this.cellLatticeImageView, whitespaceWidth/2);
+        this.simulationView.setRightAnchor(this.cellLatticeImageView, whitespaceWidth/2);
+        this.simulationView.setTopAnchor(this.cellLatticeImageView, 10.0);
+    }
+
+
+    private void updateBorderRectangle(){
+        this.updateBorderRectangleHeightAndWidth();
+        this.updateBorderRectanglePosition();
     }
 
     private void updateBorderRectangleHeightAndWidth(){
@@ -157,6 +194,15 @@ public class Controller implements EventHandler<MouseEvent>{
     private void updateBorderRectanglePosition(){
         double x = (this.simulationView.getWidth() - cellLatticeImageView.getFitWidth())/2 - 10;
         this.simulationView.setLeftAnchor(this.imageViewBorderRectangle, x);
+    }
+
+    private void updateSettings(){
+        this.updateSettingsPosition();
+        this.checkSlidersAndLabelsOutOfBounds();
+    }
+
+    private void updateSettingsPosition(){
+        this.simulationView.setTopAnchor(this.settings, this.cellLatticeImageView.getFitHeight() + 20);
     }
 
     private void checkSlidersAndLabelsOutOfBounds(){
@@ -173,29 +219,6 @@ public class Controller implements EventHandler<MouseEvent>{
         }
     }
 
-    private void updateImageViewHeightAndWidth(int current_simulation_view_height, int current_simulation_view_width){
-        this.simulation_view_height_last_timestep = current_simulation_view_height;
-        this.simulation_view_width_last_timestep = current_simulation_view_width;
-        this.cellLatticeImageView.setFitHeight((0.72)*current_simulation_view_height);
-        this.cellLatticeImageView.setFitWidth((0.72)*current_simulation_view_width);
-        if(cellLatticeImageView.getFitHeight() > cellLatticeImageView.getFitWidth()){
-            this.cellLatticeImageView.setFitHeight(cellLatticeImageView.getFitWidth());
-        } else {
-            this.cellLatticeImageView.setFitWidth(cellLatticeImageView.getFitHeight());
-        }
-    }
-
-    private void updateImageViewPosition(int current_simulation_view_width){
-        double whitespaceWidth = current_simulation_view_width - cellLatticeImageView.getFitWidth();
-        this.simulationView.setLeftAnchor(this.cellLatticeImageView, whitespaceWidth/2);
-        this.simulationView.setRightAnchor(this.cellLatticeImageView, whitespaceWidth/2);
-        this.simulationView.setTopAnchor(this.cellLatticeImageView, 10.0);
-    }
-
-    private void updateSettingsPosition(){
-        this.simulationView.setTopAnchor(this.settings, this.cellLatticeImageView.getFitHeight() + 20);
-    }
-
     /**
      * Updates the TraitVector for cells in the lattice:
      *         cell cycle time
@@ -205,12 +228,12 @@ public class Controller implements EventHandler<MouseEvent>{
      *         probability of each non-stem cell dying each time-step
      */
     public void updateTraitVector(){
-        int generalCct = 24 - (int) this.cellDivisionSpeedSlider.getValue() + 1;
-        int generalMotilitySpeed = (int) this.cellMovementSpeedSlider.getValue();
+        int universalCellCycleTime = 24 - (int) this.cellDivisionSpeedSlider.getValue() + 1;
+        int universalMotilitySpeed = (int) this.cellMovementSpeedSlider.getValue();
         double stemProbabilityOfDaughterIsStem = this.symmetricStemCellDivisionSlider.getValue();
         int nonStemMaxProliferation = 10 - (int) this.nonstemDeathFromDivisionSlider.getValue() + 1;
         double nonStemProbabilityOfDying = this.nonstemRegularDeathRateSlider.getValue();
-        this.cellLattice.updateCellTraits(generalCct, generalMotilitySpeed, stemProbabilityOfDaughterIsStem,
+        this.cellLattice.updateCellTraits(universalCellCycleTime, universalMotilitySpeed, stemProbabilityOfDaughterIsStem,
                 nonStemMaxProliferation, nonStemProbabilityOfDying);
     }
 
@@ -219,6 +242,14 @@ public class Controller implements EventHandler<MouseEvent>{
             this.resetSimulation();
         } else {
             this.togglePauseButtonAndTimer();
+        }
+    }
+
+    public void togglePauseButtonAndTimer(){
+        if (this.paused) {
+            this.resumeSimulation();
+        } else {
+            this.pauseSimulation();
         }
     }
 
@@ -246,14 +277,22 @@ public class Controller implements EventHandler<MouseEvent>{
             this.paused = false;
             this.instructionsButton.setText("Instructions");
         }
+        this.toggleVisibilityOfInstructionsAndSimulationView();
+
+    }
+
+    private void toggleVisibilityOfInstructionsAndSimulationView(){
         this.simulationView.setVisible(!(this.simulationView.isVisible()));
         this.instructionsView.setVisible(!(this.instructionsView.isVisible()));
         this.pauseButton.setVisible(!(this.pauseButton.isVisible()));
         this.resetButton.setVisible(!(this.resetButton.isVisible()));
         this.timeLabel.setVisible(!(this.timeLabel.isVisible()));
-
     }
 
+    /**
+     * If the user clicks inside the simulation box, the controller
+     * will tell the lattice to add a new stem cell at that point.
+     */
     @Override
     public void handle(MouseEvent mouseEvent)
     {
@@ -267,8 +306,8 @@ public class Controller implements EventHandler<MouseEvent>{
         double rightBound = leftBound + imageViewWidth;
         if(mouseClickX > leftBound && mouseClickX < rightBound
                 && mouseClickY > aboveBound && mouseClickY < belowBound){
-            int x = (int) ((mouseClickX - leftBound) * (300/imageViewWidth));
-            int y = (int) ((mouseClickY - aboveBound) * (300/imageViewHeight));
+            int x = (int) ((mouseClickX - leftBound) * (this.cellLattice.getNumCols()/imageViewWidth));
+            int y = (int) ((mouseClickY - aboveBound) * (this.cellLattice.getNumRows()/imageViewHeight));
             this.cellLattice.addStemCellFromClick(new Point(x, y));
         }
         mouseEvent.consume();
@@ -279,14 +318,6 @@ public class Controller implements EventHandler<MouseEvent>{
         this.timeCount = 0;
         this.createNewCellLattice();
         this.resumeSimulation();
-    }
-
-    public void togglePauseButtonAndTimer(){
-        if (this.paused) {
-            this.resumeSimulation();
-        } else {
-            this.pauseSimulation();
-        }
     }
 
     public void pauseSimulation(){

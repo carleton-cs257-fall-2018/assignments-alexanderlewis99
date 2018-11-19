@@ -1,12 +1,11 @@
 /**
  * Main.java
- * Jeff Ondich, 19 Nov 2014
+ * Alec Wang and Bat-Orgil Batjargal, 11 Nov 2018
  *
- * The main program for a tiny demo pong-like program in JavaFX. The goal of
- * this program is to illustrate two techniques interacting: (1) Timer-based
- * animation, and (2) keystroke handling. As a sidelight, this demo also
- * introduces AnchorPane to keep the gameboard tied to the window's boundaries,
- * and to keep the paddle tied to the bottom of the gameboard.
+ * The main program for a simulation of the growth of a tumor from a single
+ * stem cell. The primary goal of this program is to demonstrate how one small
+ * cell following a set of simple rules can grow at an exponential rate and
+ * give rise to an enormous growth of many cells.
  */
 
 package tumorSimulation;
@@ -40,7 +39,6 @@ public class  Main extends Application {
         primaryStage.show();
         root.requestFocus();
     }
-
 
     public static void main(String[] args) {
         launch(args);

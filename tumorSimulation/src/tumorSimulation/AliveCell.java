@@ -24,66 +24,6 @@ public class AliveCell extends Cell {
 
     }
 
-    public Map<String, Boolean> getBehaviorForTimestep() {
-        Map<String, Boolean> behavior = new HashMap<String, Boolean>();
-        behavior.put("migrate", this.migrateIfChanceAllows());
-        behavior.put("divide", this.divideIfChanceAllows());
-        behavior.put("die", this.dieIfUnlucky());
-        return behavior;
-    }
-
-    /**
-     * @return boolean - whether the cell should divide
-     */
-    private boolean divideIfChanceAllows(){
-        Random rand = new Random();
-        double chance = rand.nextDouble();
-        if (chance < this.probability_of_dividing){
-            return true;
-        } else {
-            return false;
-        }
-    }
-    /**
-     * @return boolean - whether the cell should migrate
-     */
-    private boolean migrateIfChanceAllows(){
-        Random rand = new Random();
-        double chance = rand.nextDouble();
-        if (chance < this.probability_of_migrating){
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * @return boolean - whether the cell should die
-     */
-    private boolean dieIfUnlucky(){
-        Random rand = new Random();
-        double chance = rand.nextDouble();
-        if (chance < this.probability_of_dying){
-            return true;
-        }  else {
-            return false;
-        }
-    }
-
-    /**
-     * @return the cell-type of the daughter (either stem or non-stem)
-     */
-    public String getCellTypeOfNewDaughter(){
-        Random rand = new Random();
-        double chance = rand.nextDouble();
-        if (chance <= this.probability_of_daughter_stem_cell){
-            return ("stem");
-        }
-        else {
-            return("non-stem");
-        }
-    }
-
     public int getCct() {
         return this.cct;
     }
@@ -145,5 +85,65 @@ public class AliveCell extends Cell {
     public void updateProbabilityOfMigrating() {
         this.updateProbabilityOfDividing();
         this.probability_of_migrating = (1 - this.probability_of_dividing) * this.motility_speed  * this.timestep;
+    }
+
+    /**
+     * @return the cell-type of the daughter (either stem or non-stem)
+     */
+    public String getCellTypeOfNewDaughter(){
+        Random rand = new Random();
+        double chance = rand.nextDouble();
+        if (chance <= this.probability_of_daughter_stem_cell){
+            return ("stem");
+        }
+        else {
+            return("non-stem");
+        }
+    }
+
+    public Map<String, Boolean> getBehaviorForTimestep() {
+        Map<String, Boolean> behavior = new HashMap<String, Boolean>();
+        behavior.put("migrate", this.migrateIfChanceAllows());
+        behavior.put("divide", this.divideIfChanceAllows());
+        behavior.put("die", this.dieIfUnlucky());
+        return behavior;
+    }
+
+    /**
+     * @return boolean - whether the cell should divide
+     */
+    private boolean divideIfChanceAllows(){
+        Random rand = new Random();
+        double chance = rand.nextDouble();
+        if (chance < this.probability_of_dividing){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    /**
+     * @return boolean - whether the cell should migrate
+     */
+    private boolean migrateIfChanceAllows(){
+        Random rand = new Random();
+        double chance = rand.nextDouble();
+        if (chance < this.probability_of_migrating){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * @return boolean - whether the cell should die
+     */
+    private boolean dieIfUnlucky(){
+        Random rand = new Random();
+        double chance = rand.nextDouble();
+        if (chance < this.probability_of_dying){
+            return true;
+        }  else {
+            return false;
+        }
     }
 }
