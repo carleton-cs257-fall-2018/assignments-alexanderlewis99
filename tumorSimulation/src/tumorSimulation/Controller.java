@@ -11,6 +11,7 @@ package tumorSimulation;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -19,11 +20,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import java.util.Timer;
+import java.awt.Point;
 import java.util.TimerTask;
 import javafx.embed.swing.SwingFXUtils;
 
 
-public class Controller {
+public class Controller implements EventHandler<MouseEvent>{
     final private double FRAMES_PER_SECOND = 20.0;
 
     @FXML private Button pauseButton;
@@ -119,14 +121,14 @@ public class Controller {
     }
 
     private void updateImageViewHeightAndWidth(int current_simulation_view_height, int current_simulation_view_width){
-        cellLatticeImageView.setFitHeight((0.75)*current_simulation_view_height);
+        this.cellLatticeImageView.setFitHeight((0.75)*current_simulation_view_height);
         this.simulation_view_height_last_timestep = current_simulation_view_height;
         this.simulation_view_width_last_timestep = current_simulation_view_width;
-        cellLatticeImageView.setFitWidth((0.75)*current_simulation_view_width);
+        this.cellLatticeImageView.setFitWidth((0.75)*current_simulation_view_width);
         if(cellLatticeImageView.getFitHeight() > cellLatticeImageView.getFitWidth()){
-            cellLatticeImageView.setFitHeight(cellLatticeImageView.getFitWidth());
+            this.cellLatticeImageView.setFitHeight(cellLatticeImageView.getFitWidth());
         } else {
-            cellLatticeImageView.setFitWidth(cellLatticeImageView.getFitHeight());
+            this.cellLatticeImageView.setFitWidth(cellLatticeImageView.getFitHeight());
         }
     }
 
@@ -189,6 +191,28 @@ public class Controller {
         this.resetButton.setVisible(!(this.resetButton.isVisible()));
         this.timeLabel.setVisible(!(this.timeLabel.isVisible()));
 
+    }
+
+    @Override
+    public void handle(MouseEvent mouseEvent)
+    {
+        double mouseClickX = mouseEvent.getX();
+        double mouseClickY = mouseEvent.getY();
+        double imageViewWidth = this.cellLatticeImageView.getFitHeight();
+        double imageViewHeight = this.cellLatticeImageView.getFitHeight();
+        double aboveBound = 60;
+        double belowBound = aboveBound + imageViewHeight ;
+        double leftBound = (this.simulationView.getWidth() - imageViewWidth)/2;
+        double rightBound = leftBound + imageViewWidth;
+        if(mouseClickX > leftBound && mouseClickX < rightBound
+                && mouseClickY > aboveBound && mouseClickY < belowBound){
+            int x = (int) ((mouseClickX - leftBound) * (300/imageViewWidth));
+            int y = (int) ((mouseClickY - aboveBound) * (300/imageViewHeight));
+            this.cellLattice.addStemCellFromClick(new Point(x, y));
+            System.out.println("X: " + String.valueOf(x));
+            System.out.println("Y: " + String.valueOf(y));
+        }
+        mouseEvent.consume();
     }
 
     public void resetSimulation(){

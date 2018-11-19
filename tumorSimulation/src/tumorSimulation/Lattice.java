@@ -109,6 +109,11 @@ public class Lattice extends BufferedImage{
         return cell;
     }
 
+    public void addStemCellFromClick(Point click_coordinates){
+        this.setCell(click_coordinates, new StemCell());
+        this.cellWatchlist.add(click_coordinates);
+    }
+
     public boolean isDone(){
         return (this.cellWatchlist.size()==0);
     }
