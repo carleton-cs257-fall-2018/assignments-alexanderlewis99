@@ -27,6 +27,8 @@ public class Controller {
     final private double FRAMES_PER_SECOND = 20.0;
 
     @FXML private Button pauseButton;
+    @FXML private Button resetButton;
+    @FXML private Button instructionsButton;
     @FXML private Label timeLabel;
     @FXML private AnchorPane simulationView;
     @FXML private AnchorPane programWindow;
@@ -37,6 +39,8 @@ public class Controller {
     @FXML private Slider MotilitySpeedSlider;
     @FXML private Slider ProbabilityOfDyingSlider;
     @FXML private Slider ProbabilityOfDaughterSlider;
+
+    @FXML private AnchorPane instructionsView;
 
     private Lattice cellLattice;
     private Image cellLatticeImage;
@@ -115,10 +119,10 @@ public class Controller {
     }
 
     private void updateImageViewHeightAndWidth(int current_simulation_view_height, int current_simulation_view_width){
-        cellLatticeImageView.setFitHeight((0.8)*current_simulation_view_height);
+        cellLatticeImageView.setFitHeight((0.75)*current_simulation_view_height);
         this.simulation_view_height_last_timestep = current_simulation_view_height;
         this.simulation_view_width_last_timestep = current_simulation_view_width;
-        cellLatticeImageView.setFitWidth((0.8)*current_simulation_view_width);
+        cellLatticeImageView.setFitWidth((0.75)*current_simulation_view_width);
         if(cellLatticeImageView.getFitHeight() > cellLatticeImageView.getFitWidth()){
             cellLatticeImageView.setFitHeight(cellLatticeImageView.getFitWidth());
         } else {
@@ -142,7 +146,7 @@ public class Controller {
      *         probability of each non-stem cell dying each time-step
      */
     public void updateTraitVector(){
-        int generalCct = (int) this.cctSlider.getValue();
+        int generalCct = 24 - (int) this.cctSlider.getValue() + 1;
         int generalMotilitySpeed = (int) this.MotilitySpeedSlider.getValue();
         double stemProbabilityOfDaughterIsStem = this.ProbabilityOfDaughterSlider.getValue();
         int nonStemMaxProliferation = (int) this.MaxProliferationSlider.getValue();
@@ -159,8 +163,32 @@ public class Controller {
         }
     }
 
+    public void onResetSlidersButton(ActionEvent actionEvent) {
+        this.cctSlider.setValue(1);
+        this.MotilitySpeedSlider.setValue(5);
+        this.ProbabilityOfDaughterSlider.setValue(0.1);
+        this.MaxProliferationSlider.setValue(10);
+        this.ProbabilityOfDyingSlider.setValue(0.01);
+    }
+
     public void onResetButton(ActionEvent actionEvent) {
         this.resetSimulation();
+    }
+
+    public void onInstructionsButton(ActionEvent actionEvent) {
+        if (this.paused) {
+            this.resumeSimulation();
+            this.instructionsButton.setText("Instructions");
+        } else {
+            this.pauseSimulation();
+            this.instructionsButton.setText("Return to simulation");
+        }
+        this.simulationView.setVisible(!(this.simulationView.isVisible()));
+        this.instructionsView.setVisible(!(this.instructionsView.isVisible()));
+        this.pauseButton.setVisible(!(this.pauseButton.isVisible()));
+        this.resetButton.setVisible(!(this.resetButton.isVisible()));
+        this.timeLabel.setVisible(!(this.timeLabel.isVisible()));
+
     }
 
     public void resetSimulation(){
