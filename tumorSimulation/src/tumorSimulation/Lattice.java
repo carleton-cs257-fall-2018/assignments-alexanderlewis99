@@ -326,7 +326,7 @@ public class Lattice extends BufferedImage{
         if (cell_type.equals("non-stem")){
             rgb = new Color(255, 0, 0).getRGB();; //red
         } else if (cell_type.equals("stem")){
-            rgb = new Color(40, 80, 0).getRGB();; //green
+            rgb = new Color(0, 0, 255).getRGB();; //blue
         } else if (cell_type.equals("dead")){
             rgb = new Color(0, 0, 0).getRGB(); //black
         }
