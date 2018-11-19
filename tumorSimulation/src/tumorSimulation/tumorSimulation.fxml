@@ -55,7 +55,7 @@
             <Slider fx:id="ProbabilityOfDyingSlider" AnchorPane.leftAnchor="300" AnchorPane.bottomAnchor="0"
                     showTickMarks="true" majorTickUnit=".2" min="0" max="1" value="0.01"/>
 
-            <Button fx:id="resetSlider" text="Reset Settings" AnchorPane.leftAnchor="490" AnchorPane.bottomAnchor="4" onAction="#onResetSlidersButton"/>
+            <Button fx:id="resetSliders" text="Restore Defaults" AnchorPane.leftAnchor="490" AnchorPane.bottomAnchor="4" onAction="#onResetSlidersButton"/>
 
         </AnchorPane>
 
