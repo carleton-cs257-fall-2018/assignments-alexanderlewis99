@@ -204,22 +204,12 @@ public class Controller implements EventHandler<MouseEvent>{
         double belowBound = aboveBound + imageViewHeight ;
         double leftBound = (this.simulationView.getWidth() - imageViewWidth)/2;
         double rightBound = leftBound + imageViewWidth;
-
         if(mouseClickX > leftBound && mouseClickX < rightBound
                 && mouseClickY > aboveBound && mouseClickY < belowBound){
-
             int x = (int) ((mouseClickX - leftBound) * (300/imageViewWidth));
             int y = (int) ((mouseClickY - aboveBound) * (300/imageViewHeight));
             this.cellLattice.addStemCellFromClick(new Point(x, y));
-            System.out.println("X: " + String.valueOf(x));
-            System.out.println("Y: " + String.valueOf(y));
         }
-//        System.out.println("MOUSE X: " + String.valueOf(mouseClickX));
-//        System.out.println("MOUSE Y: " + String.valueOf(mouseClickY));
-        System.out.println("aboveBound" + String.valueOf(aboveBound));
-//        System.out.println("belowBound" + String.valueOf(belowBound));
-        System.out.println("leftBound" + String.valueOf(leftBound));
-//        System.out.println("rightBound" + String.valueOf(rightBound));
         mouseEvent.consume();
     }
 
