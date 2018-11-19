@@ -24,9 +24,6 @@ public class AliveCell extends Cell {
 
     }
 
-    /**
-     * Causes the cell to undergo its normal behavior (dividing, migrating, and/or dying) for the timestep
-     */
     public Map<String, Boolean> getBehaviorForTimestep() {
         Map<String, Boolean> behavior = new HashMap<String, Boolean>();
         behavior.put("migrate", this.migrateIfChanceAllows());
@@ -35,8 +32,45 @@ public class AliveCell extends Cell {
         return behavior;
     }
 
-    /** Gets the daughter's cell-type. Stem cells have a {10%} chance of creating another stem cell.
-     * Non-stem cells have a {0%} chance of creating a non-stem cell
+    /**
+     * @return boolean - whether the cell should divide
+     */
+    private boolean divideIfChanceAllows(){
+        Random rand = new Random();
+        double chance = rand.nextDouble();
+        if (chance < this.probability_of_dividing){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    /**
+     * @return boolean - whether the cell should migrate
+     */
+    private boolean migrateIfChanceAllows(){
+        Random rand = new Random();
+        double chance = rand.nextDouble();
+        if (chance < this.probability_of_migrating){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * @return boolean - whether the cell should die
+     */
+    private boolean dieIfUnlucky(){
+        Random rand = new Random();
+        double chance = rand.nextDouble();
+        if (chance < this.probability_of_dying){
+            return true;
+        }  else {
+            return false;
+        }
+    }
+
+    /**
      * @return the cell-type of the daughter (either stem or non-stem)
      */
     public String getCellTypeOfNewDaughter(){
@@ -49,7 +83,6 @@ public class AliveCell extends Cell {
             return("non-stem");
         }
     }
-
 
     public int getCct() {
         return this.cct;
@@ -112,46 +145,5 @@ public class AliveCell extends Cell {
     public void updateProbabilityOfMigrating() {
         this.updateProbabilityOfDividing();
         this.probability_of_migrating = (1 - this.probability_of_dividing) * this.motility_speed  * this.timestep;
-    }
-
-    /**
-     * Causes the cell to divide if the random generated value is less than the probability of dividing
-     * @return boolean - whether the cell should divide
-     */
-    private boolean divideIfChanceAllows(){
-        Random rand = new Random();
-        double chance = rand.nextDouble();
-        if (chance < this.probability_of_dividing){
-            return true;
-        } else {
-            return false;
-        }
-    }
-    /**
-     * Causes the cell to migrate if the random generated value is less than the probability of migrating
-     * @return boolean - whether the cell should migrate
-     */
-    private boolean migrateIfChanceAllows(){
-        Random rand = new Random();
-        double chance = rand.nextDouble();
-        if (chance < this.probability_of_migrating){
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Causes the cell to die if the random generated value is less than the probability of dying
-     * @return boolean - whether the cell should die
-     */
-    private boolean dieIfUnlucky(){
-        Random rand = new Random();
-        double chance = rand.nextDouble();
-        if (chance < this.probability_of_dying){
-            return true;
-        }  else {
-            return false;
-        }
     }
 }

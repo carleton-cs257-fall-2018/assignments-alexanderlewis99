@@ -69,6 +69,7 @@ public class Controller {
                 Platform.runLater(new Runnable() {
                     public void run() {
                         updateLattice();
+                        updateSimulationGraphics();
                         updateWindowSizes();
                         updateTimeLabel();
                         updateTraitVector();
@@ -82,13 +83,14 @@ public class Controller {
 
     private void updateLattice(){
         if (cellLattice.isDone()){
-            this.timer.cancel();
-            this.pauseButton.setText("Continue");
-            this.paused = true;
+            pauseSimulation();
         }
         else{
             this.cellLattice.updateSimulation();
         }
+    }
+
+    private void updateSimulationGraphics(){
         this.cellLatticeImage = SwingFXUtils.toFXImage(this.cellLattice, null);
         this.cellLatticeImageView.setImage(this.cellLatticeImage);
     }
@@ -101,26 +103,34 @@ public class Controller {
     }
 
     /**
-     * Updates the size of the simulation window, the settings box, and the simulation image based on the size of the window.
+     * Updates the size of the simulation window, the settings box, and the simulation image based on the size of the program window.
      */
     private void updateWindowSizes(){
         int current_simulation_view_height = (int) this.simulationView.getHeight();
         int current_simulation_view_width = (int) this.simulationView.getWidth();
         if(this.simulation_view_height_last_timestep != current_simulation_view_height || this.simulation_view_width_last_timestep != current_simulation_view_width){
-            cellLatticeImageView.setFitHeight((0.8)*current_simulation_view_height);
-            this.simulation_view_height_last_timestep = current_simulation_view_height;
-            this.simulation_view_width_last_timestep = current_simulation_view_width;
-            cellLatticeImageView.setFitWidth((0.8)*current_simulation_view_width);
-            if(cellLatticeImageView.getFitHeight() > cellLatticeImageView.getFitWidth()){
-                cellLatticeImageView.setFitHeight(cellLatticeImageView.getFitWidth());
-            } else {
-                cellLatticeImageView.setFitWidth(cellLatticeImageView.getFitHeight());
-            }
-            double whitespaceWidth = current_simulation_view_width - cellLatticeImageView.getFitWidth();
-            this.programWindow.setLeftAnchor(this.cellLatticeImageView, whitespaceWidth/2);
-            this.programWindow.setRightAnchor(this.cellLatticeImageView, whitespaceWidth/2);
-            this.simulationView.setTopAnchor(this.settings, cellLatticeImageView.getFitHeight());
+            this.updateImageViewHeightAndWidth(current_simulation_view_height, current_simulation_view_width);
+            this.updateImageViewPosition(current_simulation_view_width);
         }
+    }
+
+    private void updateImageViewHeightAndWidth(int current_simulation_view_height, int current_simulation_view_width){
+        cellLatticeImageView.setFitHeight((0.8)*current_simulation_view_height);
+        this.simulation_view_height_last_timestep = current_simulation_view_height;
+        this.simulation_view_width_last_timestep = current_simulation_view_width;
+        cellLatticeImageView.setFitWidth((0.8)*current_simulation_view_width);
+        if(cellLatticeImageView.getFitHeight() > cellLatticeImageView.getFitWidth()){
+            cellLatticeImageView.setFitHeight(cellLatticeImageView.getFitWidth());
+        } else {
+            cellLatticeImageView.setFitWidth(cellLatticeImageView.getFitHeight());
+        }
+    }
+
+    private void updateImageViewPosition(int current_simulation_view_width){
+        double whitespaceWidth = current_simulation_view_width - cellLatticeImageView.getFitWidth();
+        this.programWindow.setLeftAnchor(this.cellLatticeImageView, whitespaceWidth/2);
+        this.programWindow.setRightAnchor(this.cellLatticeImageView, whitespaceWidth/2);
+        this.simulationView.setTopAnchor(this.settings, this.cellLatticeImageView.getFitHeight());
     }
 
     /**
@@ -137,11 +147,12 @@ public class Controller {
         double stemProbabilityOfDaughterIsStem = this.ProbabilityOfDaughterSlider.getValue();
         int nonStemMaxProliferation = (int) this.MaxProliferationSlider.getValue();
         double nonStemProbabilityOfDying = this.ProbabilityOfDyingSlider.getValue();
-        cellLattice.updateCellTraits(generalCct, generalMotilitySpeed, stemProbabilityOfDaughterIsStem, nonStemMaxProliferation, nonStemProbabilityOfDying);
+        this.cellLattice.updateCellTraits(generalCct, generalMotilitySpeed, stemProbabilityOfDaughterIsStem,
+                nonStemMaxProliferation, nonStemProbabilityOfDying);
     }
 
     public void onPauseButton(ActionEvent actionEvent) {
-        if (cellLattice.isDone()){
+        if (this.cellLattice.isDone()){
             this.resetSimulation();
         } else {
             this.togglePauseButtonAndTimer();
@@ -150,7 +161,6 @@ public class Controller {
 
     public void onResetButton(ActionEvent actionEvent) {
         this.resetSimulation();
-
     }
 
     public void resetSimulation(){

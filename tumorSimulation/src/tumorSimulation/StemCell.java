@@ -14,13 +14,13 @@ public class StemCell extends AliveCell {
     }
 
 
-    public StemCell(int cct, int MotilitySpeed, double ProbabilityOfDaugter){
+    public StemCell(int cct, int MotilitySpeed, double ProbabilityOfDaughterStemCell){
         this.setCellType("stem");
         this.setCct(cct);
         this.setMaxProliferation(-1); //proliferates infinitely
         this.setProbabilityOfDying(0); //immortal
         this.setMotilitySpeed(MotilitySpeed);
-        this.setProbabilityOfDaughterStemCell(ProbabilityOfDaugter);
+        this.setProbabilityOfDaughterStemCell(ProbabilityOfDaughterStemCell);
         this.updateProbabilityOfDividing();
         this.updateProbabilityOfMigrating();
     }
