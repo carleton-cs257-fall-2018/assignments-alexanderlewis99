@@ -4,6 +4,8 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
+
 
 <AnchorPane fx:controller="tumorSimulation.Controller" id="window" xmlns:fx="http://javafx.com/fxml">
 
@@ -31,35 +33,38 @@
           AnchorPane.topAnchor="60" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="20"
           style="-fx-background-color:white; -fx-border-color:black; -fx-border-width:1px 0px 1px 0px;">
 
+        <Rectangle fx:id="imageViewBorderRectangle" width="310" height="300" fill="darkslategray"/>
+
         <ImageView fx:id="cellLatticeImageView" pickOnBounds="true" preserveRatio="true" />
 
         <AnchorPane fx:id="settings"
                     AnchorPane.topAnchor="400" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="20"
-                    style="-fx-background-color:lightCoral; -fx-border-color:black; -fx-border-width:1px 0px 1px 0px;">
+                    style="-fx-background-color:sandybrown; -fx-border-color:black; -fx-border-width:1px 0px 1px 0px;">
+            <AnchorPane fx:id="sliderInTopRow" AnchorPane.topAnchor="0">
+                    <Label AnchorPane.leftAnchor="20" AnchorPane.bottomAnchor="57" style="-fx-font-size: 100%" text="Cell Division Speed" />
+                    <Slider fx:id="cellDivisionSpeedSlider" AnchorPane.leftAnchor="20" AnchorPane.bottomAnchor="35"
+                            showTickMarks="true" snapToTicks="true" majorTickUnit="6" min="1" max="24" value="1"/>
 
-            <Label AnchorPane.leftAnchor="20" AnchorPane.bottomAnchor="57" style="-fx-font-size: 100%" text="Cell Division Speed" />
-            <Slider fx:id="cellDivisionSpeedSlider" AnchorPane.leftAnchor="20" AnchorPane.bottomAnchor="35"
-                    showTickMarks="true" snapToTicks="true" majorTickUnit="6" min="1" max="24" value="1"/>
+                    <Label AnchorPane.leftAnchor="220" AnchorPane.bottomAnchor="57" style="-fx-font-size: 100%" text="Non-Stem Cell Death From Division" />
+                    <Slider fx:id="nonstemDeathFromDivisionSlider" AnchorPane.leftAnchor="220" AnchorPane.bottomAnchor="35"
+                            showTickMarks="true" snapToTicks="true" majorTickUnit="2" min="1" max="10" value="1"/>
 
-            <Label AnchorPane.leftAnchor="300" AnchorPane.bottomAnchor="57" style="-fx-font-size: 100%" text="Cell Movement Speed" />
-            <Slider fx:id="cellMovementSpeedSlider" AnchorPane.leftAnchor="300" AnchorPane.bottomAnchor="35"
-                    showTickMarks="true" snapToTicks="true" majorTickUnit="2" min="1" max="24" value="5"/>
+                    <Label AnchorPane.leftAnchor="480" AnchorPane.bottomAnchor="57" style="-fx-font-size: 100%" text="Symmetric stem cell division rate" />
+                    <Slider fx:id="symmetricStemCellDivisionSlider" AnchorPane.leftAnchor="480" AnchorPane.bottomAnchor="35"
+                            showTickMarks="true" snapToTicks="true" majorTickUnit=".2" min="0" max="1" value="0.1"/>
+            </AnchorPane>
 
+            <AnchorPane fx:id="sliderInBottomRow" AnchorPane.bottomAnchor="0">
+                <Label AnchorPane.leftAnchor="20" AnchorPane.bottomAnchor="23" style="-fx-font-size: 100%" text="Cell Movement Speed" />
+                <Slider fx:id="cellMovementSpeedSlider" AnchorPane.leftAnchor="20" AnchorPane.bottomAnchor="0"
+                        showTickMarks="true" snapToTicks="true" majorTickUnit="2" min="1" max="24" value="5"/>
 
-            <Label AnchorPane.leftAnchor="480" AnchorPane.bottomAnchor="57" style="-fx-font-size: 100%" text="Symmetric stem cell division rate" />
-            <Slider fx:id="symmetricStemCellDivisionSlider" AnchorPane.leftAnchor="480" AnchorPane.bottomAnchor="35"
-                    showTickMarks="true" snapToTicks="true" majorTickUnit=".2" min="0" max="1" value="0.1"/>
+                <Label AnchorPane.leftAnchor="220" AnchorPane.bottomAnchor="23" style="-fx-font-size: 100%" text="Spontaneous Non-Stem Cell Death" />
+                <Slider fx:id="nonstemRegularDeathRateSlider" AnchorPane.leftAnchor="220" AnchorPane.bottomAnchor="0"
+                        showTickMarks="true" majorTickUnit=".2" min="0" max="1" value="0.01"/>
 
-
-            <Label AnchorPane.leftAnchor="20" AnchorPane.bottomAnchor="23" style="-fx-font-size: 100%" text="Non-Stem Cell Death From Division" />
-            <Slider fx:id="nonstemDeathFromDivisionSlider" AnchorPane.leftAnchor="20" AnchorPane.bottomAnchor="0"
-                    showTickMarks="true" snapToTicks="true" majorTickUnit="2" min="1" max="10" value="1"/>
-
-            <Label AnchorPane.leftAnchor="300" AnchorPane.bottomAnchor="23" style="-fx-font-size: 100%" text="Rate of Regular Non-Stem Death" />
-            <Slider fx:id="nonstemRegularDeathRateSlider" AnchorPane.leftAnchor="300" AnchorPane.bottomAnchor="0"
-                    showTickMarks="true" majorTickUnit=".2" min="0" max="1" value="0.01"/>
-
-            <Button fx:id="resetSliders" text="Restore Defaults" AnchorPane.leftAnchor="490" AnchorPane.bottomAnchor="10" onAction="#onResetSlidersButton"/>
+                <Button fx:id="resetSliders" text="Restore Defaults" AnchorPane.leftAnchor="490" AnchorPane.bottomAnchor="10" onAction="#onResetSlidersButton"/>
+            </AnchorPane>
 
         </AnchorPane>
 

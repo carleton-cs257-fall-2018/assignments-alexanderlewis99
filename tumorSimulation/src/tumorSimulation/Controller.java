@@ -11,6 +11,7 @@ package tumorSimulation;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Group;
 import javafx.scene.input.MouseEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -19,8 +20,10 @@ import javafx.scene.control.Slider;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.shape.Rectangle;
+
+import java.awt.*;
 import java.util.Timer;
-import java.awt.Point;
 import java.util.TimerTask;
 import javafx.embed.swing.SwingFXUtils;
 
@@ -33,16 +36,17 @@ public class Controller implements EventHandler<MouseEvent>{
     @FXML private Button instructionsButton;
     @FXML private Label timeLabel;
     @FXML private AnchorPane simulationView;
-    @FXML private AnchorPane programWindow;
     @FXML private AnchorPane settings;
     @FXML private ImageView cellLatticeImageView;
+    @FXML private Rectangle imageViewBorderRectangle;
     @FXML private Slider cellDivisionSpeedSlider;
     @FXML private Slider nonstemDeathFromDivisionSlider;
     @FXML private Slider cellMovementSpeedSlider;
     @FXML private Slider nonstemRegularDeathRateSlider;
     @FXML private Slider symmetricStemCellDivisionSlider;
-
     @FXML private AnchorPane instructionsView;
+    @FXML private AnchorPane sliderInBottomRow;
+    @FXML private AnchorPane sliderInTopRow;
 
     private Lattice cellLattice;
     private Image cellLatticeImage;
@@ -50,7 +54,8 @@ public class Controller implements EventHandler<MouseEvent>{
     private int simulation_view_width_last_timestep;
     private int timeCount;
     private boolean paused;
-    private Timer timer;
+    private Timer simulationTimer;
+    private Timer windowsTimer;
 
     public Controller() {
         this.paused = false;
@@ -61,22 +66,25 @@ public class Controller implements EventHandler<MouseEvent>{
         this.createNewCellLattice();
         this.cellLatticeImage = SwingFXUtils.toFXImage(this.cellLattice, null);
         this.cellLatticeImageView.setImage(this.cellLatticeImage);
-        this.startTimer();
+        this.startSimulationTimer();
+        this.startWindowsCheckerTimer();
     }
 
     private void createNewCellLattice(){
         this.cellLattice = new Lattice(300, 300, 3);
+        Graphics2D background = cellLattice.createGraphics();
+        background.setPaint ( new Color ( 255, 255, 255) );
+        background.fillRect (0, 0, cellLattice.getWidth(), cellLattice.getHeight() );
     }
 
-    private void startTimer() {
-        this.timer = new java.util.Timer();
+    private void startSimulationTimer() {
+        this.simulationTimer = new java.util.Timer();
         TimerTask timerTask = new TimerTask() {
             public void run() {
                 Platform.runLater(new Runnable() {
                     public void run() {
                         updateLattice();
                         updateSimulationGraphics();
-                        updateWindowSizes();
                         updateTimeLabel();
                         updateTraitVector();
                     }
@@ -84,7 +92,22 @@ public class Controller implements EventHandler<MouseEvent>{
             }
         };
         long frameTimeInMilliseconds = (long)(1000.0 / FRAMES_PER_SECOND);
-        this.timer.schedule(timerTask, 0, frameTimeInMilliseconds);
+        this.simulationTimer.schedule(timerTask, 0, frameTimeInMilliseconds);
+    }
+
+    private void startWindowsCheckerTimer() {
+        this.windowsTimer = new java.util.Timer();
+        TimerTask timerTask = new TimerTask() {
+            public void run() {
+                Platform.runLater(new Runnable() {
+                    public void run() {
+                        updateWindows();
+                    }
+                });
+            }
+        };
+        long frameTimeInMilliseconds = (long)(1000.0 / FRAMES_PER_SECOND);
+        this.windowsTimer.schedule(timerTask, 0, frameTimeInMilliseconds);
     }
 
     private void updateLattice(){
@@ -111,20 +134,50 @@ public class Controller implements EventHandler<MouseEvent>{
     /**
      * Updates the size of the simulation window, the settings box, and the simulation image based on the size of the program window.
      */
-    private void updateWindowSizes(){
+    private void updateWindows(){
         int current_simulation_view_height = (int) this.simulationView.getHeight();
         int current_simulation_view_width = (int) this.simulationView.getWidth();
         if(this.simulation_view_height_last_timestep != current_simulation_view_height || this.simulation_view_width_last_timestep != current_simulation_view_width){
             this.updateImageViewHeightAndWidth(current_simulation_view_height, current_simulation_view_width);
             this.updateImageViewPosition(current_simulation_view_width);
+            this.updateSettingsPosition();
+            this.updateBorderRectangleHeightAndWidth();
+            this.updateBorderRectanglePosition();
+            this.checkSlidersAndLabelsOutOfBounds();
+        }
+    }
+
+    private void updateBorderRectangleHeightAndWidth(){
+        int imageViewHeight = (int) this.cellLatticeImageView.getFitHeight();
+        int imageViewWidth = (int) this.cellLatticeImageView.getFitWidth();
+        this.imageViewBorderRectangle.setWidth(imageViewWidth + 20);
+        this.imageViewBorderRectangle.setHeight(imageViewHeight + 20);
+    }
+
+    private void updateBorderRectanglePosition(){
+        double x = (this.simulationView.getWidth() - cellLatticeImageView.getFitWidth())/2 - 10;
+        this.simulationView.setLeftAnchor(this.imageViewBorderRectangle, x);
+    }
+
+    private void checkSlidersAndLabelsOutOfBounds(){
+        if(this.imageViewBorderRectangle.getHeight() < 305){
+            this.sliderInTopRow.setVisible(false);
+            if(this.imageViewBorderRectangle.getHeight() < 215){
+                this.sliderInBottomRow.setVisible(false);
+            }
+            else {
+                this.sliderInBottomRow.setVisible(true);
+            }
+        } else {
+            this.sliderInTopRow.setVisible(true);
         }
     }
 
     private void updateImageViewHeightAndWidth(int current_simulation_view_height, int current_simulation_view_width){
-        this.cellLatticeImageView.setFitHeight((0.75)*current_simulation_view_height);
         this.simulation_view_height_last_timestep = current_simulation_view_height;
         this.simulation_view_width_last_timestep = current_simulation_view_width;
-        this.cellLatticeImageView.setFitWidth((0.75)*current_simulation_view_width);
+        this.cellLatticeImageView.setFitHeight((0.72)*current_simulation_view_height);
+        this.cellLatticeImageView.setFitWidth((0.72)*current_simulation_view_width);
         if(cellLatticeImageView.getFitHeight() > cellLatticeImageView.getFitWidth()){
             this.cellLatticeImageView.setFitHeight(cellLatticeImageView.getFitWidth());
         } else {
@@ -134,9 +187,13 @@ public class Controller implements EventHandler<MouseEvent>{
 
     private void updateImageViewPosition(int current_simulation_view_width){
         double whitespaceWidth = current_simulation_view_width - cellLatticeImageView.getFitWidth();
-        this.programWindow.setLeftAnchor(this.cellLatticeImageView, whitespaceWidth/2);
-        this.programWindow.setRightAnchor(this.cellLatticeImageView, whitespaceWidth/2);
-        this.simulationView.setTopAnchor(this.settings, this.cellLatticeImageView.getFitHeight());
+        this.simulationView.setLeftAnchor(this.cellLatticeImageView, whitespaceWidth/2);
+        this.simulationView.setRightAnchor(this.cellLatticeImageView, whitespaceWidth/2);
+        this.simulationView.setTopAnchor(this.cellLatticeImageView, 10.0);
+    }
+
+    private void updateSettingsPosition(){
+        this.simulationView.setTopAnchor(this.settings, this.cellLatticeImageView.getFitHeight() + 20);
     }
 
     /**
@@ -180,10 +237,12 @@ public class Controller implements EventHandler<MouseEvent>{
     public void onInstructionsButton(ActionEvent actionEvent) {
         if (this.instructionsButton.getText().equals("Instructions")) {
             this.pauseSimulation();
+            this.windowsTimer.cancel();
             this.paused = true;
             this.instructionsButton.setText("Return to simulation");
         } else {
             this.resumeSimulation();
+            this.startWindowsCheckerTimer();
             this.paused = false;
             this.instructionsButton.setText("Instructions");
         }
@@ -233,12 +292,12 @@ public class Controller implements EventHandler<MouseEvent>{
     public void pauseSimulation(){
         this.paused = true;
         this.pauseButton.setText("Continue");
-        this.timer.cancel();
+        this.simulationTimer.cancel();
     }
 
     public void resumeSimulation(){
         this.paused = false;
         this.pauseButton.setText("Pause");
-        this.startTimer();
+        this.startSimulationTimer();
     }
 }
