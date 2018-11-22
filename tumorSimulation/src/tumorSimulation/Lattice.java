@@ -135,6 +135,7 @@ public class Lattice extends BufferedImage{
         }
         if(this.cellWatchlist.size()==0){
             this.addUnsurroundedAliveCellsIfExistToWatchList();
+            this.updateTraitVectorsOfCellsInWatchList();
         }
     }
 
