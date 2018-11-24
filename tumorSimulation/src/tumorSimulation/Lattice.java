@@ -209,14 +209,17 @@ public class Lattice extends BufferedImage{
      * and returns them to cellWatchList if they are no are longer surrounded
      */
     private void addUnsurroundedAliveCellsIfExistToWatchList() {
-        ArrayList<Point> cells_returned_to_watchlist = new ArrayList<>();
+        ArrayList<Point> unsurrounded_cells = new ArrayList<>();
         for(Point cell_coordinates: this.surrounded_living_cells){
             if (this.hasEmptyAdjacentSpot(cell_coordinates)){
-                this.cellWatchlist.add(cell_coordinates);
-                cells_returned_to_watchlist.add(cell_coordinates);
+                String cell_type = this.getCell(cell_coordinates).getCellType();
+                if(cell_type == "stem" || cell_type == "non-stem"){
+                    this.cellWatchlist.add(cell_coordinates);
+                }
+                unsurrounded_cells.add(cell_coordinates);
             }
         }
-        this.surrounded_living_cells.removeAll(cells_returned_to_watchlist);
+        this.surrounded_living_cells.removeAll(unsurrounded_cells);
     }
 
     /**
