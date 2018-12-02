@@ -261,7 +261,7 @@ public class Lattice extends BufferedImage{
      * @param parent - the cell that is dividing
      */
     private void divide_cell(Point parent_cell_coords, AliveCell parent){
-        Point daughter_cell_coordinates = getEmptyAdjacentSpot(parent_cell_coords);
+        Point daughter_cell_coordinates = this.getEmptyAdjacentSpot(parent_cell_coords);
         String daughter_cell_type = parent.getCellTypeOfNewDaughter();
         AliveCell daughter_cell = this.getNewDaughterCell(daughter_cell_type);
         this.setCell(daughter_cell_coordinates, daughter_cell);
@@ -365,11 +365,8 @@ public class Lattice extends BufferedImage{
      * @return the coordinates of an empty square adjacent to the given cell
      */
     private Point getEmptyAdjacentSpot(Point cell_coords){
-        ArrayList<Point> availableCoords = getAvailableCoordinates(cell_coords);
-        if (availableCoords.size() == 0){
-            return null;
-        }
-        return getRandomPointUsingMonteCarloSampling(availableCoords);
+        ArrayList<Point> availableCoords = this.getAvailableCoordinates(cell_coords);
+        return this.getRandomPointUsingMonteCarloSampling(availableCoords);
     }
 
     /**
@@ -377,22 +374,23 @@ public class Lattice extends BufferedImage{
      * @return a random point
      */
     private Point getRandomPointUsingMonteCarloSampling(ArrayList<Point> coordinates){
-        int numChoices = coordinates.size();
         Random rand = new Random();
-        double pick = rand.nextDouble();
-        double higher_end = 1;
-        double lower_end = 1 - (double) 1/numChoices;
-        int chosenOption = numChoices - 1;
-        for (int index = numChoices - 1; index >= 0; index = index - 1){
-            chosenOption = index;
-            if (pick < higher_end && pick > lower_end){
-                break;
+        Point empty_adjacent_neighbor = null;
+        boolean foundEmptyAdjacentPoint = false;
+        while (!(foundEmptyAdjacentPoint) && coordinates.size() > 0){
+            int pick = rand.nextInt(coordinates.size());
+            Point neighbor_coordinate = coordinates.get(pick);
+            Cell neighbor = this.getCell(neighbor_coordinate);
+            String cell_type = neighbor.getCellType();
+            if(!(cell_type.equals("stem") || cell_type.equals("non-stem"))){
+                empty_adjacent_neighbor = neighbor_coordinate;
+                foundEmptyAdjacentPoint = true;
             } else {
-                higher_end = higher_end - (double) 1/numChoices;
-                lower_end = lower_end - (double) 1/numChoices;
+                coordinates.remove(neighbor_coordinate);
             }
+
         }
-        return coordinates.get(chosenOption);
+        return empty_adjacent_neighbor;
     }
 
     /**
@@ -403,27 +401,27 @@ public class Lattice extends BufferedImage{
     private ArrayList<Point> getAvailableCoordinates(Point cell_coordinates){
         ArrayList<Point> all_eight_neighbors = this.getAllEightAdjacentCoordinates(cell_coordinates);
         ArrayList<Point> neighbors_in_bounds = this.removeNeighborsOutOfBounds(all_eight_neighbors);
-        ArrayList<Point> available_squares = this.removeLivingNeighbors(neighbors_in_bounds);
-        return available_squares;
+//        ArrayList<Point> available_squares = this.removeLivingNeighbors(neighbors_in_bounds);
+        return neighbors_in_bounds;
     }
 
-    /**
-     * @param neighbors - ArrayList of neighbor coordinates in bounds of lattice
-     * @return neighbors - an ArrayList of coordinates of only empty and dead neighbors
-     */
-    private ArrayList<Point> removeLivingNeighbors(ArrayList<Point> neighbors){
-        ArrayList<Point> neighbors_to_remove = new ArrayList<>();
-        for (Point neighbor_coordinate: neighbors){
-            Cell cell = this.getCell(neighbor_coordinate);
-            if (cell.getCellType().equals("stem") || cell.getCellType().equals("non-stem")){
-                neighbors_to_remove.add(neighbor_coordinate);
-            }
-        }
-        for (Point living_neighbor: neighbors_to_remove){
-            neighbors.remove(living_neighbor);
-        }
-        return neighbors;
-    }
+//    /**
+//     * @param neighbors - ArrayList of neighbor coordinates in bounds of lattice
+//     * @return neighbors - an ArrayList of coordinates of only empty and dead neighbors
+//     */
+//    private ArrayList<Point> removeLivingNeighbors(ArrayList<Point> neighbors){
+//        ArrayList<Point> neighbors_to_remove = new ArrayList<>();
+//        for (Point neighbor_coordinate: neighbors){
+//            Cell cell = this.getCell(neighbor_coordinate);
+//            if (cell.getCellType().equals("stem") || cell.getCellType().equals("non-stem")){
+//                neighbors_to_remove.add(neighbor_coordinate);
+//            }
+//        }
+//        for (Point living_neighbor: neighbors_to_remove){
+//            neighbors.remove(living_neighbor);
+//        }
+//        return neighbors;
+//    }
 
     /**
      * @param neighbors - an ArrayList of points
@@ -445,21 +443,21 @@ public class Lattice extends BufferedImage{
     }
 
     /**
-     * @param cell_coords - coordinates of the dividing/migrating cell
-     * @return an ArrayList of the 8 adjacent points around the given point
-     */
-    private ArrayList<Point> getAllEightAdjacentCoordinates(Point cell_coords){
-        int x = (int) cell_coords.getX();
-        int y = (int) cell_coords.getY();
-        ArrayList<Point> all_eight_neighbors = new ArrayList<>();
-        for (int i = -1; i <= 1; i++){
-            for (int j = -1; j <= 1; j++){
-                if (!(i == 0 && j == 0)){
-                    Point point = new Point(x + i, y + j);
-                    all_eight_neighbors.add(point);
+         * @param cell_coords - coordinates of the dividing/migrating cell
+         * @return an ArrayList of the 8 adjacent points around the given point
+         */
+        private ArrayList<Point> getAllEightAdjacentCoordinates(Point cell_coords){
+            int x = (int) cell_coords.getX();
+            int y = (int) cell_coords.getY();
+            ArrayList<Point> all_eight_neighbors = new ArrayList<>();
+            for (int i = -1; i <= 1; i++){
+                for (int j = -1; j <= 1; j++){
+                    if (!(i == 0 && j == 0)){
+                        Point point = new Point(x + i, y + j);
+                        all_eight_neighbors.add(point);
+                    }
                 }
             }
-        }
-        return all_eight_neighbors;
+            return all_eight_neighbors;
     }
 }
